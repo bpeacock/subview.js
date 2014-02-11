@@ -1,0 +1,25 @@
+{
+    "name":         "subview",
+    "description":  "A better view framework.",
+    "version":      "0.0.1",
+    "author":       "Brian Peacock",
+    "main":         "src/main.js",
+    "dependencies": {
+        "underscore": "1.5.x",
+        "mustache":   "0.8.x",
+        "jquery":     "2.1.x"
+    },
+    "devDependencies": {
+        "browserify":   "3.24.x",
+        "grunt":        "~0.4.2",
+        "grunt-contrib-watch": "0.5.x",
+        "grunt-browserify": "1.3.x"
+    },
+    "license": "MIT",
+    "keywords": [
+        "MVC",
+        "view",
+        "javascript",
+        "subview"
+    ]
+}
