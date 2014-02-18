@@ -7,7 +7,6 @@
     "dependencies": {
         "underscore": "1.5.x",
         "mustache":   "0.8.x",
-        "jquery":     "2.1.x"
     },
     "devDependencies": {
         "browserify":   "3.24.x",
