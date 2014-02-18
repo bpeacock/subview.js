@@ -64,6 +64,14 @@ View = {
     methods
 };
 
+To install
+----------
+
+```bash
+npm install
+npm install ../selector
+```
+
 To Build
 ----------------
 

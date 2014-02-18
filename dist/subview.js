@@ -571,6 +571,9 @@
 }));
 
 },{}],2:[function(require,module,exports){
+module.exports = window.jQuery || window.Zepto || window.ender || window.$;
+
+},{}],3:[function(require,module,exports){
 //     Underscore.js 1.5.2
 //     http://underscorejs.org
 //     (c) 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -1848,8 +1851,9 @@
 
 }).call(this);
 
-},{}],3:[function(require,module,exports){
-var _ = require("underscore");
+},{}],4:[function(require,module,exports){
+var $ = require('selector'),
+    _ = require("underscore");
 
 /*** Cache ***/
 var statePrefix = "state-",
@@ -1921,7 +1925,7 @@ State.prototype = {
         (this.bindings[key] || noop)(value);
 
         //Tell all of the listening children
-        var $children = subview.$(this.view.el).find('.' + this._listenCssPrefix + this.view.type + '-' + key),
+        var $children = $(this.view.el).find('.' + this._listenCssPrefix + this.view.type + '-' + key),
             i = $children.length;
 
         while(i--) {
@@ -1936,13 +1940,13 @@ State.prototype = {
     /*** Communicatory Get/Set/Bind ***/
     //These methods communicate with the closest parent of the given type
     askParent: function(type, key) {
-        var parent = subview.$(this.view.el).closest('.'+this.view._viewCssPrefix + type)[0];
+        var parent = $(this.view.el).closest('.'+this.view._viewCssPrefix + type)[0];
 
         if(parent)  return parent.view.state.get(key);
         else        return undefined;
     },
     tellParent: function(type, key, value) {
-        var parent = subview.$(this.view.el).closest('.'+this.view._viewCssPrefix + type)[0];
+        var parent = $(this.view.el).closest('.'+this.view._viewCssPrefix + type)[0];
 
         if(parent) parent.view.state.set(key, value);
         return this;
@@ -2057,7 +2061,7 @@ State.prototype = {
 module.exports = State;
 
 
-},{"underscore":2}],4:[function(require,module,exports){
+},{"selector":2,"underscore":3}],5:[function(require,module,exports){
 var Mustache    = require("mustache"),
     _           = require('underscore'),
     noop        = function() {};
@@ -2170,7 +2174,7 @@ module.exports = View;
 
 
 
-},{"mustache":1,"underscore":2}],5:[function(require,module,exports){
+},{"mustache":1,"underscore":3}],6:[function(require,module,exports){
 var State = require("./State");
 
 var ViewPool = function(View) {
@@ -2229,7 +2233,7 @@ ViewPool.prototype = {
 
 module.exports = ViewPool;
 
-},{"./State":3}],6:[function(require,module,exports){
+},{"./State":4}],7:[function(require,module,exports){
 var _               = require("underscore"),
     ViewPool        = require("./ViewPool"),
     ViewTemplate    = require("./View"),
@@ -2278,9 +2282,6 @@ var subview = function(name, protoViewPool, config) {
 subview.views      = {};
 subview.templates  = {};
 
-/*** Settings ***/
-subview.$ = null;
-
 /*** API ***/
 subview.load = function(scope) {
     //Argument Surgery
@@ -2324,4 +2325,4 @@ subview.extend = function(extension) {
 window.subview = module.exports = subview;
 
 
-},{"./View":4,"./ViewPool":5,"underscore":2}]},{},[6])
+},{"./View":5,"./ViewPool":6,"underscore":3}]},{},[7])

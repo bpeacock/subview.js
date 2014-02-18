@@ -1,4 +1,5 @@
-var _ = require("underscore");
+var $ = require('selector'),
+    _ = require("underscore");
 
 /*** Cache ***/
 var statePrefix = "state-",
@@ -70,7 +71,7 @@ State.prototype = {
         (this.bindings[key] || noop)(value);
 
         //Tell all of the listening children
-        var $children = subview.$(this.view.el).find('.' + this._listenCssPrefix + this.view.type + '-' + key),
+        var $children = $(this.view.el).find('.' + this._listenCssPrefix + this.view.type + '-' + key),
             i = $children.length;
 
         while(i--) {
@@ -85,13 +86,13 @@ State.prototype = {
     /*** Communicatory Get/Set/Bind ***/
     //These methods communicate with the closest parent of the given type
     askParent: function(type, key) {
-        var parent = subview.$(this.view.el).closest('.'+this.view._viewCssPrefix + type)[0];
+        var parent = $(this.view.el).closest('.'+this.view._viewCssPrefix + type)[0];
 
         if(parent)  return parent.view.state.get(key);
         else        return undefined;
     },
     tellParent: function(type, key, value) {
-        var parent = subview.$(this.view.el).closest('.'+this.view._viewCssPrefix + type)[0];
+        var parent = $(this.view.el).closest('.'+this.view._viewCssPrefix + type)[0];
 
         if(parent) parent.view.state.set(key, value);
         return this;

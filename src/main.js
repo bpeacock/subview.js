@@ -46,9 +46,6 @@ var subview = function(name, protoViewPool, config) {
 subview.views      = {};
 subview.templates  = {};
 
-/*** Settings ***/
-subview.$ = null;
-
 /*** API ***/
 subview.load = function(scope) {
     //Argument Surgery

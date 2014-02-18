@@ -1,5 +1,4 @@
-var $ = require("jquery")(window),
-    subview = require("../src/main.js");
+var subview = require("../src/main.js");
 
 subview("app", {
     init: function() {
