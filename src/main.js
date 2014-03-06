@@ -1,4 +1,5 @@
 var _               = require("underscore"),
+    $               = require("unopinionate").selector,
     ViewPool        = require("./ViewPool"),
     ViewTemplate    = require("./View"),
     viewTypeRegex   = new RegExp('^' + ViewTemplate.prototype._viewCssPrefix);
@@ -38,32 +39,30 @@ var subview = function(name, protoViewPool, config) {
     var viewPool = new ViewPool(View);
     subview.views[name] = viewPool;
 
-    subview.templates[name] = viewPool.template;
-
     return viewPool;
 };
 
-subview.views      = {};
-subview.templates  = {};
+subview.views = {};
 
 /*** API ***/
 subview.load = function(scope) {
     //Argument Surgery
-    if(typeof scope == 'object') {
+    if($.isPlainObject(scope)) {
         this.configure(scope);
         scope = false;
     }
 
-    var $scope = scope ? this.$(scope) : this.$('body'),
-        $views = $scope.find("[class^='view-']");
+    var $scope = scope ? $(scope) : $('body'),
+        $views = $scope.find("[class^='view-']"),
+        finder = function(c) {
+                    return c.match(viewTypeRegex);
+                };
 
     for(var i=0; i<$views.length; i++) {
         var el = $views[i],
             classes = el.className.split(/\s+/);
 
-        type =  _.find(classes, function(c) {
-                    return c.match(viewTypeRegex);
-                }).replace(viewTypeRegex, '');
+        type =  _.find(classes, finder).replace(viewTypeRegex, '');
 
         if(type) {
             this.views[type].spawn($views[i]);
@@ -78,11 +77,6 @@ subview.load = function(scope) {
 
 subview.configure = function(config) {
     _.extend(this, config);
-    return this;
-};
-
-subview.extend = function(extension) {
-    ViewTemplate.prototype = _.extend(ViewTemplate.prototype, extension);
     return this;
 };
 

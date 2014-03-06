@@ -1,5 +1,7 @@
-Hierarchical View
-=================
+subview.js
+==========
+
+A hierarchical view framework
 
 Duties:
     1. Render the application
@@ -69,7 +71,6 @@ To install
 
 ```bash
 npm install
-npm install ../selector
 ```
 
 To Build

@@ -1,6 +1,6 @@
-var Mustache    = require("mustache"),
-    _           = require('underscore'),
-    noop        = function() {};
+var _    = require('underscore'),
+    Mustache = require("mustache"),
+    noop = function() {};
 
 var View = function() {};
 
@@ -11,23 +11,69 @@ View.prototype = {
     clean:      noop,
     tag:        "div",
     template:   "",
+
+    //State data gets mapped to classes
     state:      {},
+
+    //Data goes into the templates and may also be a function that returns an object
     data:       {},
+
+    //Subviews are a set of subviews that will be fed into the templating engine
+    subviews:   {},
 
     /*** Rendering ***/
     render: function() {
-        var data = typeof this.data == 'function' ? this.data() : this.data;
-        data.subview = subview.templates;
+        var html = '';
 
-        this.el.innerHTML = Mustache.render(this.template, _.extend(this.state.data, data));
-        subview.load(this.el);
+        //No Templating Engine
+        if(typeof this.template == 'string') {
+            html = this.template;
+        }
+        else {
+            var data = _.extend(this.state.data, typeof this.data == 'function' ? this.data() : this.data);
+            
+            data.subview = {};
+            $.each(this.subviews, function(name, subview) {
+                data.subview[name] = subview.template;
+            });
+            
+            if(_.isFunction(this.template)) {
+                //EJS
+                if(typeof this.template.render == 'function') {
+                    html = this.template.render(data);
+                }
+                //Handlebars & Underscore & Jade
+                else {
+                    html = this.template(data);
+                }
+            }
+            else {
+                console.error("Templating engine not recognized.");
+            }
+        }
+
+        this.html(html);
+
+        return this;
+    },
+    html: function(html) {
+        //Remove & clean subviews in the wrapper 
+        this.$wrapper.find('.view').each(function() {
+            subview(this).remove();
+        });
+
+        this.wrapper.innerHTML = html;
+
+        //Load subviews in the wrapper
+        subview.load(this.$wrapper);
+
         return this;
     },
     remove: function() {
         //Detach
-        var parent = this.el.parentNode;
+        var parent = this.wrapper.parentNode;
         if(parent) {
-            parent.removeChild(this.el);
+            parent.removeChild(this.wrapper);
         }
 
         //Clean
@@ -73,11 +119,11 @@ View.prototype = {
     /*** Classes ***/
     _viewCssPrefix: 'view-',
     _getClasses: function() {
-        return this.el.className.split(/\s+/);
+        return this.wrapper.className.split(/\s+/);
     },
     _setClasses: function(classes) {
         var newClassName = classes.join(' ');
-        if(this.el.className != newClassName) this.el.className = newClassName;
+        if(this.wrapper.className != newClassName) this.wrapper.className = newClassName;
 
         return this;
     },

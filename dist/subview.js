@@ -571,9 +571,6 @@
 }));
 
 },{}],2:[function(require,module,exports){
-module.exports = window.jQuery || window.Zepto || window.ender || window.$;
-
-},{}],3:[function(require,module,exports){
 //     Underscore.js 1.5.2
 //     http://underscorejs.org
 //     (c) 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -1851,8 +1848,33 @@ module.exports = window.jQuery || window.Zepto || window.ender || window.$;
 
 }).call(this);
 
+},{}],3:[function(require,module,exports){
+(function (global){(function(root) {
+    var unopinionate = {
+        selector: root.jQuery || root.Zepto || root.ender || root.$,
+        template: root.Handlebars || root.Mustache
+    };
+
+    /*** Export ***/
+
+    //AMD
+    if(typeof define === 'function' && define.amd) {
+        define([], function() {
+            return unopinionate;
+        });
+    }
+    //CommonJS
+    else if(typeof module.exports !== 'undefined') {
+        module.exports = unopinionate;
+    }
+    //Global
+    else {
+        root.unopinionate = unopinionate;
+    }
+})(typeof window != 'undefined' ? window : global);
+}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],4:[function(require,module,exports){
-var $ = require('selector'),
+var $ = require('unopinionate').selector,
     _ = require("underscore");
 
 /*** Cache ***/
@@ -1925,7 +1947,7 @@ State.prototype = {
         (this.bindings[key] || noop)(value);
 
         //Tell all of the listening children
-        var $children = $(this.view.el).find('.' + this._listenCssPrefix + this.view.type + '-' + key),
+        var $children = $(this.view.wrapper).find('.' + this._listenCssPrefix + this.view.type + '-' + key),
             i = $children.length;
 
         while(i--) {
@@ -1940,13 +1962,13 @@ State.prototype = {
     /*** Communicatory Get/Set/Bind ***/
     //These methods communicate with the closest parent of the given type
     askParent: function(type, key) {
-        var parent = $(this.view.el).closest('.'+this.view._viewCssPrefix + type)[0];
+        var parent = $(this.view.wrapper).closest('.'+this.view._viewCssPrefix + type)[0];
 
         if(parent)  return parent.view.state.get(key);
         else        return undefined;
     },
     tellParent: function(type, key, value) {
-        var parent = $(this.view.el).closest('.'+this.view._viewCssPrefix + type)[0];
+        var parent = $(this.view.wrapper).closest('.'+this.view._viewCssPrefix + type)[0];
 
         if(parent) parent.view.state.set(key, value);
         return this;
@@ -2053,7 +2075,7 @@ State.prototype = {
             return c.match(regex);
         });
 
-        if(classes.length != len) this.view.el.className = classes.join(' '); //Don't do anything if there is no change (efficient!!!)
+        if(classes.length != len) this.view.wrapper.className = classes.join(' '); //Don't do anything if there is no change (efficient!!!)
         return this;
     }
 };
@@ -2061,10 +2083,10 @@ State.prototype = {
 module.exports = State;
 
 
-},{"selector":2,"underscore":3}],5:[function(require,module,exports){
-var Mustache    = require("mustache"),
-    _           = require('underscore'),
-    noop        = function() {};
+},{"underscore":2,"unopinionate":3}],5:[function(require,module,exports){
+var _    = require('underscore'),
+    Mustache = require("mustache"),
+    noop = function() {};
 
 var View = function() {};
 
@@ -2075,23 +2097,69 @@ View.prototype = {
     clean:      noop,
     tag:        "div",
     template:   "",
+
+    //State data gets mapped to classes
     state:      {},
+
+    //Data goes into the templates and may also be a function that returns an object
     data:       {},
+
+    //Subviews are a set of subviews that will be fed into the templating engine
+    subviews:   {},
 
     /*** Rendering ***/
     render: function() {
-        var data = typeof this.data == 'function' ? this.data() : this.data;
-        data.subview = subview.templates;
+        var html = '';
 
-        this.el.innerHTML = Mustache.render(this.template, _.extend(this.state.data, data));
-        subview.load(this.el);
+        //No Templating Engine
+        if(typeof this.template == 'string') {
+            html = this.template;
+        }
+        else {
+            var data = _.extend(this.state.data, typeof this.data == 'function' ? this.data() : this.data);
+            
+            data.subview = {};
+            $.each(this.subviews, function(name, subview) {
+                data.subview[name] = subview.template;
+            });
+            
+            if(_.isFunction(this.template)) {
+                //EJS
+                if(typeof this.template.render == 'function') {
+                    html = this.template.render(data);
+                }
+                //Handlebars & Underscore & Jade
+                else {
+                    html = this.template(data);
+                }
+            }
+            else {
+                console.error("Templating engine not recognized.");
+            }
+        }
+
+        this.html(html);
+
+        return this;
+    },
+    html: function(html) {
+        //Remove & clean subviews in the wrapper 
+        this.$wrapper.find('.view').each(function() {
+            subview(this).remove();
+        });
+
+        this.wrapper.innerHTML = html;
+
+        //Load subviews in the wrapper
+        subview.load(this.$wrapper);
+
         return this;
     },
     remove: function() {
         //Detach
-        var parent = this.el.parentNode;
+        var parent = this.wrapper.parentNode;
         if(parent) {
-            parent.removeChild(this.el);
+            parent.removeChild(this.wrapper);
         }
 
         //Clean
@@ -2137,11 +2205,11 @@ View.prototype = {
     /*** Classes ***/
     _viewCssPrefix: 'view-',
     _getClasses: function() {
-        return this.el.className.split(/\s+/);
+        return this.wrapper.className.split(/\s+/);
     },
     _setClasses: function(classes) {
         var newClassName = classes.join(' ');
-        if(this.el.className != newClassName) this.el.className = newClassName;
+        if(this.wrapper.className != newClassName) this.wrapper.className = newClassName;
 
         return this;
     },
@@ -2174,8 +2242,9 @@ module.exports = View;
 
 
 
-},{"mustache":1,"underscore":3}],6:[function(require,module,exports){
-var State = require("./State");
+},{"mustache":1,"underscore":2}],6:[function(require,module,exports){
+var State = require("./State"),
+    $     = require("unopinionate").selector;
 
 var ViewPool = function(View) {
     //Configuration
@@ -2197,9 +2266,12 @@ ViewPool.prototype = {
             return el.view;
         }
         else {
-            if(!el) {
-                if(pool.length !== 0) {
-                    return pool.pop();
+            var elIsObject  = $.isPlainObject(el),
+                config      = elIsObject ? el : {};
+
+            if(!el || elIsObject) {
+                if(this.pool.length !== 0) {
+                    return this.pool.pop();
                 }
                 else {
                     el = document.createElement(this.View.prototype.tag);
@@ -2207,7 +2279,8 @@ ViewPool.prototype = {
             }
             
             view = el.view = new this.View();
-            view.el = el;
+            view.wrapper  = el;
+            view.$wrapper = $(el);
             view._addDefaultClasses();
 
             //Add view State
@@ -2216,12 +2289,12 @@ ViewPool.prototype = {
             //Render
             view
                 .render()
-                .init();
+                .init(config);
 
             return view;
         }
     },
-    subview: function(name, config) {
+    extend: function(name, config) {
         return subview(name, this, config);
     },
 
@@ -2233,8 +2306,9 @@ ViewPool.prototype = {
 
 module.exports = ViewPool;
 
-},{"./State":4}],7:[function(require,module,exports){
+},{"./State":4,"unopinionate":3}],7:[function(require,module,exports){
 var _               = require("underscore"),
+    $               = require("unopinionate").selector,
     ViewPool        = require("./ViewPool"),
     ViewTemplate    = require("./View"),
     viewTypeRegex   = new RegExp('^' + ViewTemplate.prototype._viewCssPrefix);
@@ -2274,32 +2348,30 @@ var subview = function(name, protoViewPool, config) {
     var viewPool = new ViewPool(View);
     subview.views[name] = viewPool;
 
-    subview.templates[name] = viewPool.template;
-
     return viewPool;
 };
 
-subview.views      = {};
-subview.templates  = {};
+subview.views = {};
 
 /*** API ***/
 subview.load = function(scope) {
     //Argument Surgery
-    if(typeof scope == 'object') {
+    if($.isPlainObject(scope)) {
         this.configure(scope);
         scope = false;
     }
 
-    var $scope = scope ? this.$(scope) : this.$('body'),
-        $views = $scope.find("[class^='view-']");
+    var $scope = scope ? $(scope) : $('body'),
+        $views = $scope.find("[class^='view-']"),
+        finder = function(c) {
+                    return c.match(viewTypeRegex);
+                };
 
     for(var i=0; i<$views.length; i++) {
         var el = $views[i],
             classes = el.className.split(/\s+/);
 
-        type =  _.find(classes, function(c) {
-                    return c.match(viewTypeRegex);
-                }).replace(viewTypeRegex, '');
+        type =  _.find(classes, finder).replace(viewTypeRegex, '');
 
         if(type) {
             this.views[type].spawn($views[i]);
@@ -2317,12 +2389,7 @@ subview.configure = function(config) {
     return this;
 };
 
-subview.extend = function(extension) {
-    ViewTemplate.prototype = _.extend(ViewTemplate.prototype, extension);
-    return this;
-};
-
 window.subview = module.exports = subview;
 
 
-},{"./View":5,"./ViewPool":6,"underscore":3}]},{},[7])
+},{"./View":5,"./ViewPool":6,"underscore":2,"unopinionate":3}]},{},[7])

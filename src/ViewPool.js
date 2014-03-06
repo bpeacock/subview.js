@@ -1,4 +1,5 @@
-var State = require("./State");
+var State = require("./State"),
+    $     = require("unopinionate").selector;
 
 var ViewPool = function(View) {
     //Configuration
@@ -20,9 +21,12 @@ ViewPool.prototype = {
             return el.view;
         }
         else {
-            if(!el) {
-                if(pool.length !== 0) {
-                    return pool.pop();
+            var elIsObject  = $.isPlainObject(el),
+                config      = elIsObject ? el : {};
+
+            if(!el || elIsObject) {
+                if(this.pool.length !== 0) {
+                    return this.pool.pop();
                 }
                 else {
                     el = document.createElement(this.View.prototype.tag);
@@ -30,7 +34,8 @@ ViewPool.prototype = {
             }
             
             view = el.view = new this.View();
-            view.el = el;
+            view.wrapper  = el;
+            view.$wrapper = $(el);
             view._addDefaultClasses();
 
             //Add view State
@@ -39,12 +44,12 @@ ViewPool.prototype = {
             //Render
             view
                 .render()
-                .init();
+                .init(config);
 
             return view;
         }
     },
-    subview: function(name, config) {
+    extend: function(name, config) {
         return subview(name, this, config);
     },
 
