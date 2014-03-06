@@ -1,5 +1,4 @@
 var _    = require('underscore'),
-    Mustache = require("mustache"),
     noop = function() {};
 
 var View = function() {};
@@ -36,7 +35,7 @@ View.prototype = {
             $.each(this.subviews, function(name, subview) {
                 data.subview[name] = subview.template;
             });
-            
+
             if(_.isFunction(this.template)) {
                 //EJS
                 if(typeof this.template.render == 'function') {
