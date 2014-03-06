@@ -33,7 +33,7 @@ ViewPool.prototype = {
                 }
             }
             
-            view = el.view = new this.View();
+            view = el[subview._domPropertyName] = new this.View();
             view.wrapper  = el;
             view.$wrapper = $(el);
             view._addDefaultClasses();

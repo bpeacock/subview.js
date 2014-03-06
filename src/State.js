@@ -71,11 +71,11 @@ State.prototype = {
         (this.bindings[key] || noop)(value);
 
         //Tell all of the listening children
-        var $children = $(this.view.wrapper).find('.' + this._listenCssPrefix + this.view.type + '-' + key),
+        var $children = this.view.$wrapper.find('.' + this._listenCssPrefix + this.view.type + '-' + key),
             i = $children.length;
 
         while(i--) {
-            var child = $children[i].view;
+            var child = $children[i][subview._domPropertyName];
             child.state._hear(this.view.type, key, value);
         }
 
@@ -86,15 +86,15 @@ State.prototype = {
     /*** Communicatory Get/Set/Bind ***/
     //These methods communicate with the closest parent of the given type
     askParent: function(type, key) {
-        var parent = $(this.view.wrapper).closest('.'+this.view._viewCssPrefix + type)[0];
+        var parent = this.view.$wrapper.closest('.'+this.view._viewCssPrefix + type)[0];
 
-        if(parent)  return parent.view.state.get(key);
+        if(parent)  return parent[subview._domPropertyName].state.get(key);
         else        return undefined;
     },
     tellParent: function(type, key, value) {
-        var parent = $(this.view.wrapper).closest('.'+this.view._viewCssPrefix + type)[0];
+        var parent = this.view.$wrapper.closest('.'+this.view._viewCssPrefix + type)[0];
 
-        if(parent) parent.view.state.set(key, value);
+        if(parent) parent[subview._domPropertyName].state.set(key, value);
         return this;
     },
     _listenCssPrefix: "listen-",

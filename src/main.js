@@ -7,42 +7,52 @@ var _               = require("underscore"),
 var subview = function(name, protoViewPool, config) {
     var ViewPrototype;
 
-    //Argument Surgery
-    if(!config) {
-        config          = protoViewPool;
-        ViewPrototype   = ViewTemplate;
+    //Return View object from DOM element
+    if(name.nodeType) {
+        return name[subview._domPropertyName];
     }
+    //Define a subview
     else {
-        ViewPrototype = protoViewPool.View;
+        //Argument surgery
+        if(!config) {
+            config          = protoViewPool;
+            ViewPrototype   = ViewTemplate;
+        }
+        else {
+            ViewPrototype = protoViewPool.View;
+        }
+
+        //Validate Name
+        if(!name.match(/^[a-zA-Z0-9\.]+$/)) {
+            console.error("View name '" + name + "' is not alphanumeric.");
+            return false;
+        }
+
+        if(subview.views[name]) {
+            console.error("View '" + name + "' cannot be added twice.");
+            return false;
+        }
+
+        //Create the new View
+        var View = function() {},
+            superClass = new ViewPrototype();
+
+        View.prototype       = _.extend(superClass, config);
+        View.prototype.type  = name;
+        View.prototype.super = ViewPrototype.prototype;
+        
+        //Save the New View
+        var viewPool = new ViewPool(View);
+        subview.views[name] = viewPool;
+
+        return viewPool;
     }
-
-    //Validate Name
-    if(!name.match(/^[a-zA-Z0-9\.]+$/)) {
-        console.error("View name '" + name + "' is not alphanumeric.");
-        return false;
-    }
-
-    if(subview.views[name]) {
-        console.error("View '" + name + "' cannot be added twice.");
-        return false;
-    }
-
-    //Create the new View
-    var View = function() {},
-        superClass = new ViewPrototype();
-
-    View.prototype       = _.extend(superClass, config);
-    View.prototype.type  = name;
-    View.prototype.super = ViewPrototype.prototype;
-    
-    //Save the New View
-    var viewPool = new ViewPool(View);
-    subview.views[name] = viewPool;
-
-    return viewPool;
 };
 
 subview.views = {};
+
+//Obscure DOM property name for subview wrappers
+subview._domPropertyName = "subview12345";
 
 /*** API ***/
 subview.load = function(scope) {

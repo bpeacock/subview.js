@@ -1947,11 +1947,11 @@ State.prototype = {
         (this.bindings[key] || noop)(value);
 
         //Tell all of the listening children
-        var $children = $(this.view.wrapper).find('.' + this._listenCssPrefix + this.view.type + '-' + key),
+        var $children = this.view.$wrapper.find('.' + this._listenCssPrefix + this.view.type + '-' + key),
             i = $children.length;
 
         while(i--) {
-            var child = $children[i].view;
+            var child = $children[i][subview._domPropertyName];
             child.state._hear(this.view.type, key, value);
         }
 
@@ -1962,15 +1962,15 @@ State.prototype = {
     /*** Communicatory Get/Set/Bind ***/
     //These methods communicate with the closest parent of the given type
     askParent: function(type, key) {
-        var parent = $(this.view.wrapper).closest('.'+this.view._viewCssPrefix + type)[0];
+        var parent = this.view.$wrapper.closest('.'+this.view._viewCssPrefix + type)[0];
 
-        if(parent)  return parent.view.state.get(key);
+        if(parent)  return parent[subview._domPropertyName].state.get(key);
         else        return undefined;
     },
     tellParent: function(type, key, value) {
-        var parent = $(this.view.wrapper).closest('.'+this.view._viewCssPrefix + type)[0];
+        var parent = this.view.$wrapper.closest('.'+this.view._viewCssPrefix + type)[0];
 
-        if(parent) parent.view.state.set(key, value);
+        if(parent) parent[subview._domPropertyName].state.set(key, value);
         return this;
     },
     _listenCssPrefix: "listen-",
@@ -2278,7 +2278,7 @@ ViewPool.prototype = {
                 }
             }
             
-            view = el.view = new this.View();
+            view = el[subview._domPropertyName] = new this.View();
             view.wrapper  = el;
             view.$wrapper = $(el);
             view._addDefaultClasses();
@@ -2316,42 +2316,52 @@ var _               = require("underscore"),
 var subview = function(name, protoViewPool, config) {
     var ViewPrototype;
 
-    //Argument Surgery
-    if(!config) {
-        config          = protoViewPool;
-        ViewPrototype   = ViewTemplate;
+    //Return View object from DOM element
+    if(name.nodeType) {
+        return name[subview._domPropertyName];
     }
+    //Define a subview
     else {
-        ViewPrototype = protoViewPool.View;
+        //Argument surgery
+        if(!config) {
+            config          = protoViewPool;
+            ViewPrototype   = ViewTemplate;
+        }
+        else {
+            ViewPrototype = protoViewPool.View;
+        }
+
+        //Validate Name
+        if(!name.match(/^[a-zA-Z0-9\.]+$/)) {
+            console.error("View name '" + name + "' is not alphanumeric.");
+            return false;
+        }
+
+        if(subview.views[name]) {
+            console.error("View '" + name + "' cannot be added twice.");
+            return false;
+        }
+
+        //Create the new View
+        var View = function() {},
+            superClass = new ViewPrototype();
+
+        View.prototype       = _.extend(superClass, config);
+        View.prototype.type  = name;
+        View.prototype.super = ViewPrototype.prototype;
+        
+        //Save the New View
+        var viewPool = new ViewPool(View);
+        subview.views[name] = viewPool;
+
+        return viewPool;
     }
-
-    //Validate Name
-    if(!name.match(/^[a-zA-Z0-9\.]+$/)) {
-        console.error("View name '" + name + "' is not alphanumeric.");
-        return false;
-    }
-
-    if(subview.views[name]) {
-        console.error("View '" + name + "' cannot be added twice.");
-        return false;
-    }
-
-    //Create the new View
-    var View = function() {},
-        superClass = new ViewPrototype();
-
-    View.prototype       = _.extend(superClass, config);
-    View.prototype.type  = name;
-    View.prototype.super = ViewPrototype.prototype;
-    
-    //Save the New View
-    var viewPool = new ViewPool(View);
-    subview.views[name] = viewPool;
-
-    return viewPool;
 };
 
 subview.views = {};
+
+//Obscure DOM property name for subview wrappers
+subview._domPropertyName = "subview12345";
 
 /*** API ***/
 subview.load = function(scope) {
