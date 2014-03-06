@@ -22,8 +22,6 @@ This Works!!!\
 
 /*** Startup Actions ***/
 $(function() {
-    subview.load({
-        $: $
-    });
+    subview.load();
 });
 
