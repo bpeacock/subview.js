@@ -1689,14 +1689,14 @@ var ViewPool = function(View) {
 };
 
 ViewPool.prototype = {
-    spawn: function(el) {
+    spawn: function(el, config) {
         if(el && el.view) {
             return el.view;
         }
         else {
-            var elIsObject  = $.isPlainObject(el),
-                config      = elIsObject ? el : {};
-
+            config = config || el && !el.nodeType ? el : {};
+            
+            //Get the DOM node
             if(!el || !el.nodeType) {
                 if(this.pool.length !== 0) {
                     return this.pool.pop();
