@@ -41,11 +41,10 @@ ViewPool.prototype = {
             //Add view State
             view.state = new State(view, view.state);
 
-            //Render
-            view
-                .config(config)
-                .render()
-                .init(config);
+            //Render (don't chain since introduces opportunity for user error)
+            view.config(config); 
+            view.render();
+            view.init(config);
 
             return view;
         }

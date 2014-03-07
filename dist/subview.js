@@ -1513,9 +1513,7 @@ module.exports = State;
 
 },{"underscore":1,"unopinionate":2}],4:[function(require,module,exports){
 var _    = require('underscore'),
-    noop = function() {
-        return this;
-    };
+    noop = function() {};
 
 var View = function() {};
 
@@ -1716,11 +1714,10 @@ ViewPool.prototype = {
             //Add view State
             view.state = new State(view, view.state);
 
-            //Render
-            view
-                .config(config)
-                .render()
-                .init(config);
+            //Render (don't chain since introduces opportunity for user error)
+            view.config(config); 
+            view.render();
+            view.init(config);
 
             return view;
         }

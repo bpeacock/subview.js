@@ -1,7 +1,5 @@
 var _    = require('underscore'),
-    noop = function() {
-        return this;
-    };
+    noop = function() {};
 
 var View = function() {};
 
