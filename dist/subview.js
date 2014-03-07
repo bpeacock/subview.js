@@ -1513,15 +1513,18 @@ module.exports = State;
 
 },{"underscore":1,"unopinionate":2}],4:[function(require,module,exports){
 var _    = require('underscore'),
-    noop = function() {};
+    noop = function() {
+        return this;
+    };
 
 var View = function() {};
 
 View.prototype = {
 
     /*** Default Attributes (should be overwritten) ***/
-    init:       noop,
-    clean:      noop,
+    config:     noop, //Runs before render
+    init:       noop, //Runs after render
+    clean:      noop, //Runs on remove
     tag:        "div",
     template:   "",
 
@@ -1715,6 +1718,7 @@ ViewPool.prototype = {
 
             //Render
             view
+                .config(config)
                 .render()
                 .init(config);
 

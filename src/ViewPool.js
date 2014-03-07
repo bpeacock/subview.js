@@ -43,6 +43,7 @@ ViewPool.prototype = {
 
             //Render
             view
+                .config(config)
                 .render()
                 .init(config);
 
