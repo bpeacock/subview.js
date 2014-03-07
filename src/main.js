@@ -92,3 +92,9 @@ subview.configure = function(config) {
 
 window.subview = module.exports = subview;
 
+/*** Startup Actions ***/
+$(function() {
+    subview.load();
+});
+
+

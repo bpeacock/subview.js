@@ -20,8 +20,3 @@ This Works!!!\
     }
 });
 
-/*** Startup Actions ***/
-$(function() {
-    subview.load();
-});
-

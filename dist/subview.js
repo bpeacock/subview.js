@@ -1829,5 +1829,11 @@ subview.configure = function(config) {
 
 window.subview = module.exports = subview;
 
+/*** Startup Actions ***/
+$(function() {
+    subview.load();
+});
+
+
 
 },{"./View":4,"./ViewPool":5,"underscore":1,"unopinionate":2}]},{},[6])
