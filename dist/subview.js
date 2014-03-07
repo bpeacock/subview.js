@@ -1696,7 +1696,7 @@ ViewPool.prototype = {
             var elIsObject  = $.isPlainObject(el),
                 config      = elIsObject ? el : {};
 
-            if(!el || elIsObject) {
+            if(!el || !el.nodeType) {
                 if(this.pool.length !== 0) {
                     return this.pool.pop();
                 }
