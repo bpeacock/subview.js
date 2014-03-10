@@ -56,12 +56,6 @@ subview._domPropertyName = "subview12345";
 
 /*** API ***/
 subview.load = function(scope) {
-    //Argument Surgery
-    if($.isPlainObject(scope)) {
-        this.configure(scope);
-        scope = false;
-    }
-
     var $scope = scope ? $(scope) : $('body'),
         $views = $scope.find("[class^='view-']"),
         finder = function(c) {

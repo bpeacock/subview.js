@@ -12,7 +12,8 @@ module.exports = function(grunt) {
             },
             test: {
                 files: {
-                    'examples/build.js': ['examples/example.js']
+                    'examples/build.js': ['examples/example.js'],
+                    'test/build.js': ['test/example.js']
                 },
                 options: {
                     debug: true
@@ -20,7 +21,7 @@ module.exports = function(grunt) {
             }
         },
         watch: {
-            files: [ "src/*.js", "examples/example.js"],
+            files: [ "src/*.js", "examples/example.js", "test/test.js"],
             tasks: [ 'browserify' ]
         }
     });

@@ -85,7 +85,7 @@ View.prototype = {
     },
 
     /*** State API ***/
-    set: function(key, value) {
+    /*set: function(key, value) {
         this.state.set(key, value);
         return this;
     },
@@ -103,7 +103,7 @@ View.prototype = {
     trigger: function(key, value) {
         this.state.trigger(key, value);
         return this;
-    },
+    },*/
     tellParent: function(type, key, value) {
         this.state.tellParent(type, key, value);
         return this;
