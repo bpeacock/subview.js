@@ -1876,6 +1876,11 @@ var ViewPool = function(View) {
 ViewPool.prototype = {
     isViewPool: true,
     spawn: function(el, config) {
+        //jQuery normalization
+        var $el = el ? (el.jquery ? el : $(el)): null;
+        el = el && el.jquery ? el[0] : el;
+        
+        //Argument surgery
         if(el && el.view) {
             return el.view;
         }
@@ -1884,17 +1889,19 @@ ViewPool.prototype = {
             
             //Get the DOM node
             if(!el || !el.nodeType) {
+                console.log("HERE");
                 if(this.pool.length !== 0) {
                     return this.pool.pop();
                 }
                 else {
                     el = document.createElement(this.View.prototype.tag);
+                    $el = $(el);
                 }
             }
             
             view = el[subview._domPropertyName] = new this.View();
             view.wrapper  = el;
-            view.$wrapper = $(el);
+            view.$wrapper = $el;
             view._addDefaultClasses();
 
             //Add view State

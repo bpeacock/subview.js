@@ -64,5 +64,33 @@ module("ViewPool", {
     }
 });
 
+test("#spawn", function() {
+    var view = viewPool.spawn();
+    ok(view, "View created");
+
+    var $div = $("<div>");
+    view = viewPool.spawn($div[0]);
+    deepEqual(view.wrapper, $div[0], "Elements passed to spawn become the wrapper");
+
+    $div = $("<div>");
+    view = viewPool.spawn($div);
+    deepEqual(view.wrapper, $div[0], "jQuery elements passed to spawn become the wrapper");
+});
+
+test("#extend", function() {
+    var subTester = viewPool.extend('subTester');
+    equal(subTester.super.type, "tester", "SubTester extends tester");
+    subTester.destroy();
+});
+
+test("#destroy", function() {
+    viewPool.destroy();
+    ok(subview("tester"), "Namespace is freed");
+    ok(!viewPool.pool, "Pool is set to null to free RAM");
+});
+
+test("#_release", function() {
+    
+});
 
 
