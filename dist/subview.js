@@ -1879,17 +1879,16 @@ ViewPool.prototype = {
         //jQuery normalization
         var $el = el ? (el.jquery ? el : $(el)): null;
         el = el && el.jquery ? el[0] : el;
-        
+
         //Argument surgery
         if(el && el.view) {
             return el.view;
         }
         else {
-            config = config || el && !el.nodeType ? el : {};
+            config = config || ($.isPlainObject(el) ? el : undefined);
             
             //Get the DOM node
             if(!el || !el.nodeType) {
-                console.log("HERE");
                 if(this.pool.length !== 0) {
                     return this.pool.pop();
                 }

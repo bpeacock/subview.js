@@ -1,10 +1,14 @@
 var sinon   = require('sinon'),
+    _       = require('underscore'),
     $       = require("unopinionate").selector,
     module  = window.module,
     subview = require('../src/main'),
     sandbox;
 
 var testSubview = subview('test');
+
+
+
 
 /*** subview Object ***/
 
@@ -75,6 +79,31 @@ test("#spawn", function() {
     $div = $("<div>");
     view = viewPool.spawn($div);
     deepEqual(view.wrapper, $div[0], "jQuery elements passed to spawn become the wrapper");
+
+    var sameView = viewPool.spawn($div);
+    deepEqual(view, sameView, "Returns existing view when the same element is passed back");
+
+    //Test that configuration gets passed to init function
+    var initSpy   = sinon.spy(),
+        config    = {test: 1},
+        pool      = subview("anotherPool", {
+            init: initSpy
+        });
+
+
+    pool.spawn($("<div>"), config);
+    ok(initSpy.calledWith(config), "Config with jquery works");
+    initSpy.reset();
+
+    pool.spawn($("<div>")[0], config);
+    ok(initSpy.calledWith(config), "Config with DOM works");
+    initSpy.reset();
+
+    pool.spawn(config);
+    ok(initSpy.calledWith(config), "Config with no element works");
+
+    pool.destroy();
+
 });
 
 test("#extend", function() {
@@ -90,7 +119,162 @@ test("#destroy", function() {
 });
 
 test("#_release", function() {
-    
+    var view = viewPool.spawn();
+    deepEqual(viewPool.pool.length, 0, "Pool is empty");
+
+    viewPool._release(view);
+    deepEqual(viewPool.pool.length, 1, "Pool has one view in it");
 });
 
+
+/*** View ***/
+module("View", {
+    setup: function() {
+        sandbox = sinon.sandbox.create();
+    }
+});
+
+test("Initialization Process", function() {
+    var configSpy   = sinon.spy(),
+        renderSpy   = sinon.spy(),
+        initSpy     = sinon.spy();
+
+    var viewPool = subview("tester", {
+        init:   initSpy,
+        render: renderSpy,
+        config: configSpy
+    });
+
+    viewPool.spawn();
+
+    ok(configSpy.called, "config called");
+    ok(renderSpy.called, "render called");
+    ok(initSpy.called, "init called");
+
+    ok(configSpy.calledBefore(renderSpy), "config fires before render");
+    ok(renderSpy.calledBefore(initSpy), "render fires before init");
+
+    viewPool.destroy();
+});
+
+test("#render", function() {
+
+});
+
+test("#html", function() {
+
+});
+
+test("#remove", function() {
+
+});
+
+test("#_getClasses", function() {
+    var view = testSubview.spawn(),
+        classes = view._getClasses();
+
+    ok(classes.indexOf("view-test") !== -1, "Includes view-test");
+    ok(classes.indexOf("view") !== -1, "Includes view");
+});
+
+test("#_setClasses", function() {
+    var view = testSubview.spawn();
+
+    view._setClasses(['foo', 'bar']);
+    var classes = view._getClasses();
+
+    deepEqual(classes.length, 2, "Right number of classes");
+    ok(classes.indexOf('foo') !== -1, "Includes foo");
+    ok(classes.indexOf('bar') !== -1, "Includes bar");
+});
+
+test("#_addDefaultClasses", function() {
+    var view = testSubview.spawn();
+
+    view
+        ._setClasses([])
+        ._addDefaultClasses();
+
+    var classes = view._getClasses();
+
+    ok(classes.indexOf("view-test") !== -1, "Includes view-test");
+    ok(classes.indexOf("view") !== -1, "Includes view");
+});
+
+
+
+/*** State ***/
+
+module("State", {
+    setup: function() {
+        sandbox = sinon.sandbox.create();
+    },
+    teardown: function() {
+
+    }
+});
+
+test("#set", function() {
+
+});
+
+test("#get", function() {
+
+});
+
+test("#remove", function() {
+
+});
+
+test("#bind", function() {
+
+});
+
+test("#unbind", function() {
+
+});
+
+test("#trigger", function() {
+
+});
+
+test("#askParent", function() {
+
+});
+
+test("#tellParent", function() {
+
+});
+
+test("#listen", function() {
+
+});
+
+test("#_hear", function() {
+
+});
+
+test("#_update", function() {
+
+});
+
+test("#_setDefaults", function() {
+
+});
+
+test("#_getStateClasses", function() {
+
+});
+
+test("#_getStateClass", function() {
+
+});
+
+test("#_setStateClass", function() {
+
+});
+
+test("#_removeStateclass", function() {
+
+});
 
