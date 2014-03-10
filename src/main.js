@@ -15,13 +15,15 @@ var subview = function(name, protoViewPool, config) {
     //Define a subview
     else {
         //Argument surgery
-        if(!config) {
+        if(protoViewPool && protoViewPool.isViewPool) {
+            ViewPrototype = protoViewPool.View;
+        }
+        else {
             config          = protoViewPool;
             ViewPrototype   = ViewTemplate;
         }
-        else {
-            ViewPrototype = protoViewPool.View;
-        }
+
+        config = config || {};
 
         //Validate Name
         if(subview._validateName(name)) {
@@ -41,7 +43,7 @@ var subview = function(name, protoViewPool, config) {
             return viewPool;
         }
         else {
-            return false;
+            return null;
         }
     }
 };

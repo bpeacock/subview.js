@@ -37,6 +37,19 @@ test('subview() get view from node', function() {
     deepEqual(subview(tester.wrapper), tester, 'Returns correct element');
 });
 
+test('subview() define subview', function() {
+    ok(!subview('test'), "Invalid subview definition");
+
+    var tester = subview('tester');
+    ok(tester, "Subview successfully created");
+    deepEqual(tester, subview.views.tester, "Subview successfully registered");
+
+    ok(tester.super, "Super is bound to the view");
+
+    var subTester = subview('subtester', tester);
+    equal(subTester.super.type, "tester", "SubTester extends tester");
+});
+
 test('#load', function() {
     var $tester = $("<div class='view-test'>").appendTo('body');
     subview.load();

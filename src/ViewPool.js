@@ -16,6 +16,7 @@ var ViewPool = function(View) {
 };
 
 ViewPool.prototype = {
+    isViewPool: true,
     spawn: function(el, config) {
         if(el && el.view) {
             return el.view;
