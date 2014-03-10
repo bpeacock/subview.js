@@ -53,6 +53,10 @@ ViewPool.prototype = {
     extend: function(name, config) {
         return subview(name, this, config);
     },
+    destroy: function() {
+        this.pool = null;
+        delete subview.views[this.type];
+    },
 
     _release: function(view) {
         this.pool.push(view);

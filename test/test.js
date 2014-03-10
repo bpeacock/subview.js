@@ -6,28 +6,9 @@ var sinon   = require('sinon'),
 
 var testSubview = subview('test');
 
-module("DOM subview definition", {
-    setup: function() {
-        sandbox = sinon.sandbox.create();
-
-    },
-    teardown: function() {
-        
-    }
-});
-
-
 /*** subview Object ***/
 
-module("subview", {
-    setup: function() {
-        sandbox = sinon.sandbox.create();
-
-    },
-    teardown: function() {
-        
-    }
-});
+module("subview");
 
 test('subview() get view from node', function() {
     deepEqual(subview($('body')[0]), null, 'Element without bound view');
@@ -48,6 +29,10 @@ test('subview() define subview', function() {
 
     var subTester = subview('subtester', tester);
     equal(subTester.super.type, "tester", "SubTester extends tester");
+
+    //cleanup
+    tester.destroy();
+    subTester.destroy();
 });
 
 test('#load', function() {
@@ -65,4 +50,19 @@ test('#_validateName', function() {
     ok(!subview._validateName("Foo%"), "Invalid characters");
     ok(!subview._validateName("test"), "Pre-existing view");
 });
+
+
+/*** ViewPool ***/
+var viewPool;
+module("ViewPool", {
+    setup: function() {
+        sandbox = sinon.sandbox.create();
+        viewPool = subview("tester");
+    },
+    teardown: function() {
+        viewPool.destroy();
+    }
+});
+
+
 
