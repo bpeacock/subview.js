@@ -1745,8 +1745,8 @@ var subview = function(name, protoViewPool, config) {
     var ViewPrototype;
 
     //Return View object from DOM element
-    if(name.nodeType) {
-        return name[subview._domPropertyName];
+    if(name.nodeType || name.jquery) {
+        return (name.jquery ? name[0] : name)[subview._domPropertyName] || null;
     }
     //Define a subview
     else {
@@ -1805,7 +1805,7 @@ subview.load = function(scope) {
 
         type =  _.find(classes, finder).replace(viewTypeRegex, '');
 
-        if(type) {
+        if(type && this.views[type]) {
             this.views[type].spawn($views[i]);
         }
         else {
@@ -1816,11 +1816,7 @@ subview.load = function(scope) {
     return this;
 };
 
-subview.configure = function(config) {
-    _.extend(this, config);
-    return this;
-};
-
+/*** Export ***/
 window.subview = module.exports = subview;
 
 /*** Startup Actions ***/

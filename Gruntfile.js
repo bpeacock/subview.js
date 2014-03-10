@@ -13,7 +13,7 @@ module.exports = function(grunt) {
             test: {
                 files: {
                     'examples/build.js': ['examples/example.js'],
-                    'test/build.js': ['test/example.js']
+                    'test/build.js': ['test/test.js']
                 },
                 options: {
                     debug: true
