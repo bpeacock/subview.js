@@ -1,5 +1,6 @@
-var $ = require('unopinionate').selector,
-    _ = require("underscore");
+var $   = require('unopinionate').selector,
+    log = require("loglevel"),
+    _   = require("underscore");
 
 /*** Cache ***/
 var statePrefix = "state-",
@@ -28,7 +29,7 @@ State.prototype = {
     set: function(key, value) {
         //Validate
         if(!key.match(/^[a-zA-Z0-9\.]+$/)) {
-            console.error("State name '" + key + "' is not alphanumeric.");
+            log.error("State name '" + key + "' is not alphanumeric.");
         }
         else {
             //Set

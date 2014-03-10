@@ -17,6 +17,7 @@ module("DOM subview definition", {
 });
 
 
+/*** subview Object ***/
 
 module("subview", {
     setup: function() {
@@ -40,6 +41,15 @@ test('#load', function() {
     var $tester = $("<div class='view-test'>").appendTo('body');
     subview.load();
     ok(subview($tester), "View was successfully created");
+
+    var $tester2 = $("<div class='view-test'>").appendTo('body');
+    subview.load('body');
+    ok(subview($tester2), "Scoped loading was successful");
 });
 
+test('#_validateName', function() {
+    ok(subview._validateName("Foo1"), "Base Case");
+    ok(!subview._validateName("Foo%"), "Invalid characters");
+    ok(!subview._validateName("test"), "Pre-existing view");
+});
 

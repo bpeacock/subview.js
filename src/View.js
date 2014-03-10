@@ -1,4 +1,5 @@
 var _    = require('underscore'),
+    log  = require("loglevel"),
     noop = function() {};
 
 var View = function() {};
@@ -48,7 +49,7 @@ View.prototype = {
                 }
             }
             else {
-                console.error("Templating engine not recognized.");
+                log.error("Templating engine not recognized.");
             }
         }
 

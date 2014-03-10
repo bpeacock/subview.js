@@ -1,4 +1,5 @@
 var _               = require("underscore"),
+    log             = require("loglevel"),
     $               = require("unopinionate").selector,
     ViewPool        = require("./ViewPool"),
     ViewTemplate    = require("./View"),
@@ -23,29 +24,25 @@ var subview = function(name, protoViewPool, config) {
         }
 
         //Validate Name
-        if(!name.match(/^[a-zA-Z0-9\.]+$/)) {
-            console.error("View name '" + name + "' is not alphanumeric.");
+        if(subview._validateName(name)) {
+
+            //Create the new View
+            var View = function() {},
+                superClass = new ViewPrototype();
+
+            View.prototype       = _.extend(superClass, config);
+            View.prototype.type  = name;
+            View.prototype.super = ViewPrototype.prototype;
+            
+            //Save the New View
+            var viewPool = new ViewPool(View);
+            subview.views[name] = viewPool;
+
+            return viewPool;
+        }
+        else {
             return false;
         }
-
-        if(subview.views[name]) {
-            console.error("View '" + name + "' cannot be added twice.");
-            return false;
-        }
-
-        //Create the new View
-        var View = function() {},
-            superClass = new ViewPrototype();
-
-        View.prototype       = _.extend(superClass, config);
-        View.prototype.type  = name;
-        View.prototype.super = ViewPrototype.prototype;
-        
-        //Save the New View
-        var viewPool = new ViewPool(View);
-        subview.views[name] = viewPool;
-
-        return viewPool;
     }
 };
 
@@ -59,8 +56,8 @@ subview.load = function(scope) {
     var $scope = scope ? $(scope) : $('body'),
         $views = $scope.find("[class^='view-']"),
         finder = function(c) {
-                    return c.match(viewTypeRegex);
-                };
+            return c.match(viewTypeRegex);
+        };
 
     for(var i=0; i<$views.length; i++) {
         var el = $views[i],
@@ -72,11 +69,25 @@ subview.load = function(scope) {
             this.views[type].spawn($views[i]);
         }
         else {
-            console.error("View type '"+type+"' is not defined.");
+            log.error("subview '"+type+"' is not defined.");
         }
     }
 
     return this;
+};
+
+subview._validateName = function(name) {
+    if(!name.match(/^[a-zA-Z0-9]+$/)) {
+        log.error("subview name '" + name + "' is not alphanumeric.");
+        return false;
+    }
+
+    if(subview.views[name]) {
+        log.error("subview '" + name + "' is already defined.");
+        return false;
+    }
+
+    return true;
 };
 
 /*** Export ***/

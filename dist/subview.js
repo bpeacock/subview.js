@@ -1,4 +1,187 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+/*
+ * loglevel - https://github.com/pimterry/loglevel
+ *
+ * Copyright (c) 2013 Tim Perry
+ * Licensed under the MIT license.
+ */
+
+;(function (undefined) {
+    var undefinedType = "undefined";
+
+    (function (name, definition) {
+        if (typeof module !== 'undefined') {
+            module.exports = definition();
+        } else if (typeof define === 'function' && typeof define.amd === 'object') {
+            define(definition);
+        } else {
+            this[name] = definition();
+        }
+    }('log', function () {
+        var self = {};
+        var noop = function() {};
+
+        function realMethod(methodName) {
+            if (typeof console === undefinedType) {
+                return noop;
+            } else if (console[methodName] === undefined) {
+                if (console.log !== undefined) {
+                    return boundToConsole(console, 'log');
+                } else {
+                    return noop;
+                }
+            } else {
+                return boundToConsole(console, methodName);
+            }
+        }
+
+        function boundToConsole(console, methodName) {
+            var method = console[methodName];
+            if (method.bind === undefined) {
+                if (Function.prototype.bind === undefined) {
+                    return functionBindingWrapper(method, console);
+                } else {
+                    try {
+                        return Function.prototype.bind.call(console[methodName], console);
+                    } catch (e) {
+                        // In IE8 + Modernizr, the bind shim will reject the above, so we fall back to wrapping
+                        return functionBindingWrapper(method, console);
+                    }
+                }
+            } else {
+                return console[methodName].bind(console);
+            }
+        }
+
+        function functionBindingWrapper(f, context) {
+            return function() {
+                Function.prototype.apply.apply(f, [context, arguments]);
+            };
+        }
+
+        var logMethods = [
+            "trace",
+            "debug",
+            "info",
+            "warn",
+            "error"
+        ];
+
+        function replaceLoggingMethods(methodFactory) {
+            for (var ii = 0; ii < logMethods.length; ii++) {
+                self[logMethods[ii]] = methodFactory(logMethods[ii]);
+            }
+        }
+
+        function cookiesAvailable() {
+            return (typeof window !== undefinedType &&
+                    window.document !== undefined &&
+                    window.document.cookie !== undefined);
+        }
+
+        function localStorageAvailable() {
+            try {
+                return (typeof window !== undefinedType &&
+                        window.localStorage !== undefined);
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function persistLevelIfPossible(levelNum) {
+            var levelName;
+
+            for (var key in self.levels) {
+                if (self.levels.hasOwnProperty(key) && self.levels[key] === levelNum) {
+                    levelName = key;
+                    break;
+                }
+            }
+
+            if (localStorageAvailable()) {
+                window.localStorage['loglevel'] = levelName;
+            } else if (cookiesAvailable()) {
+                window.document.cookie = "loglevel=" + levelName + ";";
+            } else {
+                return;
+            }
+        }
+
+        var cookieRegex = /loglevel=([^;]+)/;
+
+        function loadPersistedLevel() {
+            var storedLevel;
+
+            if (localStorageAvailable()) {
+                storedLevel = window.localStorage['loglevel'];
+            }
+
+            if (!storedLevel && cookiesAvailable()) {
+                var cookieMatch = cookieRegex.exec(window.document.cookie) || [];
+                storedLevel = cookieMatch[1];
+            }
+
+            self.setLevel(self.levels[storedLevel] || self.levels.WARN);
+        }
+
+        /*
+         *
+         * Public API
+         *
+         */
+
+        self.levels = { "TRACE": 0, "DEBUG": 1, "INFO": 2, "WARN": 3,
+            "ERROR": 4, "SILENT": 5};
+
+        self.setLevel = function (level) {
+            if (typeof level === "number" && level >= 0 && level <= self.levels.SILENT) {
+                persistLevelIfPossible(level);
+
+                if (level === self.levels.SILENT) {
+                    replaceLoggingMethods(function () {
+                        return noop;
+                    });
+                    return;
+                } else if (typeof console === undefinedType) {
+                    replaceLoggingMethods(function (methodName) {
+                        return function () {
+                            if (typeof console !== undefinedType) {
+                                self.setLevel(level);
+                                self[methodName].apply(self, arguments);
+                            }
+                        };
+                    });
+                    return "No console available for logging";
+                } else {
+                    replaceLoggingMethods(function (methodName) {
+                        if (level <= self.levels[methodName.toUpperCase()]) {
+                            return realMethod(methodName);
+                        } else {
+                            return noop;
+                        }
+                    });
+                }
+            } else if (typeof level === "string" && self.levels[level.toUpperCase()] !== undefined) {
+                self.setLevel(self.levels[level.toUpperCase()]);
+            } else {
+                throw "log.setLevel() called with invalid level: " + level;
+            }
+        };
+
+        self.enableAll = function() {
+            self.setLevel(self.levels.TRACE);
+        };
+
+        self.disableAll = function() {
+            self.setLevel(self.levels.SILENT);
+        };
+
+        loadPersistedLevel();
+        return self;
+    }));
+})();
+
+},{}],2:[function(require,module,exports){
 //     Underscore.js 1.5.2
 //     http://underscorejs.org
 //     (c) 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -1276,7 +1459,7 @@
 
 }).call(this);
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 (function (global){(function(root) {
     var unopinionate = {
         selector: root.jQuery || root.Zepto || root.ender || root.$,
@@ -1301,9 +1484,10 @@
     }
 })(typeof window != 'undefined' ? window : global);
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],3:[function(require,module,exports){
-var $ = require('unopinionate').selector,
-    _ = require("underscore");
+},{}],4:[function(require,module,exports){
+var $   = require('unopinionate').selector,
+    log = require("loglevel"),
+    _   = require("underscore");
 
 /*** Cache ***/
 var statePrefix = "state-",
@@ -1332,7 +1516,7 @@ State.prototype = {
     set: function(key, value) {
         //Validate
         if(!key.match(/^[a-zA-Z0-9\.]+$/)) {
-            console.error("State name '" + key + "' is not alphanumeric.");
+            log.error("State name '" + key + "' is not alphanumeric.");
         }
         else {
             //Set
@@ -1511,8 +1695,9 @@ State.prototype = {
 module.exports = State;
 
 
-},{"underscore":1,"unopinionate":2}],4:[function(require,module,exports){
+},{"loglevel":1,"underscore":2,"unopinionate":3}],5:[function(require,module,exports){
 var _    = require('underscore'),
+    log  = require("loglevel"),
     noop = function() {};
 
 var View = function() {};
@@ -1562,7 +1747,7 @@ View.prototype = {
                 }
             }
             else {
-                console.error("Templating engine not recognized.");
+                log.error("Templating engine not recognized.");
             }
         }
 
@@ -1670,7 +1855,7 @@ module.exports = View;
 
 
 
-},{"underscore":1}],5:[function(require,module,exports){
+},{"loglevel":1,"underscore":2}],6:[function(require,module,exports){
 var State = require("./State"),
     $     = require("unopinionate").selector;
 
@@ -1734,8 +1919,9 @@ ViewPool.prototype = {
 
 module.exports = ViewPool;
 
-},{"./State":3,"unopinionate":2}],6:[function(require,module,exports){
+},{"./State":4,"unopinionate":3}],7:[function(require,module,exports){
 var _               = require("underscore"),
+    log             = require("loglevel"),
     $               = require("unopinionate").selector,
     ViewPool        = require("./ViewPool"),
     ViewTemplate    = require("./View"),
@@ -1760,29 +1946,25 @@ var subview = function(name, protoViewPool, config) {
         }
 
         //Validate Name
-        if(!name.match(/^[a-zA-Z0-9\.]+$/)) {
-            console.error("View name '" + name + "' is not alphanumeric.");
+        if(subview._validateName(name)) {
+
+            //Create the new View
+            var View = function() {},
+                superClass = new ViewPrototype();
+
+            View.prototype       = _.extend(superClass, config);
+            View.prototype.type  = name;
+            View.prototype.super = ViewPrototype.prototype;
+            
+            //Save the New View
+            var viewPool = new ViewPool(View);
+            subview.views[name] = viewPool;
+
+            return viewPool;
+        }
+        else {
             return false;
         }
-
-        if(subview.views[name]) {
-            console.error("View '" + name + "' cannot be added twice.");
-            return false;
-        }
-
-        //Create the new View
-        var View = function() {},
-            superClass = new ViewPrototype();
-
-        View.prototype       = _.extend(superClass, config);
-        View.prototype.type  = name;
-        View.prototype.super = ViewPrototype.prototype;
-        
-        //Save the New View
-        var viewPool = new ViewPool(View);
-        subview.views[name] = viewPool;
-
-        return viewPool;
     }
 };
 
@@ -1796,8 +1978,8 @@ subview.load = function(scope) {
     var $scope = scope ? $(scope) : $('body'),
         $views = $scope.find("[class^='view-']"),
         finder = function(c) {
-                    return c.match(viewTypeRegex);
-                };
+            return c.match(viewTypeRegex);
+        };
 
     for(var i=0; i<$views.length; i++) {
         var el = $views[i],
@@ -1809,11 +1991,25 @@ subview.load = function(scope) {
             this.views[type].spawn($views[i]);
         }
         else {
-            console.error("View type '"+type+"' is not defined.");
+            log.error("subview '"+type+"' is not defined.");
         }
     }
 
     return this;
+};
+
+subview._validateName = function(name) {
+    if(!name.match(/^[a-zA-Z0-9]+$/)) {
+        log.error("subview name '" + name + "' is not alphanumeric.");
+        return false;
+    }
+
+    if(subview.views[name]) {
+        log.error("subview '" + name + "' is already defined.");
+        return false;
+    }
+
+    return true;
 };
 
 /*** Export ***/
@@ -1826,4 +2022,4 @@ $(function() {
 
 
 
-},{"./View":4,"./ViewPool":5,"underscore":1,"unopinionate":2}]},{},[6])
+},{"./View":5,"./ViewPool":6,"loglevel":1,"underscore":2,"unopinionate":3}]},{},[7])
