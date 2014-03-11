@@ -299,10 +299,6 @@ test("#_hear", function() {
 
 });
 
-test("#_update", function() {
-
-});
-
 test("#_setDefaults", function() {
 
 });

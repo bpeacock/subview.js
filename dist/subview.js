@@ -1628,16 +1628,6 @@ State.prototype = {
 
 
     /*** Updates State From DOM Classes ***/
-    _update: function() {
-        var self    = this,
-            states  = this.getStateClasses();
-
-        _.each(states, function(value, key) {
-            self.set(key, value);
-        });
-
-        return this;
-    },
     _setDefaults: function(defaults) {
         var self = this;
 
