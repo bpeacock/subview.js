@@ -1525,7 +1525,25 @@ State.prototype = {
                 this.trigger(key, value);
 
                 if(value === true || value === false || (typeof value == 'string' && value.match(/^[a-zA-Z0-9]+$/))) {
-                    this._setStateClass(key, value);
+
+                    var classes = this.view._getClasses(),
+                        regex   = getStateClassRegex(key),
+                        i       = classes.length,
+                        defined = false,
+                        newState = statePrefix + key + "-" + value;
+
+                    while(i--) {
+                        if(classes[i].match(regex)) {
+                            if(newState == classes[i])  return this; //Don't do anything if there is no change (efficient!!!)
+                            else                        classes[i] = newState;
+
+                            defined = true;
+                            break;
+                        }
+                    }
+
+                    if(!defined) classes.push(newState);
+                    this.view._setClasses(classes);
                 }
             }
         }
@@ -1539,7 +1557,16 @@ State.prototype = {
         if(this.get(key)) {
             delete this.data[key];
             this.trigger(key, null);
-            this._removeStateClass(key);
+
+            var classes = this.view._getClasses(),
+                len     = classes.length,
+                regex   = getStateClassRegex(key);
+
+            classes = _.reject(classes, function(c) {
+                return c.match(regex);
+            });
+
+            if(classes.length != len) this.view.wrapper.className = classes.join(' '); //Don't do anything if there is no change (efficient!!!)
         }
 
         return this;
@@ -1645,50 +1672,6 @@ State.prototype = {
         }
 
         return data;
-    },
-    _getStateClass: function(key) {
-        var classes = this.view._getClasses(),
-            regex   = getStateClassRegex(key),
-            state   = _.find(classes, function(c) {
-                return c.match(regex);
-            }),
-            parts   = state ? state.split('-') : [];
-
-        return parts.length == 3 ? parts[2] : null;
-    },
-    _setStateClass: function(key, value) {
-        var classes = this.view._getClasses(),
-            regex   = getStateClassRegex(key),
-            i       = classes.length,
-            data    = {},
-            defined = false,
-            newState = statePrefix + key + "-" + value;
-
-        while(i--) {
-            if(classes[i].match(regex)) {
-                if(newState == classes[i])  return this; //Don't do anything if there is no change (efficient!!!)
-                else                        classes[i] = newState;
-
-                defined = true;
-                break;
-            }
-        }
-
-        if(!defined) classes.push(newState);
-        this.view._setClasses(classes);
-        return this;
-    },
-    _removeStateclass: function(key) {
-        var classes = this.view._getClasses(),
-            len     = classes.length,
-            regex   = getStateClassRegex(key);
-
-        classes = _.reject(classes, function(c) {
-            return c.match(regex);
-        });
-
-        if(classes.length != len) this.view.wrapper.className = classes.join(' '); //Don't do anything if there is no change (efficient!!!)
-        return this;
     }
 };
 
