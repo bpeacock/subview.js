@@ -78,6 +78,23 @@ subview.load = function(scope) {
     return this;
 };
 
+subview.lookup = function(name) {
+    if(typeof name == 'string') {
+        return this.views[name];
+    }
+    else {
+        if(name.isViewPool) {
+            return name;
+        }
+        else if(name.isView) {
+            return name.pool;
+        }
+        else {
+            return undefined;
+        }
+    }
+};
+
 subview._validateName = function(name) {
     if(!name.match(/^[a-zA-Z0-9]+$/)) {
         log.error("subview name '" + name + "' is not alphanumeric.");

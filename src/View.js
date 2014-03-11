@@ -5,12 +5,14 @@ var _    = require('underscore'),
 var View = function() {};
 
 View.prototype = {
-
+    isView: true,
+    
     /*** Default Attributes (should be overwritten) ***/
     config:     noop, //Runs before render
     init:       noop, //Runs after render
     clean:      noop, //Runs on remove
-    tag:        "div",
+    tagName:    "div",
+    className:  "",
     template:   "",
 
     //State data gets mapped to classes
@@ -145,6 +147,9 @@ View.prototype = {
 
         //Add Default View Class
         classes.push('view');
+
+        //Add className
+        classes = classes.concat(this.className.split(' '));
 
         this._setClasses(_.uniq(classes));
 

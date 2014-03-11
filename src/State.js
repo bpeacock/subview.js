@@ -1,5 +1,4 @@
-var $   = require('unopinionate').selector,
-    log = require("loglevel"),
+var log = require("loglevel"),
     _   = require("underscore");
 
 /*** Cache ***/

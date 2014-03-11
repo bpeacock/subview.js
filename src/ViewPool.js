@@ -6,7 +6,7 @@ var ViewPool = function(View) {
     this.View   = View;
     this.type   = View.prototype.type;
     this.super  = View.prototype.super;
-    this.template = "<"+this.View.prototype.tag+" class='"+this.View.prototype._viewCssPrefix + this.View.prototype.type+"'></"+this.View.prototype.tag+">";
+    this.template = "<"+this.View.prototype.tagName+" class='"+this.View.prototype._viewCssPrefix + this.View.prototype.type+" "+this.View.prototype.className+"'></"+this.View.prototype.tagName+">";
 
     //View Configuration
     this.View.prototype.pool = this;
@@ -35,12 +35,14 @@ ViewPool.prototype = {
                     return this.pool.pop();
                 }
                 else {
-                    el = document.createElement(this.View.prototype.tag);
+                    el = document.createElement(this.View.prototype.tagName);
                     $el = $(el);
                 }
             }
             
-            view = el[subview._domPropertyName] = new this.View();
+            var view = new this.View();
+            el[subview._domPropertyName] = view;
+            
             view.wrapper  = el;
             view.$wrapper = $el;
             view._addDefaultClasses();

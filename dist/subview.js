@@ -1485,8 +1485,7 @@
 })(typeof window != 'undefined' ? window : global);
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],4:[function(require,module,exports){
-var $   = require('unopinionate').selector,
-    log = require("loglevel"),
+var log = require("loglevel"),
     _   = require("underscore");
 
 /*** Cache ***/
@@ -1668,7 +1667,7 @@ State.prototype = {
 module.exports = State;
 
 
-},{"loglevel":1,"underscore":2,"unopinionate":3}],5:[function(require,module,exports){
+},{"loglevel":1,"underscore":2}],5:[function(require,module,exports){
 var _    = require('underscore'),
     log  = require("loglevel"),
     noop = function() {};
@@ -1676,12 +1675,14 @@ var _    = require('underscore'),
 var View = function() {};
 
 View.prototype = {
-
+    isView: true,
+    
     /*** Default Attributes (should be overwritten) ***/
     config:     noop, //Runs before render
     init:       noop, //Runs after render
     clean:      noop, //Runs on remove
-    tag:        "div",
+    tagName:    "div",
+    className:  "",
     template:   "",
 
     //State data gets mapped to classes
@@ -1817,6 +1818,9 @@ View.prototype = {
         //Add Default View Class
         classes.push('view');
 
+        //Add className
+        classes = classes.concat(this.className.split(' '));
+
         this._setClasses(_.uniq(classes));
 
         return this;
@@ -1837,7 +1841,7 @@ var ViewPool = function(View) {
     this.View   = View;
     this.type   = View.prototype.type;
     this.super  = View.prototype.super;
-    this.template = "<"+this.View.prototype.tag+" class='"+this.View.prototype._viewCssPrefix + this.View.prototype.type+"'></"+this.View.prototype.tag+">";
+    this.template = "<"+this.View.prototype.tagName+" class='"+this.View.prototype._viewCssPrefix + this.View.prototype.type+" "+this.View.prototype.className+"'></"+this.View.prototype.tagName+">";
 
     //View Configuration
     this.View.prototype.pool = this;
@@ -1866,12 +1870,14 @@ ViewPool.prototype = {
                     return this.pool.pop();
                 }
                 else {
-                    el = document.createElement(this.View.prototype.tag);
+                    el = document.createElement(this.View.prototype.tagName);
                     $el = $(el);
                 }
             }
             
-            view = el[subview._domPropertyName] = new this.View();
+            var view = new this.View();
+            el[subview._domPropertyName] = view;
+            
             view.wrapper  = el;
             view.$wrapper = $el;
             view._addDefaultClasses();
@@ -1982,6 +1988,23 @@ subview.load = function(scope) {
     }
 
     return this;
+};
+
+subview.lookup = function(name) {
+    if(typeof name == 'string') {
+        return this.views[name];
+    }
+    else {
+        if(name.isViewPool) {
+            return name;
+        }
+        else if(name.isView) {
+            return name.pool;
+        }
+        else {
+            return undefined;
+        }
+    }
 };
 
 subview._validateName = function(name) {
