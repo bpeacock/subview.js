@@ -6,7 +6,7 @@ var View = function() {};
 
 View.prototype = {
     isView: true,
-    
+
     /*** Default Attributes (should be overwritten) ***/
     config:     noop, //Runs before render
     init:       noop, //Runs after render
@@ -26,7 +26,9 @@ View.prototype = {
 
     /*** Rendering ***/
     render: function() {
-        var html = '';
+        var self = this,
+            html = '',
+            postLoad = false;
 
         //No Templating Engine
         if(typeof this.template == 'string') {
@@ -35,11 +37,19 @@ View.prototype = {
         else {
             var data = _.extend(this.state.data, typeof this.data == 'function' ? this.data() : this.data);
             
+            //Define the subview variable
             data.subview = {};
             $.each(this.subviews, function(name, subview) {
-                data.subview[name] = subview.template;
+                if(subview.isViewPool) {
+                    data.subview[name] = subview.template;
+                }
+                else {
+                    postLoad = true;
+                    data.subview[name] = "<script class='post-load-view' type='text/html' data-name='"+name+"'></script>";
+                }
             });
 
+            //Run the templating engine
             if(_.isFunction(this.template)) {
                 //EJS
                 if(typeof this.template.render == 'function') {
@@ -56,6 +66,16 @@ View.prototype = {
         }
 
         this.html(html);
+
+        //Post Load Views
+        if(postLoad) {
+            this.$wrapper.find('.post-load-view').each(function() {
+                var $this = $(this);
+                $this
+                    .after(self.subviews[$this.attr('data-name')].$wrapper)
+                    .remove();
+            });
+        }
 
         return this;
     },
