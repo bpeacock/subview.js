@@ -32,6 +32,15 @@ var subview = function(name, protoViewPool, config) {
             var View = function() {},
                 superClass = new ViewPrototype();
 
+            //Extend the existing init, config & clean functions rather than overwriting them
+            _.each(['init', 'config', 'clean'], function(name) {
+                config[name+'Functions'] = superClass[name+'Functions'].slice(0); //Clone superClass init
+                if(config[name]) {
+                    config[name+'Functions'].push(config[name]);
+                    delete config[name];
+                }
+            });
+
             View.prototype       = _.extend(superClass, config);
             View.prototype.type  = name;
             View.prototype.super = ViewPrototype.prototype;

@@ -1,6 +1,5 @@
 var _    = require('underscore'),
-    log  = require("loglevel"),
-    noop = function() {};
+    log  = require("loglevel");
 
 var View = function() {};
 
@@ -8,9 +7,6 @@ View.prototype = {
     isView: true,
 
     /*** Default Attributes (should be overwritten) ***/
-    config:     noop, //Runs before render
-    init:       noop, //Runs after render
-    clean:      noop, //Runs on remove
     tagName:    "div",
     className:  "",
     template:   "",
@@ -23,6 +19,26 @@ View.prototype = {
 
     //Subviews are a set of subviews that will be fed into the templating engine
     subviews:   {},
+
+    /*** Initialization Functions (should be configured but will be manipulated when defining the subview) ***/
+    config: function(config) { //Runs before render
+        for(var i=0; i<this.configFunctions.length; i++) {
+            this.configFunctions[i].apply(this, [config]);
+        }
+    }, 
+    configFunctions: [],
+    init: function(config) { //Runs after render
+        for(var i=0; i<this.initFunctions.length; i++) {
+            this.initFunctions[i].apply(this, [config]);
+        }
+    }, 
+    initFunctions: [],
+    clean: function() { //Runs on remove
+        for(var i=0; i<this.cleanFunctions.length; i++) {
+            this.cleanFunctions[i].apply(this, []);
+        }
+    }, 
+    cleanFunctions: [],
 
     /*** Rendering ***/
     render: function() {

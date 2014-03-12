@@ -1669,8 +1669,7 @@ module.exports = State;
 
 },{"loglevel":1,"underscore":2}],5:[function(require,module,exports){
 var _    = require('underscore'),
-    log  = require("loglevel"),
-    noop = function() {};
+    log  = require("loglevel");
 
 var View = function() {};
 
@@ -1678,9 +1677,6 @@ View.prototype = {
     isView: true,
 
     /*** Default Attributes (should be overwritten) ***/
-    config:     noop, //Runs before render
-    init:       noop, //Runs after render
-    clean:      noop, //Runs on remove
     tagName:    "div",
     className:  "",
     template:   "",
@@ -1693,6 +1689,26 @@ View.prototype = {
 
     //Subviews are a set of subviews that will be fed into the templating engine
     subviews:   {},
+
+    /*** Initialization Functions (should be configured but will be manipulated when defining the subview) ***/
+    config: function(config) { //Runs before render
+        for(var i=0; i<this.configFunctions.length; i++) {
+            this.configFunctions[i].apply(this, [config]);
+        }
+    }, 
+    configFunctions: [],
+    init: function(config) { //Runs after render
+        for(var i=0; i<this.initFunctions.length; i++) {
+            this.initFunctions[i].apply(this, [config]);
+        }
+    }, 
+    initFunctions: [],
+    clean: function() { //Runs on remove
+        for(var i=0; i<this.cleanFunctions.length; i++) {
+            this.cleanFunctions[i].apply(this, []);
+        }
+    }, 
+    cleanFunctions: [],
 
     /*** Rendering ***/
     render: function() {
@@ -1963,6 +1979,15 @@ var subview = function(name, protoViewPool, config) {
             //Create the new View
             var View = function() {},
                 superClass = new ViewPrototype();
+
+            //Extend the existing init, config & clean functions rather than overwriting them
+            _.each(['init', 'config', 'clean'], function(name) {
+                config[name+'Functions'] = superClass[name+'Functions'].slice(0); //Clone superClass init
+                if(config[name]) {
+                    config[name+'Functions'].push(config[name]);
+                    delete config[name];
+                }
+            });
 
             View.prototype       = _.extend(superClass, config);
             View.prototype.type  = name;
