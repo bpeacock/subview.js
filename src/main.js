@@ -123,7 +123,8 @@ window.subview = module.exports = subview;
 
 /*** Startup Actions ***/
 $(function() {
-    subview.load();
+    if(!subview.noInit) {
+        subview.load();
+    }
 });
-
 

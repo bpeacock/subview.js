@@ -2071,9 +2071,10 @@ window.subview = module.exports = subview;
 
 /*** Startup Actions ***/
 $(function() {
-    subview.load();
+    if(!subview.noInit) {
+        subview.load();
+    }
 });
-
 
 
 },{"./View":5,"./ViewPool":6,"loglevel":1,"underscore":2,"unopinionate":3}]},{},[7])
