@@ -105,7 +105,7 @@ subview.lookup = function(name) {
 };
 
 subview._validateName = function(name) {
-    if(!name.match(/^[a-zA-Z0-9]+$/)) {
+    if(!name.match(/^[a-zA-Z0-9\-_]+$/)) {
         log.error("subview name '" + name + "' is not alphanumeric.");
         return false;
     }
