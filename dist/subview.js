@@ -1827,7 +1827,14 @@ View.prototype = {
 
     /*** Traversing ***/
     parent: function(type) {
-        return this.$wrapper.closest('.' + (type ? this._viewCssPrefix + type : 'view'));
+        var $el = this.$wrapper.closest('.' + (type ? this._viewCssPrefix + type : 'view'));
+        
+        if($el && $el.length > 0) {
+            return $el[0][subview._domPropertyName];
+        }
+        else {
+            return null;
+        }
     },
 
     /*** Classes ***/
