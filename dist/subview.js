@@ -1825,6 +1825,11 @@ View.prototype = {
         return this;
     },
 
+    /*** Traversing ***/
+    parent: function(type) {
+        return this.$wrapper.closest('.' + (type ? this._viewCssPrefix + type : 'view'));
+    },
+
     /*** Classes ***/
     _viewCssPrefix: 'view-',
     _getClasses: function() {
