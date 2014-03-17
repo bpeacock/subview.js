@@ -139,25 +139,24 @@ View.prototype = {
 
         _.find(directions, function(jqFunc, dir) {
             var selector = '.listener-'+name+'-'+dir;
-
+            
             //Select $wrappers with the right listener class in the right direction
-            var $els = self.$wrapper[jqFunc](selector + ', ' + selector+'-'+self.type),
-                i    = $els.length;
+            var $els = self.$wrapper[jqFunc](selector + ', ' + selector+'-'+self.type);
 
-            while(i--) {
+            for(var i=0; i<$els.length; i++) {
                 //Get the actual subview
                 var recipient = subview($els[i]);
 
                 //Check for a subview type specific callback
                 var typedCallback = recipient.listeners[self.type + ":" + name + ":" + dir];
-                if(typedCallback) {
-                    return typedCallback.apply(self, [args]) === false; //Breaks if callback returns false
+                if(typedCallback && typedCallback.apply(self, [args]) === false) {
+                    return true; //Breaks if callback returns false
                 }
 
                 //Check for a general event callback
                 var untypedCallback = recipient.listeners[name + ":" + dir];
-                if(untypedCallback) {
-                    return untypedCallback.apply(self, [args]) === false; //Breaks if callback returns false
+                if(untypedCallback && untypedCallback.apply(self, [args]) === false) {
+                    return true; //Breaks if callback returns false
                 }
             }
         });
@@ -236,6 +235,9 @@ View.prototype = {
 
     },
     prev: function(type) {
+
+    },
+    children: function(type) {
 
     },
 
