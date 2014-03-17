@@ -1668,8 +1668,8 @@ module.exports = State;
 
 
 },{"loglevel":1,"underscore":2}],5:[function(require,module,exports){
-var _    = require('underscore'),
-    log  = require("loglevel");
+var _           = require('underscore'),
+    log         = require('loglevel');
 
 var View = function() {};
 
@@ -1692,6 +1692,8 @@ View.prototype = {
 
     /*** Initialization Functions (should be configured but will be manipulated when defining the subview) ***/
     config: function(config) { //Runs before render
+        this.listeners = {};
+
         for(var i=0; i<this.configFunctions.length; i++) {
             this.configFunctions[i].apply(this, [config]);
         }
@@ -1793,35 +1795,98 @@ View.prototype = {
         return this;
     },
 
-    /*** State API ***/
-    /*set: function(key, value) {
-        this.state.set(key, value);
+    /*** Event API ***/
+    trigger: function(name, args) {
+        var self = this;
+        
+        //Broadcast in all directions
+        var directions = {
+            up:     'find',
+            down:   'parents',
+            across: 'siblings'
+        };
+
+        _.each(directions, function(jqFunc, dir) {
+            var selector = '.listener-'+name+'-'+dir;
+
+            //Select $wrappers with the right listener class in the right direction
+            var $els = self.$wrapper[jqFunc](selector + ', ' + selector+'-'+self.type),
+                i    = $els.length;
+
+            while(i--) {
+                //Get the actual subview
+                var recipient = subview($els[i]);
+
+                //Check for a general event callback
+                var untypedCallback = recipient.listeners[name + ":" + dir];
+                if(untypedCallback) {
+                    untypedCallback.apply(self, [args]);
+                }
+
+                //Check for a subview type specific callback
+                var typedCallback = recipient.listeners[self.type + ":" + name + ":" + dir];
+                if(typedCallback) {
+                    typedCallback.apply(self, [args]);
+                }
+            }
+        });
+    },
+    listen: function(event, callback, direction) {
+        //Parse the event format "[view type]:[event name]"
+        eventParts = event.split(':');
+        
+        var eventName = eventParts.length > 1 ? eventParts[1] : eventParts[0],
+            viewType  = eventParts.length > 1 ? eventParts[0] : null;
+
+        //Add the listener class
+        this.$wrapper.addClass('listener-'+eventName+'-'+direction+(viewType ? '-'+viewType : ''));
+
+        //Save the callback
+        this.listeners[event+":"+direction] = callback;
+
         return this;
     },
-    get: function(key) {
-        return this.state.get(key);
-    },
-    bind: function(key, callback) {
-        this.state.bind(key, callback);
-        return callback;
-    },
-    unbind: function(key) {
-        this.state.unbind(key);
+
+    listenUp: function(event, callback) {
+        var self = this;
+
+        if(typeof event == 'string') {
+            this.listen(event, callback, 'up');
+        }
+        else {
+            _.each(event, function(callback, event) {
+                self.listen(event, callback, 'up');
+            });
+        }
+        
         return this;
     },
-    trigger: function(key, value) {
-        this.state.trigger(key, value);
-        return this;
-    },*/
-    tellParent: function(type, key, value) {
-        this.state.tellParent(type, key, value);
+    listenDown: function(event, callback) {
+        var self = this;
+
+        if(typeof event == 'string') {
+            this.listen(event, callback, 'down');
+        }
+        else {
+            _.each(event, function(callback, event) {
+                self.listen(event, callback, 'down');
+            });
+        }
+
         return this;
     },
-    askParent: function(type, key) {
-        return this.state.askParent(type, key);
-    },
-    listen: function(type, key, value) {
-        this.state.listen(type, key, value);
+    listenAcross: function(event, callback) {
+        var self = this;
+
+        if(typeof event == 'string') {
+            this.listen(event, callback, 'across');
+        }
+        else {
+            _.each(event, function(callback, event) {
+                self.listen(event, callback, 'across');
+            });
+        }
+
         return this;
     },
 
@@ -1835,6 +1900,15 @@ View.prototype = {
         else {
             return null;
         }
+    },
+    next: function(type) {
+
+    },
+    prev: function(type) {
+
+    },
+    children: function(type) {
+
     },
 
     /*** Classes ***/
