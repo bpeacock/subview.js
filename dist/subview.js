@@ -1798,6 +1798,7 @@ View.prototype = {
     /*** Event API ***/
     trigger: function(name, args) {
         var self = this;
+        args = args || [];
         
         //Broadcast in all directions
         var directions = {
@@ -1905,9 +1906,6 @@ View.prototype = {
 
     },
     prev: function(type) {
-
-    },
-    children: function(type) {
 
     },
 
