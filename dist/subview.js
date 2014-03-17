@@ -1806,7 +1806,7 @@ View.prototype = {
             across: 'siblings'
         };
 
-        _.each(directions, function(jqFunc, dir) {
+        _.find(directions, function(jqFunc, dir) {
             var selector = '.listener-'+name+'-'+dir;
 
             //Select $wrappers with the right listener class in the right direction
@@ -1817,16 +1817,16 @@ View.prototype = {
                 //Get the actual subview
                 var recipient = subview($els[i]);
 
-                //Check for a general event callback
-                var untypedCallback = recipient.listeners[name + ":" + dir];
-                if(untypedCallback) {
-                    untypedCallback.apply(self, [args]);
-                }
-
                 //Check for a subview type specific callback
                 var typedCallback = recipient.listeners[self.type + ":" + name + ":" + dir];
                 if(typedCallback) {
-                    typedCallback.apply(self, [args]);
+                    return typedCallback.apply(self, [args]) === false; //Breaks if callback returns false
+                }
+
+                //Check for a general event callback
+                var untypedCallback = recipient.listeners[name + ":" + dir];
+                if(untypedCallback) {
+                    return untypedCallback.apply(self, [args]) === false; //Breaks if callback returns false
                 }
             }
         });
@@ -1950,8 +1950,6 @@ View.prototype = {
 };
 
 module.exports = View;
-
-
 
 
 },{"loglevel":1,"underscore":2}],6:[function(require,module,exports){
