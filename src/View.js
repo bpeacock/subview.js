@@ -122,7 +122,7 @@ View.prototype = {
             this.state._setDefaults();
             this.clean();
 
-            this.pool._release();
+            this.pool._release(this);
         }
 
         return this;
