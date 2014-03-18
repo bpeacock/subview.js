@@ -111,17 +111,20 @@ View.prototype = {
         return this;
     },
     remove: function() {
-        //Detach
-        var parent = this.wrapper.parentNode;
-        if(parent) {
-            parent.removeChild(this.wrapper);
+        if(this._active) {
+            //Detach
+            var parent = this.wrapper.parentNode;
+            if(parent) {
+                parent.removeChild(this.wrapper);
+            }
+
+            //Clean
+            this.state._setDefaults();
+            this.clean();
+
+            this.pool._release();
         }
 
-        //Clean
-        this.state.setDefaults();
-        this.clean();
-
-        this.pool._release();
         return this;
     },
 
@@ -242,6 +245,7 @@ View.prototype = {
     },
 
     /*** Classes ***/
+    _active: false,
     _viewCssPrefix: 'view-',
     _getClasses: function() {
         return this.wrapper.className.split(/\s+/);

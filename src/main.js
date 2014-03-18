@@ -7,9 +7,12 @@ var _               = require("underscore"),
 
 var subview = function(name, protoViewPool, config) {
     var ViewPrototype;
-
+    
+    if(!name) {
+        return null;
+    }
     //Return View object from DOM element
-    if(name.nodeType || name.jquery) {
+    else if(name.nodeType || name.jquery) {
         return (name.jquery ? name[0] : name)[subview._domPropertyName] || null;
     }
     //Define a subview

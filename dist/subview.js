@@ -1781,17 +1781,20 @@ View.prototype = {
         return this;
     },
     remove: function() {
-        //Detach
-        var parent = this.wrapper.parentNode;
-        if(parent) {
-            parent.removeChild(this.wrapper);
+        if(this._active) {
+            //Detach
+            var parent = this.wrapper.parentNode;
+            if(parent) {
+                parent.removeChild(this.wrapper);
+            }
+
+            //Clean
+            this.state._setDefaults();
+            this.clean();
+
+            this.pool._release();
         }
 
-        //Clean
-        this.state.setDefaults();
-        this.clean();
-
-        this.pool._release();
         return this;
     },
 
@@ -1912,6 +1915,7 @@ View.prototype = {
     },
 
     /*** Classes ***/
+    _active: false,
     _viewCssPrefix: 'view-',
     _getClasses: function() {
         return this.wrapper.className.split(/\s+/);
@@ -2001,6 +2005,7 @@ ViewPool.prototype = {
             view.wrapper  = el;
             view.$wrapper = $el;
             view._addDefaultClasses();
+            view._active = true;
 
             //Add view State
             view.state = new State(view, view.state);
@@ -2022,6 +2027,7 @@ ViewPool.prototype = {
     },
 
     _release: function(view) {
+        view._active = false;
         this.pool.push(view);
         return this;
     }
@@ -2039,9 +2045,12 @@ var _               = require("underscore"),
 
 var subview = function(name, protoViewPool, config) {
     var ViewPrototype;
-
+    
+    if(!name) {
+        return null;
+    }
     //Return View object from DOM element
-    if(name.nodeType || name.jquery) {
+    else if(name.nodeType || name.jquery) {
         return (name.jquery ? name[0] : name)[subview._domPropertyName] || null;
     }
     //Define a subview

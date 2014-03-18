@@ -46,6 +46,7 @@ ViewPool.prototype = {
             view.wrapper  = el;
             view.$wrapper = $el;
             view._addDefaultClasses();
+            view._active = true;
 
             //Add view State
             view.state = new State(view, view.state);
@@ -67,6 +68,7 @@ ViewPool.prototype = {
     },
 
     _release: function(view) {
+        view._active = false;
         this.pool.push(view);
         return this;
     }
