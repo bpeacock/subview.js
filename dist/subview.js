@@ -1807,14 +1807,16 @@ View.prototype = {
         var directions = {
             up:     'find',
             down:   'parents',
-            across: 'siblings'
+            across: 'siblings',
+            all:    null
         };
 
         _.find(directions, function(jqFunc, dir) {
             var selector = '.listener-'+name+'-'+dir;
+            selector = selector + ', ' + selector+'-'+self.type;
             
             //Select $wrappers with the right listener class in the right direction
-            var $els = self.$wrapper[jqFunc](selector + ', ' + selector+'-'+self.type);
+            var $els = jqFunc ? self.$wrapper[jqFunc](selector) : $(selector);
 
             for(var i=0; i<$els.length; i++) {
                 //Get the actual subview
@@ -1835,61 +1837,47 @@ View.prototype = {
         });
     },
     listen: function(event, callback, direction) {
-        //Parse the event format "[view type]:[event name]"
-        eventParts = event.split(':');
-        
-        var eventName = eventParts.length > 1 ? eventParts[1] : eventParts[0],
-            viewType  = eventParts.length > 1 ? eventParts[0] : null;
-
-        //Add the listener class
-        this.$wrapper.addClass('listener-'+eventName+'-'+direction+(viewType ? '-'+viewType : ''));
-
-        //Save the callback
-        this.listeners[event+":"+direction] = callback;
-
-        return this;
-    },
-
-    listenUp: function(event, callback) {
         var self = this;
-
+        
         if(typeof event == 'string') {
-            this.listen(event, callback, 'up');
+            addListener(event, callback, direction);
         }
         else {
             _.each(event, function(callback, event) {
-                self.listen(event, callback, 'up');
+                addListener(event, callback, direction);
             });
         }
-        
+
+        function addListener(eventName, callback, direction) {
+            direction = direction || 'all';
+
+            //Parse the event format "[view type]:[event name], [view type]:[event name]"
+            _.each(eventName.split(','), function(event) {
+                var eventParts = event.replace(/ /g, '').split(':');
+                
+                var eventName = eventParts.length > 1 ? eventParts[1] : eventParts[0],
+                    viewType  = eventParts.length > 1 ? eventParts[0] : null;
+
+                //Add the listener class
+                self.$wrapper.addClass('listener-'+eventName+'-'+direction+(viewType ? '-'+viewType : ''));
+
+                //Save the callback
+                self.listeners[eventName+":"+direction] = callback;
+            });
+        }
+
+        return this;
+    },
+    listenUp: function(event, callback) {
+        this.listen(event, callback, 'up');
         return this;
     },
     listenDown: function(event, callback) {
-        var self = this;
-
-        if(typeof event == 'string') {
-            this.listen(event, callback, 'down');
-        }
-        else {
-            _.each(event, function(callback, event) {
-                self.listen(event, callback, 'down');
-            });
-        }
-
+        this.listen(event, callback, 'down');
         return this;
     },
     listenAcross: function(event, callback) {
-        var self = this;
-
-        if(typeof event == 'string') {
-            this.listen(event, callback, 'across');
-        }
-        else {
-            _.each(event, function(callback, event) {
-                self.listen(event, callback, 'across');
-            });
-        }
-
+        this.listen(event, callback, 'across');
         return this;
     },
 
