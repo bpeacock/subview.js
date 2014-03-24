@@ -1,5 +1,4 @@
-var State = require("./State"),
-    $     = require("unopinionate").selector;
+var $ = require("unopinionate").selector;
 
 var ViewPool = function(View) {
     //Configuration
@@ -47,9 +46,6 @@ ViewPool.prototype = {
             view.$wrapper = $el;
             view._addDefaultClasses();
             view._active = true;
-
-            //Add view State
-            view.state = new State(view, view.state);
 
             //Render (don't chain since introduces opportunity for user error)
             view.config(config); 

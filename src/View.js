@@ -11,9 +11,6 @@ View.prototype = {
     className:  "",
     template:   "",
 
-    //State data gets mapped to classes
-    state:      {},
-
     //Data goes into the templates and may also be a function that returns an object
     data:       {},
 
@@ -53,7 +50,7 @@ View.prototype = {
             html = this.template;
         }
         else {
-            var data = _.extend(this.state.data, typeof this.data == 'function' ? this.data() : this.data);
+            var data = typeof this.data == 'function' ? this.data() : this.data;
             
             //Define the subview variable
             data.subview = {};
@@ -119,7 +116,6 @@ View.prototype = {
             }
 
             //Clean
-            this.state._setDefaults();
             this.clean();
 
             this.pool._release(this);
