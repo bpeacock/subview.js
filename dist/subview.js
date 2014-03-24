@@ -1769,7 +1769,7 @@ View.prototype = {
     },
     html: function(html) {
         //Remove & clean subviews in the wrapper 
-        this.$wrapper.find('.view').each(function() {
+        this.$wrapper.find('.subview').each(function() {
             subview(this).remove();
         });
 
@@ -1883,7 +1883,7 @@ View.prototype = {
 
     /*** Traversing ***/
     parent: function(type) {
-        var $el = this.$wrapper.closest('.' + (type ? this._viewCssPrefix + type : 'view'));
+        var $el = this.$wrapper.closest('.' + (type ? this._viewCssPrefix + type : 'subview'));
         
         if($el && $el.length > 0) {
             return $el[0][subview._domPropertyName];
@@ -1904,7 +1904,7 @@ View.prototype = {
 
     /*** Classes ***/
     _active: false,
-    _viewCssPrefix: 'view-',
+    _viewCssPrefix: 'subview-',
     _getClasses: function() {
         return this.wrapper.className.split(/\s+/);
     },
@@ -1930,7 +1930,7 @@ View.prototype = {
         }
 
         //Add Default View Class
-        classes.push('view');
+        classes.push('subview');
 
         //Add className
         classes = classes.concat(this.className.split(' '));
@@ -2033,7 +2033,7 @@ var _               = require("underscore"),
 
 var subview = function(name, protoViewPool, config) {
     var ViewPrototype;
-    
+
     if(!name) {
         return null;
     }
@@ -2094,7 +2094,7 @@ subview._domPropertyName = "subview12345";
 /*** API ***/
 subview.load = function(scope) {
     var $scope = scope ? $(scope) : $('body'),
-        $views = $scope.find("[class^='view-']"),
+        $views = $scope.find("[class^='subview-']"),
         finder = function(c) {
             return c.match(viewTypeRegex);
         };

@@ -7,7 +7,7 @@ var _               = require("underscore"),
 
 var subview = function(name, protoViewPool, config) {
     var ViewPrototype;
-    
+
     if(!name) {
         return null;
     }
@@ -68,7 +68,7 @@ subview._domPropertyName = "subview12345";
 /*** API ***/
 subview.load = function(scope) {
     var $scope = scope ? $(scope) : $('body'),
-        $views = $scope.find("[class^='view-']"),
+        $views = $scope.find("[class^='subview-']"),
         finder = function(c) {
             return c.match(viewTypeRegex);
         };
