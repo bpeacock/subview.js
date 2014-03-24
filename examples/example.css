@@ -2,7 +2,7 @@ body {
     font-family: Avenir, "Helvetica Neue", Helvetica, sans-serif;
 }
 
-.view {
+.subview {
     border: 1px solid #9B9B9B;
     -webkit-border-radius:  3px;
     -moz-border-radius:     3px;
@@ -11,21 +11,21 @@ body {
     margin: 2px;
 }
 
-.view-a {
+.subview-a {
     color: white;
     background: #1F6FE7;
 }
 
 .state-auth-true .signin,
 .state-auth-false .signout,
-.state-auth-false .view-auth {
+.state-auth-false .subview-auth {
     display: none;
 }
 
-.view-b {
+.subview-b {
     background: #4CB34C;
 }
 
-.view-auth {
+.subview-auth {
     background: #DB6B6B;
 }
