@@ -5,11 +5,11 @@ module.exports = subview("A", {
         var self = this;
 
         $('.signin').click(function() {
-            self.tellParent('app', 'auth', true);
+            self.trigger('auth', [true]);
         });
 
         $('.signout').click(function() {
-            self.tellParent('app', 'auth', false);
+            self.trigger('auth', [false]);
         });
     },
     template: "\

@@ -206,6 +206,19 @@ View.prototype = {
         this.listen(event, callback, 'across');
         return this;
     },
+    mirror: function(event) {
+        var self = this;
+
+        this.listen(event, function() {
+            self.trigger(event);
+        });
+
+        return this;
+    },
+    bind: function(event, callback) { //NOT WORKING
+        this.listen(event, callback, 'self');
+        return this;
+    },
 
     /*** Traversing ***/
     parent: function(type) {

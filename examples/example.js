@@ -5,7 +5,24 @@ var subview     = require("../src/main.js"),
 
 subview("app", {
     init: function() {
-        
+        var self = this;
+        this.listenDown('auth', function(auth) {
+            console.log('auth');
+
+            setTimeout(function() {
+                if(auth) {
+                    self.$wrapper
+                        .removeClass('state-auth-false')
+                        .addClass('state-auth-true');
+                }
+                else {
+                    self.$wrapper
+                        .addClass('state-auth-false')
+                        .removeClass('state-auth-true');
+                }
+            }, 0);
+            
+        });
     },
     template: Handlebars.compile("\
 This Works!!!\
@@ -14,9 +31,6 @@ This Works!!!\
     subviews: {
         A: require("./subviews/ViewA"),
         B: require("./subviews/ViewB")
-    },
-    state: {
-        auth: true
     }
 });
 
