@@ -121,6 +121,20 @@ subview._validateName = function(name) {
     return true;
 };
 
+subview.init = function() {
+    var Main = subview.lookup('main');
+
+    if(Main) {
+        subview.main = Main.spawn();
+        subview.main.$wrapper.appendTo('body');
+    }
+};
+
 /*** Export ***/
 window.subview = module.exports = subview;
 
+$(function() {
+    if(!subview.noInit) {
+        subview.init();
+    }
+});
