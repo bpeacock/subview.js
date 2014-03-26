@@ -18,7 +18,7 @@ Basic Usage
 ```javascript
 subview('main', {
     init: function() {
-        //Stuff to be done when main is created
+        //Stuff to be done when initializing a subview via the .spawn method
     },
 
     /*** Templating ***/
@@ -32,7 +32,10 @@ subview('main', {
 
     /*** ***/
     clean: function() {
-        
+        //Runs when a subview is removed to clean and prepare it to be reused
+    },
+    build: function() {
+        //Runs only the first time a subview is created
     }
 });
 ```

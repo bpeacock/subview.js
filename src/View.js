@@ -30,6 +30,12 @@ View.prototype = {
         }
     }, 
     cleanFunctions: [],
+    build: function() { //Runs on remove
+        for(var i=0; i<this.cleanFunctions.length; i++) {
+            this.cleanFunctions[i].apply(this, []);
+        }
+    }, 
+    buildFunctions: [],
 
     /*** Rendering ***/
     render: function() {

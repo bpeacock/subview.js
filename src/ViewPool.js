@@ -26,29 +26,43 @@ ViewPool.prototype = {
             return el.view;
         }
         else {
+            var view;
             config = config || ($.isPlainObject(el) ? el : undefined);
             
             //Get the DOM node
             if(!el || !el.nodeType) {
                 if(this.pool.length !== 0) {
-                    return this.pool.pop();
+                    view = this.pool.pop();
                 }
                 else {
                     el = document.createElement(this.View.prototype.tagName);
                     $el = $(el);
                 }
             }
+
+            var isNewView;
+            if(!view) {
+                isNewView = true;
+                view = new this.View();
+
+                //Bind the element
+                el[subview._domPropertyName] = view;
+                
+                view.wrapper  = el;
+                view.$wrapper = $el;
+
+                view._addDefaultClasses();
+            }
             
-            var view = new this.View();
-            el[subview._domPropertyName] = view;
-            
-            view.wrapper  = el;
-            view.$wrapper = $el;
-            view._addDefaultClasses();
             view._active = true;
 
-            //Render (don't chain since introduces opportunity for user error)
-            view.render();
+            //Render
+            if(isNewView) {
+                view.render();
+                view.build(config);
+            }
+
+            //Initialize
             view.init(config);
 
             return view;
