@@ -140,7 +140,7 @@ View.prototype = {
         _.find(directions, function(jqFunc, dir) {
             var selector = '.listener-'+name+'-'+dir;
             selector = selector + ', ' + selector+'-'+self.type;
-            
+
             //Select $wrappers with the right listener class in the right direction
             var $els = jqFunc ? self.$wrapper[jqFunc](selector) : $(selector);
 
@@ -150,13 +150,13 @@ View.prototype = {
 
                 //Check for a subview type specific callback
                 var typedCallback = recipient.listeners[self.type + ":" + name + ":" + dir];
-                if(typedCallback && typedCallback.apply(self, [args]) === false) {
+                if(typedCallback && typedCallback.apply(self, args) === false) {
                     return true; //Breaks if callback returns false
                 }
 
                 //Check for a general event callback
                 var untypedCallback = recipient.listeners[name + ":" + dir];
-                if(untypedCallback && untypedCallback.apply(self, [args]) === false) {
+                if(untypedCallback && untypedCallback.apply(self, args) === false) {
                     return true; //Breaks if callback returns false
                 }
             }
