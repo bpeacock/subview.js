@@ -52,9 +52,7 @@ View.prototype = {
             
             //Define the subview variable
             data.subview = {};
-            $.each(this.subviews, function(subview) {
-                var name = subview.type;
-                
+            $.each(this.subviews, function(name, subview) {
                 if(subview.isViewPool) {
                     data.subview[name] = subview.template;
                 }
