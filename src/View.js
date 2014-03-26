@@ -18,14 +18,6 @@ View.prototype = {
     subviews:   {},
 
     /*** Initialization Functions (should be configured but will be manipulated when defining the subview) ***/
-    config: function(config) { //Runs before render
-        this.listeners = {};
-
-        for(var i=0; i<this.configFunctions.length; i++) {
-            this.configFunctions[i].apply(this, [config]);
-        }
-    }, 
-    configFunctions: [],
     init: function(config) { //Runs after render
         for(var i=0; i<this.initFunctions.length; i++) {
             this.initFunctions[i].apply(this, [config]);

@@ -5,6 +5,41 @@ A hierarchical view framework.
 
 THIS IS AN UNSTABLE 0.0.x RELEASE
 
+To install
+----------
+
+```bash
+npm install subview
+```
+
+Basic Usage
+-----------
+
+```javascript
+subview('main', {
+    init: function() {
+        //Stuff to be done when main is created
+    },
+
+    /*** Templating ***/
+    template: Handlebars.compile(myTemplate),
+    subviews: [ //Subviews that will be available in the template
+        AnotherSubview
+    ],
+    data: { //Data available in the template (may also be a function)
+        "key": "value"
+    },
+
+    /*** ***/
+    clean: function() {
+        
+    }
+});
+```
+
+Philosophy
+----------
+
 Duties:
 1. Render the application
 2. Execute functions that define UI logic
@@ -25,22 +60,13 @@ Tenets:
 10. Views should be able to be extended while preserving critical functionality of their parent class.
 
 
-To install
-----------
+Development
+-----------
 
-```bash
-npm install subview
-```
+To build: `grunt build`
 
-To Build
---------
+To watch: `grunt watch`
 
-```bash
-grunt browserify
-```
-
-```bash
-grunt watch
-```
+To test: `grunt test`
 
 

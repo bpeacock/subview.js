@@ -48,7 +48,6 @@ ViewPool.prototype = {
             view._active = true;
 
             //Render (don't chain since introduces opportunity for user error)
-            view.config(config); 
             view.render();
             view.init(config);
 
