@@ -3,7 +3,7 @@ subview.js
 
 A hierarchical view framework.
 
-THIS IS AN UNSTABLE 0.0.1 RELEASE
+THIS IS AN UNSTABLE 0.0.x RELEASE
 
 Duties:
 1. Render the application
