@@ -124,10 +124,3 @@ subview._validateName = function(name) {
 /*** Export ***/
 window.subview = module.exports = subview;
 
-/*** Startup Actions ***/
-$(function() {
-    if(!subview.noInit) {
-        subview.load();
-    }
-});
-
