@@ -44,6 +44,7 @@ Philosophy
 ----------
 
 Duties:
+
 1. Render the application
 2. Execute functions that define UI logic
 3. ~~Store application state~~
@@ -51,6 +52,7 @@ Duties:
 5. Manage View Object pools
 
 Tenets: 
+
 1. App interfaces should be organized into a hierarchical sub-view structure.
 2. This hierarchy should be defined only in the current state of the DOM.  i.e. a subview is defined as a view that is a child of view's wrapper DOM element.
 3. These views should all inherit a set of basic methods and properties.
