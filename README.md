@@ -29,7 +29,7 @@ To install
 ----------
 
 ```bash
-npm install
+npm install subview
 ```
 
 To Build
