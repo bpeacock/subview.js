@@ -35,7 +35,7 @@ subview('main', {
         //Runs when a subview is removed to clean and prepare it to be reused
     },
     build: function() {
-        //Runs only the first time a subview is created
+        //Runs after every render
     }
 });
 ```

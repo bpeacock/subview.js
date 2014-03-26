@@ -54,12 +54,12 @@ ViewPool.prototype = {
                 view._addDefaultClasses();
             }
             
+            //Make the view active
             view._active = true;
 
             //Render
             if(isNewView) {
                 view.render();
-                view.build(config);
             }
 
             //Initialize

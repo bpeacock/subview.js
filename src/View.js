@@ -52,7 +52,9 @@ View.prototype = {
             
             //Define the subview variable
             data.subview = {};
-            $.each(this.subviews, function(name, subview) {
+            $.each(this.subviews, function(subview) {
+                var name = subview.type;
+                
                 if(subview.isViewPool) {
                     data.subview[name] = subview.template;
                 }
@@ -89,6 +91,9 @@ View.prototype = {
                     .remove();
             });
         }
+
+        //Run the build function
+        this.build();
 
         return this;
     },
