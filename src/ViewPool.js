@@ -55,7 +55,7 @@ ViewPool.prototype = {
 
                 view._addDefaultClasses();
                 view._bindListeners();
-
+                
                 view.once();
             }
             

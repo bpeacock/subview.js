@@ -123,7 +123,12 @@ subview._validateName = function(name) {
 subview._reservedMethods = [
     'html',
     'remove',
-    'trigger'
+    'trigger',
+    '$',
+    '_bindListeners',
+    '_active',
+    '_subviewCssClass',
+    '_addDefaultClasses'
 ];
 
 subview._validateConfig = function(config) {
@@ -132,10 +137,6 @@ subview._validateConfig = function(config) {
     $.each(config, function(name, value) {
         if(subview._reservedMethods.indexOf(name) != -1) {
             console.error("Method '"+name+"' is reserved as part of the subview API.");
-            success = false;
-        }
-        else if(name.match(/^_/)) {
-            console.error("The _ prefixed name-space is reserved for internal subview methods.");
             success = false;
         }
     });
