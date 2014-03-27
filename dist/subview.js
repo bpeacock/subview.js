@@ -1796,18 +1796,26 @@ View.prototype = {
         $.each(this.listeners, function(events, callback) {
 
             //Parse the event format "[view type]:[event name], [view type]:[event name]"
-            $.each(events.split(','), function(i, event) {
-                var eventParts = event.replace(/ /g, '').split(':');
+
+            events = events.split(',');
+            var i = events.length;
+
+            while(i--) {
+                var event       = events[i].replace(/ /g, ''),
+                    eventParts  = event.split(':');
                 
                 var direction = eventParts[0],
                     name      = eventParts[1],
                     viewType  = eventParts[2] || null;
-
+                
                 //Add the listener class
                 if(direction != 'self') {
                     self.$wrapper.addClass('listener-' + direction + '-' + name + (viewType ? '-' + viewType : ''));
                 }
-            });
+
+                //Fix the listeners callback
+                self.listeners[event] = callback;
+            }
         });
 
         return this;
