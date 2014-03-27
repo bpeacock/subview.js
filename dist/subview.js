@@ -1498,14 +1498,8 @@ View.prototype = {
     tagName:    "div",
     className:  "",
 
-    /*
-        listeners
-        ---------
-
-        '[direction]:[event name]:[from type], ...': function(eventArguments*) {
-            
-        }
-    */
+    //listeners
+    //'[direction]:[event name]:[from type], ...': function(eventArguments*) {}
     listeners: {},
 
     /* Templating */
@@ -1680,10 +1674,9 @@ View.prototype = {
         var self = this;
 
         $.each(this.listeners, function(events, callback) {
-            direction = direction || 'all';
 
             //Parse the event format "[view type]:[event name], [view type]:[event name]"
-            $.each(eventName.split(','), function(event) {
+            $.each(events.split(','), function(i, event) {
                 var eventParts = event.replace(/ /g, '').split(':');
                 
                 var direction = eventParts[0],
@@ -1704,17 +1697,8 @@ View.prototype = {
     _active: false,
     _subviewCssClass: 'subview',
     _viewCssPrefix:   'subview-',
-    _getClasses: function() {
-        return this.wrapper.className.split(/\s+/);
-    },
-    _setClasses: function(classes) {
-        var newClassName = classes.join(' ');
-        if(this.wrapper.className != newClassName) this.wrapper.className = newClassName;
-
-        return this;
-    },
     _addDefaultClasses: function() {
-        var classes = this._getClasses();
+        var classes = [];
         classes.push(this._viewCssPrefix + this.type);
 
         var superClass = this.super;
@@ -1731,10 +1715,8 @@ View.prototype = {
         //Add Default View Class
         classes.push(this._subviewCssClass);
 
-        //Add className
-        classes = classes.concat(this.className.split(' '));
-
-        this._setClasses(_.uniq(classes));
+        //Add classes to the DOM
+        this.$wrapper.addClass(classes.join(' '));
 
         return this;
     }
