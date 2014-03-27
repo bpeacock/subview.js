@@ -40,7 +40,7 @@ subview('main', {
 });
 ```
 
-[Here](https://raw.github.com/bpeacock/subview.js/blob/master/examples/index.html) is a simple example with [source code](examples).
+A simple example is available [here](examples).
 
 
 Philosophy
