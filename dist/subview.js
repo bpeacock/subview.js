@@ -1791,15 +1791,15 @@ View.prototype = {
     /*** Classes ***/
     _active: false,
     _subviewCssClass: 'subview',
-    _viewCssPrefix:   'subview-',
     _addDefaultClasses: function() {
         var classes = [];
-        classes.push(this._viewCssPrefix + this.type);
+
+        classes.push(this._subviewCssClass + '-' + this.type);
 
         var superClass = this.super;
         while(true) {
             if(superClass.type) {
-                classes.push(this._viewCssPrefix + superClass.type);
+                classes.push(this._subviewCssClass + '-' + superClass.type);
                 superClass = superClass.super;
             }
             else {
@@ -1829,7 +1829,7 @@ var ViewPool = function(View) {
     this.View   = View;
     this.type   = View.prototype.type;
     this.super  = View.prototype.super;
-    this.template = "<"+this.View.prototype.tagName+" class='"+this.View.prototype._viewCssPrefix + this.View.prototype.type+" "+this.View.prototype.className+"'></"+this.View.prototype.tagName+">";
+    this.template = "<"+this.View.prototype.tagName+" class='"+this.View.prototype._subviewCssClass + '-' + this.View.prototype.type+" "+this.View.prototype.className+"'></"+this.View.prototype.tagName+">";
 
     //View Configuration
     this.View.prototype.pool = this;
@@ -1922,7 +1922,7 @@ var _               = require("underscore"),
     $               = require("unopinionate").selector,
     ViewPool        = require("./ViewPool"),
     ViewTemplate    = require("./View"),
-    viewTypeRegex   = new RegExp('^' + ViewTemplate.prototype._viewCssPrefix);
+    viewTypeRegex   = new RegExp('^' + ViewTemplate.prototype._subviewCssClass + '-');
 
 var subview = function(name, protoViewPool, config) {
     var ViewPrototype;
@@ -2042,7 +2042,12 @@ subview._validateName = function(name) {
 subview._reservedMethods = [
     'html',
     'remove',
-    'trigger'
+    'trigger',
+    '$',
+    '_bindListeners',
+    '_active',
+    '_subviewCssClass',
+    '_addDefaultClasses'
 ];
 
 subview._validateConfig = function(config) {
@@ -2051,10 +2056,6 @@ subview._validateConfig = function(config) {
     $.each(config, function(name, value) {
         if(subview._reservedMethods.indexOf(name) != -1) {
             console.error("Method '"+name+"' is reserved as part of the subview API.");
-            success = false;
-        }
-        else if(name.match(/^_/)) {
-            console.error("The _ prefixed name-space is reserved for internal subview methods.");
             success = false;
         }
     });

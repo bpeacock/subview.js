@@ -209,15 +209,15 @@ View.prototype = {
     /*** Classes ***/
     _active: false,
     _subviewCssClass: 'subview',
-    _viewCssPrefix:   'subview-',
     _addDefaultClasses: function() {
         var classes = [];
-        classes.push(this._viewCssPrefix + this.type);
+
+        classes.push(this._subviewCssClass + '-' + this.type);
 
         var superClass = this.super;
         while(true) {
             if(superClass.type) {
-                classes.push(this._viewCssPrefix + superClass.type);
+                classes.push(this._subviewCssClass + '-' + superClass.type);
                 superClass = superClass.super;
             }
             else {

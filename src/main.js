@@ -3,7 +3,7 @@ var _               = require("underscore"),
     $               = require("unopinionate").selector,
     ViewPool        = require("./ViewPool"),
     ViewTemplate    = require("./View"),
-    viewTypeRegex   = new RegExp('^' + ViewTemplate.prototype._viewCssPrefix);
+    viewTypeRegex   = new RegExp('^' + ViewTemplate.prototype._subviewCssClass + '-');
 
 var subview = function(name, protoViewPool, config) {
     var ViewPrototype;
