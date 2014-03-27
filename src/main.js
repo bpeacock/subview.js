@@ -35,7 +35,7 @@ var subview = function(name, protoViewPool, config) {
                 superClass  = new ViewPrototype();
 
             //Extend the existing init, config & clean functions rather than overwriting them
-            _.each(['init', 'build', 'clean'], function(name) {
+            _.each(['once', 'init', 'clean'], function(name) {
                 config[name+'Functions'] = superClass[name+'Functions'].slice(0); //Clone superClass init
                 if(config[name]) {
                     config[name+'Functions'].push(config[name]);
@@ -48,7 +48,7 @@ var subview = function(name, protoViewPool, config) {
             View.prototype.super = ViewPrototype.prototype;
             
             //Save the New View
-            var viewPool = new ViewPool(View);
+            var viewPool        = new ViewPool(View);
             subview.views[name] = viewPool;
 
             return viewPool;
@@ -121,16 +121,9 @@ subview._validateName = function(name) {
 };
 
 subview._reservedMethods = [
-    'render', 
     'html',
     'remove',
-    'trigger',
-    'listen',
-    'listenUp',
-    'listenDown', 
-    'listenAcross',
-    'bind',
-    'mirror'
+    'trigger'
 ];
 
 subview._validateConfig = function(config) {

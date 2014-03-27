@@ -1,5 +1,6 @@
 var _   = require('underscore'),
-    log = require('loglevel');
+    log = require('loglevel'),
+    noop = function() {};
 
 var View = function() {};
 
@@ -9,6 +10,18 @@ View.prototype = {
     /*** Default Attributes (should be overwritten) ***/
     tagName:    "div",
     className:  "",
+
+    /*
+        listeners
+        ---------
+
+        '[direction]:[event name]:[from type], ...': function(eventArguments*) {
+            
+        }
+    */
+    listeners: {},
+
+    /* Templating */
     template:   "",
 
     //Data goes into the templates and may also be a function that returns an object
@@ -17,7 +30,19 @@ View.prototype = {
     //Subviews are a set of subviews that will be fed into the templating engine
     subviews:   {},
 
+    reRender:   false, //Determines if subview is re-rendered every time it is spawned
+
+    /* Callbacks */
+    preRender:  noop,
+    postRender: noop,
+
     /*** Initialization Functions (should be configured but will be manipulated when defining the subview) ***/
+    once: function(config) { //Runs after render
+        for(var i=0; i<this.onceFunctions.length; i++) {
+            this.onceFunctions[i].apply(this, [config]);
+        }
+    }, 
+    onceFunctions: [],
     init: function(config) { //Runs after render
         for(var i=0; i<this.initFunctions.length; i++) {
             this.initFunctions[i].apply(this, [config]);
@@ -30,18 +55,14 @@ View.prototype = {
         }
     }, 
     cleanFunctions: [],
-    build: function() { //Runs on 
-        for(var i=0; i<this.cleanFunctions.length; i++) {
-            this.cleanFunctions[i].apply(this, []);
-        }
-    }, 
-    buildFunctions: [],
 
     /*** Rendering ***/
     render: function() {
         var self = this,
             html = '',
             postLoad = false;
+
+        this.preRender();
 
         //No Templating Engine
         if(typeof this.template == 'string') {
@@ -90,14 +111,13 @@ View.prototype = {
             });
         }
 
-        //Run the build function
-        this.build();
+        this.postRender();
 
         return this;
     },
     html: function(html) {
         //Remove & clean subviews in the wrapper 
-        this.$wrapper.find('.subview').each(function() {
+        this.$wrapper.find('.'+this._subviewCssClass).each(function() {
             subview(this).remove();
         });
 
@@ -156,80 +176,47 @@ View.prototype = {
                 var recipient = subview($els[i]);
 
                 //Check for a subview type specific callback
-                var typedCallback = recipient.listeners[self.type + ":" + name + ":" + dir];
+                var typedCallback = recipient.listeners[dir + ":" + name + ":" + self.type];
                 if(typedCallback && typedCallback.apply(self, args) === false) {
                     return true; //Breaks if callback returns false
                 }
 
                 //Check for a general event callback
-                var untypedCallback = recipient.listeners[name + ":" + dir];
+                var untypedCallback = recipient.listeners[dir + ":" + name];
                 if(untypedCallback && untypedCallback.apply(self, args) === false) {
                     return true; //Breaks if callback returns false
                 }
             }
         });
     },
-    listen: function(event, callback, direction) {
+    _bindListeners: function() {
         var self = this;
-        
-        if(typeof event == 'string') {
-            addListener(event, callback, direction);
-        }
-        else {
-            _.each(event, function(callback, event) {
-                addListener(event, callback, direction);
-            });
-        }
 
-        function addListener(eventName, callback, direction) {
+        $.each(this.listeners, function(events, callback) {
             direction = direction || 'all';
 
             //Parse the event format "[view type]:[event name], [view type]:[event name]"
-            _.each(eventName.split(','), function(event) {
+            $.each(eventName.split(','), function(event) {
                 var eventParts = event.replace(/ /g, '').split(':');
                 
-                var eventName = eventParts.length > 1 ? eventParts[1] : eventParts[0],
-                    viewType  = eventParts.length > 1 ? eventParts[0] : null;
+                var direction = eventParts[0],
+                    name      = eventParts[1],
+                    viewType  = eventParts[2] || null;
 
                 //Add the listener class
-                self.$wrapper.addClass('listener-'+eventName+'-'+direction+(viewType ? '-'+viewType : ''));
-
-                //Save the callback
-                self.listeners[eventName+":"+direction] = callback;
+                if(direction != 'self') {
+                    self.$wrapper.addClass('listener-' + direction + '-' + name + (viewType ? '-' + viewType : ''));
+                }
             });
-        }
-
-        return this;
-    },
-    listenUp: function(event, callback) {
-        this.listen(event, callback, 'up');
-        return this;
-    },
-    listenDown: function(event, callback) {
-        this.listen(event, callback, 'down');
-        return this;
-    },
-    listenAcross: function(event, callback) {
-        this.listen(event, callback, 'across');
-        return this;
-    },
-    mirror: function(event) {
-        var self = this;
-
-        this.listen(event, function() {
-            self.trigger(event);
         });
 
-        return this;
-    },
-    bind: function(event, callback) { //NOT WORKING
-        this.listen(event, callback, 'self');
         return this;
     },
 
     /*** Classes ***/
     _active: false,
-    _viewCssPrefix: 'subview-',
+    _subviewCssClass: 'subview',
+    _viewCssPrefix:   'subview-',
     _getClasses: function() {
         return this.wrapper.className.split(/\s+/);
     },
@@ -255,7 +242,7 @@ View.prototype = {
         }
 
         //Add Default View Class
-        classes.push('subview');
+        classes.push(this._subviewCssClass);
 
         //Add className
         classes = classes.concat(this.className.split(' '));

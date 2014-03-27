@@ -45,23 +45,22 @@ ViewPool.prototype = {
                 isNewView   = true;
                 view        = new this.View();
 
-                //Bind the element
+                //Bind to/from the element
                 el[subview._domPropertyName] = view;
-                
                 view.wrapper  = el;
                 view.$wrapper = $el;
 
-                //Add the listeners object
-                view.listeners = {};
-
                 view._addDefaultClasses();
+                view._bindListeners();
+
+                view.once();
             }
             
             //Make the view active
             view._active = true;
 
             //Render
-            if(isNewView) {
+            if(isNewView || view.reRender) {
                 view.render();
             }
 
