@@ -1517,7 +1517,7 @@ View.prototype = {
         }
     }, 
     cleanFunctions: [],
-    build: function() { //Runs on remove
+    build: function() { //Runs on 
         for(var i=0; i<this.cleanFunctions.length; i++) {
             this.cleanFunctions[i].apply(this, []);
         }
@@ -1629,8 +1629,14 @@ View.prototype = {
             var selector = '.listener-'+name+'-'+dir;
             selector = selector + ', ' + selector+'-'+self.type;
 
+            console.log('');
+            console.log(selector);
+            console.log(jqFunc);
+
             //Select $wrappers with the right listener class in the right direction
             var $els = jqFunc ? self.$wrapper[jqFunc](selector) : $(selector);
+
+            console.log($els);
 
             for(var i=0; i<$els.length; i++) {
                 //Get the actual subview
@@ -1706,27 +1712,6 @@ View.prototype = {
     bind: function(event, callback) { //NOT WORKING
         this.listen(event, callback, 'self');
         return this;
-    },
-
-    /*** Traversing ***/
-    parent: function(type) {
-        var $el = this.$wrapper.closest('.' + (type ? this._viewCssPrefix + type : 'subview'));
-        
-        if($el && $el.length > 0) {
-            return $el[0][subview._domPropertyName];
-        }
-        else {
-            return null;
-        }
-    },
-    next: function(type) {
-
-    },
-    prev: function(type) {
-
-    },
-    children: function(type) {
-
     },
 
     /*** Classes ***/
@@ -1816,14 +1801,17 @@ ViewPool.prototype = {
 
             var isNewView;
             if(!view) {
-                isNewView = true;
-                view = new this.View();
+                isNewView   = true;
+                view        = new this.View();
 
                 //Bind the element
                 el[subview._domPropertyName] = view;
                 
                 view.wrapper  = el;
                 view.$wrapper = $el;
+
+                //Add the listeners object
+                view.listeners = {};
 
                 view._addDefaultClasses();
             }
@@ -1890,13 +1878,12 @@ var subview = function(name, protoViewPool, config) {
 
         config = config || {};
 
-        //Validate Name
-        if(subview._validateName(name)) {
-
+        //Validate Name && Configuration
+        if(subview._validateName(name) && subview._validateConfig(config)) {
             //Create the new View
             var View        = function() {},
                 superClass  = new ViewPrototype();
-            
+
             //Extend the existing init, config & clean functions rather than overwriting them
             _.each(['init', 'build', 'clean'], function(name) {
                 config[name+'Functions'] = superClass[name+'Functions'].slice(0); //Clone superClass init
@@ -1981,6 +1968,36 @@ subview._validateName = function(name) {
     }
 
     return true;
+};
+
+subview._reservedMethods = [
+    'render', 
+    'html',
+    'remove',
+    'trigger',
+    'listen',
+    'listenUp',
+    'listenDown', 
+    'listenAcross',
+    'bind',
+    'mirror'
+];
+
+subview._validateConfig = function(config) {
+    var success = true;
+
+    $.each(config, function(name, value) {
+        if(subview._reservedMethods.indexOf(name) != -1) {
+            console.error("Method '"+name+"' is reserved as part of the subview API.");
+            success = false;
+        }
+        else if(name.match(/^_/)) {
+            console.error("The _ prefixed name-space is reserved for internal subview methods.");
+            success = false;
+        }
+    });
+
+    return success;
 };
 
 subview.init = function() {

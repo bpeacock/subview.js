@@ -28,13 +28,12 @@ var subview = function(name, protoViewPool, config) {
 
         config = config || {};
 
-        //Validate Name
-        if(subview._validateName(name)) {
-
+        //Validate Name && Configuration
+        if(subview._validateName(name) && subview._validateConfig(config)) {
             //Create the new View
             var View        = function() {},
                 superClass  = new ViewPrototype();
-            
+
             //Extend the existing init, config & clean functions rather than overwriting them
             _.each(['init', 'build', 'clean'], function(name) {
                 config[name+'Functions'] = superClass[name+'Functions'].slice(0); //Clone superClass init
@@ -119,6 +118,36 @@ subview._validateName = function(name) {
     }
 
     return true;
+};
+
+subview._reservedMethods = [
+    'render', 
+    'html',
+    'remove',
+    'trigger',
+    'listen',
+    'listenUp',
+    'listenDown', 
+    'listenAcross',
+    'bind',
+    'mirror'
+];
+
+subview._validateConfig = function(config) {
+    var success = true;
+
+    $.each(config, function(name, value) {
+        if(subview._reservedMethods.indexOf(name) != -1) {
+            console.error("Method '"+name+"' is reserved as part of the subview API.");
+            success = false;
+        }
+        else if(name.match(/^_/)) {
+            console.error("The _ prefixed name-space is reserved for internal subview methods.");
+            success = false;
+        }
+    });
+
+    return success;
 };
 
 subview.init = function() {

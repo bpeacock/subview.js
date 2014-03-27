@@ -42,14 +42,17 @@ ViewPool.prototype = {
 
             var isNewView;
             if(!view) {
-                isNewView = true;
-                view = new this.View();
+                isNewView   = true;
+                view        = new this.View();
 
                 //Bind the element
                 el[subview._domPropertyName] = view;
                 
                 view.wrapper  = el;
                 view.$wrapper = $el;
+
+                //Add the listeners object
+                view.listeners = {};
 
                 view._addDefaultClasses();
             }

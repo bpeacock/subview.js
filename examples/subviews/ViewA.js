@@ -4,7 +4,11 @@ module.exports = subview("A", {
     init: function() {
         var self = this;
 
+        console.log("INIT");
+        console.log($('.signin'));
+
         $('.signin').click(function() {
+            console.log("HERE");
             self.trigger('auth', [true]);
         });
 

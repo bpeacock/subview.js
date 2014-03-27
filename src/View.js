@@ -30,7 +30,7 @@ View.prototype = {
         }
     }, 
     cleanFunctions: [],
-    build: function() { //Runs on remove
+    build: function() { //Runs on 
         for(var i=0; i<this.cleanFunctions.length; i++) {
             this.cleanFunctions[i].apply(this, []);
         }
@@ -142,8 +142,14 @@ View.prototype = {
             var selector = '.listener-'+name+'-'+dir;
             selector = selector + ', ' + selector+'-'+self.type;
 
+            console.log('');
+            console.log(selector);
+            console.log(jqFunc);
+
             //Select $wrappers with the right listener class in the right direction
             var $els = jqFunc ? self.$wrapper[jqFunc](selector) : $(selector);
+
+            console.log($els);
 
             for(var i=0; i<$els.length; i++) {
                 //Get the actual subview
@@ -219,27 +225,6 @@ View.prototype = {
     bind: function(event, callback) { //NOT WORKING
         this.listen(event, callback, 'self');
         return this;
-    },
-
-    /*** Traversing ***/
-    parent: function(type) {
-        var $el = this.$wrapper.closest('.' + (type ? this._viewCssPrefix + type : 'subview'));
-        
-        if($el && $el.length > 0) {
-            return $el[0][subview._domPropertyName];
-        }
-        else {
-            return null;
-        }
-    },
-    next: function(type) {
-
-    },
-    prev: function(type) {
-
-    },
-    children: function(type) {
-
     },
 
     /*** Classes ***/

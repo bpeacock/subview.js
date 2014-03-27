@@ -2,7 +2,7 @@ var subview     = require("../src/main.js"),
     Handlebars  = require("handlebars");
 
 subview("main", {
-    build: function() {
+    init: function() {
         var self = this;
         this.listenDown('auth', function(auth) {
             console.log('auth');
