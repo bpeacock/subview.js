@@ -35,10 +35,13 @@ subview('main', {
         name: SomeSubview 
     },
     data: {         //Data available in the template (may also be a function)
-        "key": "value"
+        key: "value"
     }
 });
 ```
+
+[Here](https://raw.github.com/bpeacock/subview.js/blob/master/examples/index.html) is a simple example with [source code](examples).
+
 
 Philosophy
 ----------
