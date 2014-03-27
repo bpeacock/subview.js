@@ -1684,7 +1684,7 @@ View.prototype = {
                 if(view.isViewPool) {
                     view = view.spawn();
                 }
-                
+
                 $this
                     .after(view.$wrapper)
                     .remove();
@@ -1728,6 +1728,30 @@ View.prototype = {
         return this.$wrapper.find(selector);
     },
 
+    /*** Traversing ***/
+    traverse: function(jqFunc, type) {
+        var $el = this.$wrapper[jqFunc](this._getTraverseClass(type));
+        
+        if($el && $el.length > 0) {
+            return $el[0][subview._domPropertyName];
+        }
+        else {
+            return null;
+        }
+    },
+    parent: function(type) {
+        return this.traverse('closest', type);
+    },
+    next: function(type) {
+        return this.traverse('next', type);
+    },
+    prev: function(type) {
+        return this.traverse('prev', type);
+    },
+    children: function(type) {
+        return this.traverse('find', type);
+    },
+    
     /*** Event API ***/
     trigger: function(name, args) {
         var self = this;
@@ -2042,7 +2066,12 @@ subview._validateName = function(name) {
 subview._reservedMethods = [
     'html',
     'remove',
+    'parent',
+    'children',
+    'next',
+    'prev',
     'trigger',
+    'traverse',
     '$',
     '_bindListeners',
     '_active',

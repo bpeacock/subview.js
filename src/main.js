@@ -123,7 +123,12 @@ subview._validateName = function(name) {
 subview._reservedMethods = [
     'html',
     'remove',
+    'parent',
+    'children',
+    'next',
+    'prev',
     'trigger',
+    'traverse',
     '$',
     '_bindListeners',
     '_active',
