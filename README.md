@@ -17,8 +17,16 @@ Basic Usage
 
 ```javascript
 subview('main', {
+
+    /*** Main Methods ***/
+    once: function() {
+        //Runs the first time a subview is created then never again.
+    },
     init: function() {
         //Stuff to be done when initializing a subview via the .spawn method
+    },
+    clean: function() {
+        //Runs when a subview is removed to clean and prepare it to be reused
     },
 
     /*** Templating ***/
@@ -28,14 +36,6 @@ subview('main', {
     },
     data: {         //Data available in the template (may also be a function)
         "key": "value"
-    },
-
-    /*** ***/
-    clean: function() {
-        //Runs when a subview is removed to clean and prepare it to be reused
-    },
-    build: function() {
-        //Runs after every render
     }
 });
 ```
