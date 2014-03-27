@@ -1485,6 +1485,76 @@
 })(typeof window != 'undefined' ? window : global);
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],4:[function(require,module,exports){
+var $ = require("unopinionate").selector,
+    _ = require('underscore');
+
+var State = function($el) {
+    this.$wrapper = $el;
+    this.data     = {};
+    this.bindings = {};
+};
+
+State.prototype = {
+    _stateCssPrefix:        'state-',
+    _stateCssPrefixRegex:   /^state-/,
+
+    /*** Get Set ***/
+    set: function(name, value) {
+        this.data[name] = value;
+        this.$wrapper.addClass(_stateCssPrefix + name + '-' + value);
+        this.trigger(name);
+    },
+    get: function(name) {
+        return this.data[name];
+    },
+
+    /*** Dump Load ***/
+    dump: function() {
+        return _.clone(this.data);
+    },
+    load: function(defaults) {
+        this.data = _.clone(defaults);
+
+        //Reset Classes
+        var classes = this.$wrapper[0].className.split(' '),
+            i = classes.length;
+
+        while(i--) {
+            if(classes[i].match(_stateCssPrefixRegex)) {
+                classes.splice(i, 1);
+            }
+        }
+        
+        this.$wrapper[0].className = classes.join(' ');
+    },
+
+    /*** Events ***/
+    bind: function(name, callback) {
+        var binding = this.bindings[name];
+
+        if(binding) {
+            binding.push(callback);
+        }
+        else {
+            binding = [callback];
+        }
+    },
+    unbind: function(name) {
+        delete this.bindings[name];
+    },
+    trigger: function(name) {
+        var binding = this.bindings[name],
+            value   = this.data[name];
+
+        if(binding) {
+            for(var i=0; i<binding.length; i++) {
+                binding[i](value);
+            }
+        }
+    }
+};
+
+},{"underscore":2,"unopinionate":3}],5:[function(require,module,exports){
 var _   = require('underscore'),
     log = require('loglevel'),
     noop = function() {};
@@ -1501,6 +1571,9 @@ View.prototype = {
     //listeners
     //'[direction]:[event name]:[from type], ...': function(eventArguments*) {}
     listeners: {},
+
+    //State
+    stateDefaults: {},
 
     /* Templating */
     template:   "",
@@ -1642,32 +1715,26 @@ View.prototype = {
             all:    null
         };
 
-        _.find(directions, function(jqFunc, dir) {
-            var selector = '.listener-'+name+'-'+dir;
+        _.find(directions, function(jqFunc, direction) {
+            var selector = '.listener-'+direction+'-'+name;
             selector = selector + ', ' + selector+'-'+self.type;
-
-            console.log('');
-            console.log(selector);
-            console.log(jqFunc);
 
             //Select $wrappers with the right listener class in the right direction
             var $els = jqFunc ? self.$wrapper[jqFunc](selector) : $(selector);
-
-            console.log($els);
 
             for(var i=0; i<$els.length; i++) {
                 //Get the actual subview
                 var recipient = subview($els[i]);
 
                 //Check for a subview type specific callback
-                var typedCallback = recipient.listeners[dir + ":" + name + ":" + self.type];
-                if(typedCallback && typedCallback.apply(self, args) === false) {
+                var typedCallback = recipient.listeners[direction + ":" + name + ":" + self.type];
+                if(typedCallback && typedCallback.apply(recipient, args) === false) {
                     return true; //Breaks if callback returns false
                 }
 
                 //Check for a general event callback
-                var untypedCallback = recipient.listeners[dir + ":" + name];
-                if(untypedCallback && untypedCallback.apply(self, args) === false) {
+                var untypedCallback = recipient.listeners[direction + ":" + name];
+                if(untypedCallback && untypedCallback.apply(recipient, args) === false) {
                     return true; //Breaks if callback returns false
                 }
             }
@@ -1728,8 +1795,9 @@ View.prototype = {
 module.exports = View;
 
 
-},{"loglevel":1,"underscore":2}],5:[function(require,module,exports){
-var $ = require("unopinionate").selector;
+},{"loglevel":1,"underscore":2}],6:[function(require,module,exports){
+var $       = require("unopinionate").selector,
+    State   = require('./State');
 
 var ViewPool = function(View) {
     //Configuration
@@ -1781,6 +1849,8 @@ ViewPool.prototype = {
                 view.wrapper  = el;
                 view.$wrapper = $el;
 
+                view.state = new State($el);
+
                 view._addDefaultClasses();
                 view._bindListeners();
 
@@ -1789,6 +1859,9 @@ ViewPool.prototype = {
             
             //Make the view active
             view._active = true;
+
+            //Set the default state
+            view.state.load(view.stateDefaults);
 
             //Render
             if(isNewView || view.reRender) {
@@ -1818,7 +1891,7 @@ ViewPool.prototype = {
 
 module.exports = ViewPool;
 
-},{"unopinionate":3}],6:[function(require,module,exports){
+},{"./State":4,"unopinionate":3}],7:[function(require,module,exports){
 var _               = require("underscore"),
     log             = require("loglevel"),
     $               = require("unopinionate").selector,
@@ -1982,4 +2055,4 @@ $(function() {
     }
 });
 
-},{"./View":4,"./ViewPool":5,"loglevel":1,"underscore":2,"unopinionate":3}]},{},[6])
+},{"./View":5,"./ViewPool":6,"loglevel":1,"underscore":2,"unopinionate":3}]},{},[7])

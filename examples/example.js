@@ -5,12 +5,12 @@ subview("main", {
     listeners: {
         'down:auth': function(auth) {
             if(auth) {
-                self.$wrapper
+                this.$wrapper
                     .removeClass('state-auth-false')
                     .addClass('state-auth-true');
             }
             else {
-                self.$wrapper
+                this.$wrapper
                     .addClass('state-auth-false')
                     .removeClass('state-auth-true');
             }

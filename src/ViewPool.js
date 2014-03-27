@@ -1,4 +1,5 @@
-var $ = require("unopinionate").selector;
+var $       = require("unopinionate").selector,
+    State   = require('./State');
 
 var ViewPool = function(View) {
     //Configuration
@@ -50,6 +51,8 @@ ViewPool.prototype = {
                 view.wrapper  = el;
                 view.$wrapper = $el;
 
+                view.state = new State($el);
+
                 view._addDefaultClasses();
                 view._bindListeners();
 
@@ -58,6 +61,9 @@ ViewPool.prototype = {
             
             //Make the view active
             view._active = true;
+
+            //Set the default state
+            view.state.load(view.stateDefaults);
 
             //Render
             if(isNewView || view.reRender) {

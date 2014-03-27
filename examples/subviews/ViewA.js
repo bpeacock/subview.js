@@ -4,11 +4,7 @@ module.exports = subview("A", {
     postRender: function() {
         var self = this;
 
-        console.log("INIT");
-        console.log($('.signin'));
-
         this.$('.signin').click(function() {
-            console.log("HERE");
             self.trigger('auth', [true]);
         });
 

@@ -1,7 +1,7 @@
 var subview = require("../../src/main.js"),
     Handlebars  = require("handlebars");
 
-module.exports = subview("auth", {
+module.exports = subview("Auth", {
     template: Handlebars.compile("\
 This should only show up when signed in.\
 <ul>\

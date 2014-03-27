@@ -15,6 +15,9 @@ View.prototype = {
     //'[direction]:[event name]:[from type], ...': function(eventArguments*) {}
     listeners: {},
 
+    //State
+    stateDefaults: {},
+
     /* Templating */
     template:   "",
 
@@ -155,32 +158,26 @@ View.prototype = {
             all:    null
         };
 
-        _.find(directions, function(jqFunc, dir) {
-            var selector = '.listener-'+name+'-'+dir;
+        _.find(directions, function(jqFunc, direction) {
+            var selector = '.listener-'+direction+'-'+name;
             selector = selector + ', ' + selector+'-'+self.type;
-
-            console.log('');
-            console.log(selector);
-            console.log(jqFunc);
 
             //Select $wrappers with the right listener class in the right direction
             var $els = jqFunc ? self.$wrapper[jqFunc](selector) : $(selector);
-
-            console.log($els);
 
             for(var i=0; i<$els.length; i++) {
                 //Get the actual subview
                 var recipient = subview($els[i]);
 
                 //Check for a subview type specific callback
-                var typedCallback = recipient.listeners[dir + ":" + name + ":" + self.type];
-                if(typedCallback && typedCallback.apply(self, args) === false) {
+                var typedCallback = recipient.listeners[direction + ":" + name + ":" + self.type];
+                if(typedCallback && typedCallback.apply(recipient, args) === false) {
                     return true; //Breaks if callback returns false
                 }
 
                 //Check for a general event callback
-                var untypedCallback = recipient.listeners[dir + ":" + name];
-                if(untypedCallback && untypedCallback.apply(self, args) === false) {
+                var untypedCallback = recipient.listeners[direction + ":" + name];
+                if(untypedCallback && untypedCallback.apply(recipient, args) === false) {
                     return true; //Breaks if callback returns false
                 }
             }

@@ -4,8 +4,8 @@ var ViewA = require("./ViewA"),
 module.exports = ViewA.extend("B", {
     template: _.template("\
 This is view B.  I'm subclassed from view A.\
-<%= subview.auth %>"),
+<%= subview.Auth %>"),
     subviews: {
-        auth: require("./Auth")
+        Auth: require("./Auth")
     }
 });
