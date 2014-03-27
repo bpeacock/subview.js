@@ -2,18 +2,12 @@ var subview     = require("../src/main.js"),
     Handlebars  = require("handlebars");
 
 subview("main", {
+    defaultState: {
+        auth: true
+    },
     listeners: {
         'down:auth': function(auth) {
-            if(auth) {
-                this.$wrapper
-                    .removeClass('state-auth-false')
-                    .addClass('state-auth-true');
-            }
-            else {
-                this.$wrapper
-                    .addClass('state-auth-false')
-                    .removeClass('state-auth-true');
-            }
+            this.state.set('auth', auth);
         }
     },
     template: Handlebars.compile("\

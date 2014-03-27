@@ -63,7 +63,7 @@ ViewPool.prototype = {
             view._active = true;
 
             //Set the default state
-            view.state.load(view.stateDefaults);
+            view.state.load(view.defaultState);
 
             //Render
             if(isNewView || view.reRender) {

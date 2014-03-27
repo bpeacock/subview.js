@@ -16,7 +16,7 @@ View.prototype = {
     listeners: {},
 
     //State
-    stateDefaults: {},
+    defaultState: {},
 
     /* Templating */
     template:   "",

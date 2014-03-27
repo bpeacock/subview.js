@@ -1,5 +1,4 @@
-var $ = require("unopinionate").selector,
-    _ = require('underscore');
+var $ = require("unopinionate").selector;
 
 var State = function($el) {
     this.$wrapper = $el;
@@ -9,12 +8,17 @@ var State = function($el) {
 
 State.prototype = {
     _stateCssPrefix:        'state-',
-    _stateCssPrefixRegex:   /^state-/,
 
     /*** Get Set ***/
     set: function(name, value) {
+        //Set Data Store
         this.data[name] = value;
-        this.$wrapper.addClass(_stateCssPrefix + name + '-' + value);
+
+        //Set Classes
+        this._removeClasses(name);
+        this.$wrapper.addClass(this._stateCssPrefix + name + '-' + value);
+
+        //Trigger Events
         this.trigger(name);
     },
     get: function(name) {
@@ -23,22 +27,26 @@ State.prototype = {
 
     /*** Dump Load ***/
     dump: function() {
-        return _.clone(this.data);
+        return this.data;
     },
     load: function(defaults) {
-        this.data = _.clone(defaults);
+        var self = this;
 
-        //Reset Classes
-        var classes = this.$wrapper[0].className.split(' '),
-            i = classes.length;
+        if(this.notFirstTime) {
+            //Reset data
+            this.data = {};
 
-        while(i--) {
-            if(classes[i].match(_stateCssPrefixRegex)) {
-                classes.splice(i, 1);
-            }
+            //Reset classes
+            this._removeClasses();
+        }
+        else {
+            this.notFirstTime = true;
         }
         
-        this.$wrapper[0].className = classes.join(' ');
+        //Set Everything
+        $.each(defaults, function(name, value) {
+            self.set(name, value);
+        });
     },
 
     /*** Events ***/
@@ -64,5 +72,22 @@ State.prototype = {
                 binding[i](value);
             }
         }
+    },
+
+    _removeClasses: function(name) {
+        var classes = this.$wrapper[0].className.split(' '),
+            regex = new RegExp('^'+this._stateCssPrefix+name+'-'),
+            i = classes.length;
+
+        while(i--) {
+            if(classes[i].match(regex)) {
+                classes.splice(i, 1);
+            }
+        }
+        
+        this.$wrapper[0].className = classes.join(' ');
     }
 };
+
+module.exports = State;
+
