@@ -1638,7 +1638,7 @@ View.prototype = {
     /*** Rendering ***/
     render: function() {
         var self = this,
-            html = '',
+            html = '';
             postLoad = false;
 
         this.preRender();
@@ -1653,13 +1653,8 @@ View.prototype = {
             //Define the subview variable
             data.subview = {};
             $.each(this.subviews, function(name, subview) {
-                if(subview.isViewPool) {
-                    data.subview[name] = subview.template;
-                }
-                else {
-                    postLoad = true;
-                    data.subview[name] = "<script class='post-load-view' type='text/html' data-name='"+name+"'></script>";
-                }
+                postLoad = true;
+                data.subview[name] = "<script class='post-load-view' type='text/html' data-name='"+name+"'></script>";
             });
 
             //Run the templating engine
@@ -1683,9 +1678,15 @@ View.prototype = {
         //Post Load Views
         if(postLoad) {
             this.$wrapper.find('.post-load-view').each(function() {
-                var $this = $(this);
+                var $this = $(this),
+                    view  = self.subviews[$this.attr('data-name')];
+
+                if(view.isViewPool) {
+                    view = view.spawn();
+                }
+                
                 $this
-                    .after(self.subviews[$this.attr('data-name')].$wrapper)
+                    .after(view.$wrapper)
                     .remove();
             });
         }
@@ -1829,8 +1830,7 @@ var ViewPool = function(View) {
     this.View   = View;
     this.type   = View.prototype.type;
     this.super  = View.prototype.super;
-    this.template = "<"+this.View.prototype.tagName+" class='"+this.View.prototype._subviewCssClass + '-' + this.View.prototype.type+" "+this.View.prototype.className+"'></"+this.View.prototype.tagName+">";
-
+    
     //View Configuration
     this.View.prototype.pool = this;
 

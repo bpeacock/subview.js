@@ -6,8 +6,7 @@ var ViewPool = function(View) {
     this.View   = View;
     this.type   = View.prototype.type;
     this.super  = View.prototype.super;
-    this.template = "<"+this.View.prototype.tagName+" class='"+this.View.prototype._subviewCssClass + '-' + this.View.prototype.type+" "+this.View.prototype.className+"'></"+this.View.prototype.tagName+">";
-
+    
     //View Configuration
     this.View.prototype.pool = this;
 
