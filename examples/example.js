@@ -1,10 +1,8 @@
 var subview     = require("../src/main.js"),
     Handlebars  = require("handlebars");
 
-//subview.Mustache = Mustache;
-
-subview("app", {
-    init: function() {
+subview("main", {
+    build: function() {
         var self = this;
         this.listenDown('auth', function(auth) {
             console.log('auth');
@@ -21,7 +19,6 @@ subview("app", {
                         .removeClass('state-auth-true');
                 }
             }, 0);
-            
         });
     },
     template: Handlebars.compile("\
@@ -33,4 +30,3 @@ This Works!!!\
         B: require("./subviews/ViewB")
     }
 });
-

@@ -1,5 +1,5 @@
-var _           = require('underscore'),
-    log         = require('loglevel');
+var _   = require('underscore'),
+    log = require('loglevel');
 
 var View = function() {};
 

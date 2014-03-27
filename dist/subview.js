@@ -1485,8 +1485,8 @@
 })(typeof window != 'undefined' ? window : global);
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],4:[function(require,module,exports){
-var _           = require('underscore'),
-    log         = require('loglevel');
+var _   = require('underscore'),
+    log = require('loglevel');
 
 var View = function() {};
 
@@ -1505,14 +1505,6 @@ View.prototype = {
     subviews:   {},
 
     /*** Initialization Functions (should be configured but will be manipulated when defining the subview) ***/
-    config: function(config) { //Runs before render
-        this.listeners = {};
-
-        for(var i=0; i<this.configFunctions.length; i++) {
-            this.configFunctions[i].apply(this, [config]);
-        }
-    }, 
-    configFunctions: [],
     init: function(config) { //Runs after render
         for(var i=0; i<this.initFunctions.length; i++) {
             this.initFunctions[i].apply(this, [config]);
@@ -1525,6 +1517,12 @@ View.prototype = {
         }
     }, 
     cleanFunctions: [],
+    build: function() { //Runs on remove
+        for(var i=0; i<this.cleanFunctions.length; i++) {
+            this.cleanFunctions[i].apply(this, []);
+        }
+    }, 
+    buildFunctions: [],
 
     /*** Rendering ***/
     render: function() {
@@ -1579,6 +1577,9 @@ View.prototype = {
             });
         }
 
+        //Run the build function
+        this.build();
+
         return this;
     },
     html: function(html) {
@@ -1627,7 +1628,7 @@ View.prototype = {
         _.find(directions, function(jqFunc, dir) {
             var selector = '.listener-'+name+'-'+dir;
             selector = selector + ', ' + selector+'-'+self.type;
-            
+
             //Select $wrappers with the right listener class in the right direction
             var $els = jqFunc ? self.$wrapper[jqFunc](selector) : $(selector);
 
@@ -1637,13 +1638,13 @@ View.prototype = {
 
                 //Check for a subview type specific callback
                 var typedCallback = recipient.listeners[self.type + ":" + name + ":" + dir];
-                if(typedCallback && typedCallback.apply(self, [args]) === false) {
+                if(typedCallback && typedCallback.apply(self, args) === false) {
                     return true; //Breaks if callback returns false
                 }
 
                 //Check for a general event callback
                 var untypedCallback = recipient.listeners[name + ":" + dir];
-                if(untypedCallback && untypedCallback.apply(self, [args]) === false) {
+                if(untypedCallback && untypedCallback.apply(self, args) === false) {
                     return true; //Breaks if callback returns false
                 }
             }
@@ -1691,6 +1692,19 @@ View.prototype = {
     },
     listenAcross: function(event, callback) {
         this.listen(event, callback, 'across');
+        return this;
+    },
+    mirror: function(event) {
+        var self = this;
+
+        this.listen(event, function() {
+            self.trigger(event);
+        });
+
+        return this;
+    },
+    bind: function(event, callback) { //NOT WORKING
+        this.listen(event, callback, 'self');
         return this;
     },
 
@@ -1786,30 +1800,43 @@ ViewPool.prototype = {
             return el.view;
         }
         else {
+            var view;
             config = config || ($.isPlainObject(el) ? el : undefined);
             
             //Get the DOM node
             if(!el || !el.nodeType) {
                 if(this.pool.length !== 0) {
-                    return this.pool.pop();
+                    view = this.pool.pop();
                 }
                 else {
                     el = document.createElement(this.View.prototype.tagName);
                     $el = $(el);
                 }
             }
+
+            var isNewView;
+            if(!view) {
+                isNewView = true;
+                view = new this.View();
+
+                //Bind the element
+                el[subview._domPropertyName] = view;
+                
+                view.wrapper  = el;
+                view.$wrapper = $el;
+
+                view._addDefaultClasses();
+            }
             
-            var view = new this.View();
-            el[subview._domPropertyName] = view;
-            
-            view.wrapper  = el;
-            view.$wrapper = $el;
-            view._addDefaultClasses();
+            //Make the view active
             view._active = true;
 
-            //Render (don't chain since introduces opportunity for user error)
-            view.config(config); 
-            view.render();
+            //Render
+            if(isNewView) {
+                view.render();
+            }
+
+            //Initialize
             view.init(config);
 
             return view;
@@ -1867,11 +1894,11 @@ var subview = function(name, protoViewPool, config) {
         if(subview._validateName(name)) {
 
             //Create the new View
-            var View = function() {},
-                superClass = new ViewPrototype();
-
+            var View        = function() {},
+                superClass  = new ViewPrototype();
+            
             //Extend the existing init, config & clean functions rather than overwriting them
-            _.each(['init', 'config', 'clean'], function(name) {
+            _.each(['init', 'build', 'clean'], function(name) {
                 config[name+'Functions'] = superClass[name+'Functions'].slice(0); //Clone superClass init
                 if(config[name]) {
                     config[name+'Functions'].push(config[name]);
@@ -1956,15 +1983,22 @@ subview._validateName = function(name) {
     return true;
 };
 
+subview.init = function() {
+    var Main = subview.lookup('main');
+
+    if(Main) {
+        subview.main = Main.spawn();
+        subview.main.$wrapper.appendTo('body');
+    }
+};
+
 /*** Export ***/
 window.subview = module.exports = subview;
 
-/*** Startup Actions ***/
 $(function() {
     if(!subview.noInit) {
-        subview.load();
+        subview.init();
     }
 });
-
 
 },{"./View":4,"./ViewPool":5,"loglevel":1,"underscore":2,"unopinionate":3}]},{},[6])
