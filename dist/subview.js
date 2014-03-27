@@ -1625,6 +1625,9 @@ View.prototype = {
 
         return this;
     },
+    $: function(selector) {
+        return this.$wrapper.find(selector);
+    },
 
     /*** Event API ***/
     trigger: function(name, args) {

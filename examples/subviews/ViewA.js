@@ -1,18 +1,18 @@
 var subview = require("../../src/main.js");
 
 module.exports = subview("A", {
-    init: function() {
+    postRender: function() {
         var self = this;
 
         console.log("INIT");
         console.log($('.signin'));
 
-        $('.signin').click(function() {
+        this.$('.signin').click(function() {
             console.log("HERE");
             self.trigger('auth', [true]);
         });
 
-        $('.signout').click(function() {
+        this.$('.signout').click(function() {
             self.trigger('auth', [false]);
         });
     },
