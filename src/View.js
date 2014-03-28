@@ -265,6 +265,16 @@ View.prototype = {
         this.$wrapper.addClass(classes.join(' '));
 
         return this;
+    },
+
+    /*** Extensions ***/
+    _loadExtensions: function() {
+        var self = this;
+        $.each(this.prototype, function(name, prop) {
+            if(prop._isSubviewExtension) {
+                self[name] = prop(self);
+            }
+        });
     }
 };
 

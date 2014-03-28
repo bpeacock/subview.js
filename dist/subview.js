@@ -1752,6 +1752,16 @@ View.prototype = {
         this.$wrapper.addClass(classes.join(' '));
 
         return this;
+    },
+
+    /*** Extensions ***/
+    _loadExtensions: function() {
+        var self = this;
+        $.each(this.prototype, function(name, prop) {
+            if(prop._isSubviewExtension) {
+                self[name] = prop(self);
+            }
+        });
     }
 };
 
@@ -1812,7 +1822,8 @@ ViewPool.prototype = {
 
                 view._addDefaultClasses();
                 view._bindListeners();
-
+                view._loadExtensions();
+                
                 view.once();
             }
             
@@ -2028,6 +2039,35 @@ subview.init = function() {
         subview.main = Main.spawn();
         subview.main.$wrapper.appendTo('body');
     }
+};
+
+/*** Extensions ***/
+subview.extension = function(extensionConfig) {
+    //The Actual Extension Definition
+    var Extension = function(userConfig, view) {
+        this.view   = view;
+        this.config = userConfig;
+    };
+
+    Extension.prototype = extensionConfig;
+
+    // This function gets called by the user to pass in their configuration
+    var ExtensionFactory = function(userConfig) {
+
+        // This function is called in view._loadExtensions
+        return function(view) {
+            var extension = new Extension(userConfig, view);
+
+            //Initialize the extension
+            extension.init(userConfig, view);
+            
+            return extension;
+        };
+    };
+
+    ExtensionFactory._isSubviewExtension = true;
+
+    return ExtensionFactory;
 };
 
 /*** Export ***/

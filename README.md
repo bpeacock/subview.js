@@ -36,11 +36,72 @@ subview('main', {
     },
     data: {         //Data available in the template (may also be a function)
         key: "value"
-    }
+    },
+    myExtension: myExtension({
+
+    })
 });
 ```
 
 A simple example is available [here](examples).
+
+
+subview.js Extensions
+---------------------
+
+Subviews can include third party functionality via composition (extensions) or inheritance from another subview. 
+
+### Using Extensions
+
+Subview extensions are added as properties of a subview and are given the namespace you assign. The extension itsself is a function that is called with a configuration object, with properties that depend on the individual extension. See the example below:
+
+```javascript
+subview('main', {
+    init: function() {
+        this.foo.bar();
+    },
+    foo: myExtension({
+        config: 'property'
+    })
+});
+```
+
+
+### Available Extensions
+
+- [State](https://github.com/bpeacock/subview-state.js) - Adds a state model to your subview that can be bound to and is reflected by CSS classes applied to the `$wrapper`. This is very useful for UI state changes such as hiding and showing a side bar.
+
+Submit a pull request to add your extension to the list!
+
+
+### Writing Extensions
+
+Subview extensions are [factory](http://en.wikipedia.org/wiki/Factory_method_pattern) functions that should return an instance of your extension. In order to be recognized as a subview extension, **the extension must have the property `isSubviewExtension` set to `true`**.  Below is a basic template for an extension:
+
+```javascript
+//The Extension itself
+var MyExtension = function(view) {
+    this.view = view;
+};
+
+MyExtension.prototype = {
+    foo: function() {
+        //Alert the type of the subview that has loaded the extension
+        alert(this.view.type); 
+    }
+};
+
+//The Extension factory that is returned
+var extension = function(config) {
+    return new MyExtension(this);
+};
+
+extension.isSubviewExtension = true;
+
+module.exports = extension;
+```
+
+Notice that the extension above uses an object with `prototype` methods to create the extension. This is preferred for efficiency and should be considered a best practice.
 
 
 Philosophy
