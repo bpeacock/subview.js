@@ -6,7 +6,7 @@
   "main": "src/main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bpeacock/subview.js/blob/master/README.md"
+    "url": "https://github.com/bpeacock/subview.js"
   },
   "dependencies": {
     "underscore": "1.5.x",
