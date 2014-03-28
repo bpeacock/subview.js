@@ -3,6 +3,12 @@ Subview.js [![Build Status](https://travis-ci.org/bpeacock/subview.js.svg?branch
 
 Subview.js is a minimalistic hierarchical view framework designed to be highly modular, highly extensible and very efficient for applications containing thousands of views.  The last point makes subview an excellent choice for complex user interfaces that are redrawn often such as word processors, messengers and other single-page web-apps.  Subview *is not and will never be* a complete MVC framework but rather a View/Controller module designed to be used in conjunction with a Data Model.
 
+### Features:
+- Extensible Views
+- Hierarchically Scoped Events
+- Elegant Templating with Your Favorite Engine (Handlebars, Underscore, EJS or Jade)
+- Efficient View Management Through Object Pools
+
 
 Installation
 ------------
@@ -96,7 +102,7 @@ Duties:
 
 1. Render the application
 2. Execute functions that define UI logic
-3. ~~Store application state~~
+3. ~~Store application state~~ Moved to the [State Extension](https://github.com/bpeacock/subview-state.js).
 4. ~~Provide event bindings for application state change~~ Provide Event Bindings for inner-app communication.
 5. Manage View Object pools
 
