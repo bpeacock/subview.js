@@ -1,11 +1,7 @@
 Subview.js
 ==========
 
-A hierarchical view framework.
-
-THIS IS AN UNSTABLE 0.0.x RELEASE
-
-Subview.js is a minimalistic view framework designed to be highly modular, highly extensible and very efficient for applications containing thousands of views.  The last point makes subview an excellent choice for complex user interfaces that are redrawn often such as word processors, messengers and other single-page web-apps.  Subview *is not and will never be* a complete MVC framework but rather a View/Controller module designed to be used in conjunction with a Data Model.
+Subview.js is a minimalistic hierarchical view framework designed to be highly modular, highly extensible and very efficient for applications containing thousands of views.  The last point makes subview an excellent choice for complex user interfaces that are redrawn often such as word processors, messengers and other single-page web-apps.  Subview *is not and will never be* a complete MVC framework but rather a View/Controller module designed to be used in conjunction with a Data Model.
 
 
 To install
