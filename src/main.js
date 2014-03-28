@@ -163,7 +163,7 @@ subview._validateConfig = function(config) {
 
     $.each(config, function(name, value) {
         if(subview._reservedMethods.indexOf(name) != -1) {
-            console.error("Method '"+name+"' is reserved as part of the subview API.");
+            log.error("Method '"+name+"' is reserved as part of the subview API.");
             success = false;
         }
     });
@@ -202,9 +202,9 @@ subview.extension = function(extensionConfig) {
 
             return extension;
         };
-        
+
         ExtensionFactory._isSubviewExtension = true;
-        
+
         return ExtensionFactory;
     };
 };

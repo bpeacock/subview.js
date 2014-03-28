@@ -1758,11 +1758,7 @@ View.prototype = {
     _loadExtensions: function() {
         var self = this;
         $.each(this, function(name, prop) {
-            console.log('');
-            console.log(name);
-            console.log(prop);
             if(prop._isSubviewExtension) {
-                console.log('here');
                 self[name] = prop(self);
             }
         });
@@ -2028,7 +2024,7 @@ subview._validateConfig = function(config) {
 
     $.each(config, function(name, value) {
         if(subview._reservedMethods.indexOf(name) != -1) {
-            console.error("Method '"+name+"' is reserved as part of the subview API.");
+            log.error("Method '"+name+"' is reserved as part of the subview API.");
             success = false;
         }
     });
@@ -2067,9 +2063,9 @@ subview.extension = function(extensionConfig) {
 
             return extension;
         };
-        
+
         ExtensionFactory._isSubviewExtension = true;
-        
+
         return ExtensionFactory;
     };
 };

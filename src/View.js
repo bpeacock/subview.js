@@ -271,11 +271,7 @@ View.prototype = {
     _loadExtensions: function() {
         var self = this;
         $.each(this, function(name, prop) {
-            console.log('');
-            console.log(name);
-            console.log(prop);
             if(prop._isSubviewExtension) {
-                console.log('here');
                 self[name] = prop(self);
             }
         });
