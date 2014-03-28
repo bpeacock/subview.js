@@ -1602,14 +1602,11 @@ View.prototype = {
     },
     html: function(html) {
         //Remove & clean subviews in the wrapper 
-        this.$wrapper.find('.'+this._subviewCssClass).each(function() {
+        this.$('.'+this._subviewCssClass).each(function() {
             subview(this).remove();
         });
 
         this.wrapper.innerHTML = html;
-
-        //Load subviews in the wrapper
-        subview.load(this.$wrapper);
 
         return this;
     },
@@ -1661,13 +1658,14 @@ View.prototype = {
     trigger: function(name, args) {
         var self = this;
         args = args || [];
-        
+
         //Broadcast in all directions
         var directions = {
             up:     'find',
             down:   'parents',
             across: 'siblings',
-            all:    null
+            all:    null,
+            self:   this.$wrapper
         };
 
         _.find(directions, function(jqFunc, direction) {
@@ -1675,7 +1673,9 @@ View.prototype = {
             selector = selector + ', ' + selector+'-'+self.type;
 
             //Select $wrappers with the right listener class in the right direction
-            var $els = jqFunc ? self.$wrapper[jqFunc](selector) : $(selector);
+            var $els = jqFunc ? 
+                            jqFunc.jquery ? jqFunc :
+                                self.$wrapper[jqFunc](selector) : $(selector);
 
             for(var i=0; i<$els.length; i++) {
                 //Get the actual subview
@@ -1823,7 +1823,7 @@ ViewPool.prototype = {
                 view._addDefaultClasses();
                 view._bindListeners();
                 view._loadExtensions();
-                
+
                 view.once();
             }
             
@@ -1864,6 +1864,7 @@ var _               = require("underscore"),
     $               = require("unopinionate").selector,
     ViewPool        = require("./ViewPool"),
     ViewTemplate    = require("./View"),
+    noop            = function() {},
     viewTypeRegex   = new RegExp('^' + ViewTemplate.prototype._subviewCssClass + '-');
 
 var subview = function(name, protoViewPool, config) {
@@ -2051,6 +2052,8 @@ subview.extension = function(extensionConfig) {
 
     Extension.prototype = extensionConfig;
 
+    if(!Extension.prototype.init) Extension.prototype.init = noop;
+
     // This function gets called by the user to pass in their configuration
     return function(userConfig) {
 
@@ -2059,7 +2062,7 @@ subview.extension = function(extensionConfig) {
             var extension = new Extension(userConfig, view);
 
             //Initialize the extension
-            extension.init(userConfig, view);
+            extension.init.apply(extension, [userConfig, view]);
 
             return extension;
         };

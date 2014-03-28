@@ -115,14 +115,11 @@ View.prototype = {
     },
     html: function(html) {
         //Remove & clean subviews in the wrapper 
-        this.$wrapper.find('.'+this._subviewCssClass).each(function() {
+        this.$('.'+this._subviewCssClass).each(function() {
             subview(this).remove();
         });
 
         this.wrapper.innerHTML = html;
-
-        //Load subviews in the wrapper
-        subview.load(this.$wrapper);
 
         return this;
     },
@@ -174,13 +171,14 @@ View.prototype = {
     trigger: function(name, args) {
         var self = this;
         args = args || [];
-        
+
         //Broadcast in all directions
         var directions = {
             up:     'find',
             down:   'parents',
             across: 'siblings',
-            all:    null
+            all:    null,
+            self:   this.$wrapper
         };
 
         _.find(directions, function(jqFunc, direction) {
@@ -188,7 +186,9 @@ View.prototype = {
             selector = selector + ', ' + selector+'-'+self.type;
 
             //Select $wrappers with the right listener class in the right direction
-            var $els = jqFunc ? self.$wrapper[jqFunc](selector) : $(selector);
+            var $els = jqFunc ? 
+                            jqFunc.jquery ? jqFunc :
+                                self.$wrapper[jqFunc](selector) : $(selector);
 
             for(var i=0; i<$els.length; i++) {
                 //Get the actual subview

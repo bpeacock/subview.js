@@ -35,7 +35,7 @@ subview('main', {
     /*** Templating ***/
     template: Handlebars.compile(myTemplate),
     subviews: {     //Subviews that will be available in the template
-        name: SomeSubview 
+        name: SomeSubview
     },
     data: {         //Data available in the template (may also be a function)
         key: "value"

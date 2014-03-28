@@ -52,7 +52,7 @@ ViewPool.prototype = {
                 view._addDefaultClasses();
                 view._bindListeners();
                 view._loadExtensions();
-                
+
                 view.once();
             }
             

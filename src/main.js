@@ -3,6 +3,7 @@ var _               = require("underscore"),
     $               = require("unopinionate").selector,
     ViewPool        = require("./ViewPool"),
     ViewTemplate    = require("./View"),
+    noop            = function() {},
     viewTypeRegex   = new RegExp('^' + ViewTemplate.prototype._subviewCssClass + '-');
 
 var subview = function(name, protoViewPool, config) {
@@ -190,6 +191,8 @@ subview.extension = function(extensionConfig) {
 
     Extension.prototype = extensionConfig;
 
+    if(!Extension.prototype.init) Extension.prototype.init = noop;
+
     // This function gets called by the user to pass in their configuration
     return function(userConfig) {
 
@@ -198,7 +201,7 @@ subview.extension = function(extensionConfig) {
             var extension = new Extension(userConfig, view);
 
             //Initialize the extension
-            extension.init(userConfig, view);
+            extension.init.apply(extension, [userConfig, view]);
 
             return extension;
         };
