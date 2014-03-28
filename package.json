@@ -24,7 +24,8 @@
     "qunitjs": "~1.14.0",
     "sinon": "~1.8.2",
     "grunt-contrib-uglify": "~0.3.2",
-    "grunt-contrib-jshint": "~0.8.0"
+    "grunt-contrib-jshint": "~0.8.0",
+    "subview-state": "0.x.x"
   },
   "scripts": {
     "test": "grunt test"
