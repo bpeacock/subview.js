@@ -44,7 +44,9 @@ subview('main', {
     },
     myExtension: myExtension({
 
-    })
+    }),
+
+    // ... My API
 });
 ```
 
