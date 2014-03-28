@@ -42,11 +42,15 @@ subview('main', {
     data: {         //Data available in the template (may also be a function)
         key: "value"
     },
+
+    /*** Extensions ***/
     myExtension: myExtension({
 
     }),
 
-    // ... My API
+    /*** My API ***/
+
+    // ... Some API Functions
 });
 ```
 
