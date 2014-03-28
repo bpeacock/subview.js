@@ -43,6 +43,28 @@ var subview = function(name, protoViewPool, config) {
                 }
             });
 
+            //Extend the listeners object
+            if(config.listeners) {
+                $.each(superClass.listeners, function(event, callback) {
+                    if(config.listeners[event]) {
+                        //Extend the function
+                        config.listeners[event] = (function(oldCallback, newCallback) {
+                            return function() {
+                                if(oldCallback.apply(this, arguments) === false) {
+                                    return false;
+                                }
+                                
+                                return newCallback.apply(this, arguments);
+                            };
+                        })(config.listeners[event], callback);
+                    }
+                    else {
+                        config.listeners[event] = callback;
+                    }
+                });
+            }
+
+            //Build The new view
             View.prototype       = _.extend(superClass, config);
             View.prototype.type  = name;
             View.prototype.super = ViewPrototype.prototype;
