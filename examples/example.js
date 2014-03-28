@@ -2,9 +2,6 @@ var subview     = require("../src/main.js"),
     Handlebars  = require("handlebars");
 
 subview("main", {
-    defaultState: {
-        auth: true
-    },
     listeners: {
         'down:auth': function(auth) {
             this.state.set('auth', auth);
@@ -17,5 +14,8 @@ This Works!!!\
     subviews: {
         A: require("./subviews/ViewA"),
         B: require("./subviews/ViewB")
-    }
+    },
+    state: require("subview-state")({
+        auth: true
+    })
 });

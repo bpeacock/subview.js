@@ -191,22 +191,22 @@ subview.extension = function(extensionConfig) {
     Extension.prototype = extensionConfig;
 
     // This function gets called by the user to pass in their configuration
-    var ExtensionFactory = function(userConfig) {
+    return function(userConfig) {
 
         // This function is called in view._loadExtensions
-        return function(view) {
+        var ExtensionFactory = function(view) {
             var extension = new Extension(userConfig, view);
 
             //Initialize the extension
             extension.init(userConfig, view);
-            
+
             return extension;
         };
+        
+        ExtensionFactory._isSubviewExtension = true;
+        
+        return ExtensionFactory;
     };
-
-    ExtensionFactory._isSubviewExtension = true;
-
-    return ExtensionFactory;
 };
 
 /*** Export ***/

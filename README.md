@@ -1,9 +1,12 @@
-subview.js
+Subview.js
 ==========
 
 A hierarchical view framework.
 
 THIS IS AN UNSTABLE 0.0.x RELEASE
+
+Subview.js is a minimalistic view framework designed to be highly modular, highly extensible and very efficient for applications containing thousands of views.  The last point makes subview an excellent choice for complex user interfaces that are redrawn often such as word processors, messengers and other single-page web-apps.  Subview *is not and will never be* a complete MVC framework but rather a View/Controller module designed to be used in conjunction with a Data Model.
+
 
 To install
 ----------
@@ -79,7 +82,7 @@ Submit a pull request to add your extension to the list!
 Subview extensions are created with the `subview.extension` method:
 
 ```javascript
-module.exports = subview.extension({
+module.exports = window.subview.extension({
     init: function(config, view) {
 
     }
@@ -87,7 +90,7 @@ module.exports = subview.extension({
 });
 ```
 
-At the moment extensions have only an `init` method that passes user configuration and the view it applies to its-self.  In the future, this will be extended to include bindings to subview life-cycle methods such as `once`, `preRender`, `postRender` and `clean`.  In all of the extension's methods `this` refers to the local scope of the extension NOT the subview that it is extending. This property gives extensions their own unique name-space preventing conflicts with multiple extensions.
+At the moment extensions have only an `init` method that passes user configuration and the view it applies to its-self.  In the future, this will be extended to include bindings to subview life-cycle methods such as `once`, `preRender`, `postRender` and `clean`.  In all of the extension's methods `this` refers to the local scope of the extension NOT the subview that it is extending. This property gives extensions their own unique namespace preventing conflicts with multiple extensions. Make sure to use the instance of subview on the global (window) object to ensure that your extension is built using whatever version of subview is present on the page.
 
 
 Philosophy

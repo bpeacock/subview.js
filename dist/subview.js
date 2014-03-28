@@ -1757,8 +1757,12 @@ View.prototype = {
     /*** Extensions ***/
     _loadExtensions: function() {
         var self = this;
-        $.each(this.prototype, function(name, prop) {
+        $.each(this, function(name, prop) {
+            console.log('');
+            console.log(name);
+            console.log(prop);
             if(prop._isSubviewExtension) {
+                console.log('here');
                 self[name] = prop(self);
             }
         });
@@ -2052,22 +2056,22 @@ subview.extension = function(extensionConfig) {
     Extension.prototype = extensionConfig;
 
     // This function gets called by the user to pass in their configuration
-    var ExtensionFactory = function(userConfig) {
+    return function(userConfig) {
 
         // This function is called in view._loadExtensions
-        return function(view) {
+        var ExtensionFactory = function(view) {
             var extension = new Extension(userConfig, view);
 
             //Initialize the extension
             extension.init(userConfig, view);
-            
+
             return extension;
         };
+        
+        ExtensionFactory._isSubviewExtension = true;
+        
+        return ExtensionFactory;
     };
-
-    ExtensionFactory._isSubviewExtension = true;
-
-    return ExtensionFactory;
 };
 
 /*** Export ***/
