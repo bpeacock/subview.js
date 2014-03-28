@@ -90,7 +90,7 @@ module.exports = window.subview.extension({
 });
 ```
 
-At the moment extensions have only an `init` method that passes user configuration and the view it applies to its-self.  In the future, this will be extended to include bindings to subview life-cycle methods such as `once`, `preRender`, `postRender` and `clean`.  In all of the extension's methods `this` refers to the local scope of the extension NOT the subview that it is extending. This property gives extensions their own unique namespace preventing conflicts with multiple extensions. Make sure to use the instance of subview on the global (window) object to ensure that your extension is built using whatever version of subview is present on the page.
+At the moment extensions have only an `init` method that passes user configuration and the view it applies to its-self.  In the future, this will be extended to include bindings to subview life-cycle methods such as `once`, `preRender`, `postRender` and `clean`.  In all of the extension's methods `this` refers to the local scope of the extension NOT the subview that it is extending. This property gives extensions their own unique namespace preventing conflicts with multiple extensions. **Make sure to use the instance of subview on the global (window) object to ensure that your extension is built using whatever version of subview is present on the page.**
 
 
 Philosophy
