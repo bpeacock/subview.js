@@ -1485,101 +1485,6 @@
 })(typeof window != 'undefined' ? window : global);
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],4:[function(require,module,exports){
-var $ = require("unopinionate").selector;
-
-var State = function($el) {
-    this.$wrapper = $el;
-    this.data     = {};
-    this.bindings = {};
-};
-
-State.prototype = {
-    _stateCssPrefix:        'state-',
-
-    /*** Get Set ***/
-    set: function(name, value) {
-        //Set Data Store
-        this.data[name] = value;
-
-        //Set Classes
-        this._removeClasses(name);
-        this.$wrapper.addClass(this._stateCssPrefix + name + '-' + value);
-
-        //Trigger Events
-        this.trigger(name);
-    },
-    get: function(name) {
-        return this.data[name];
-    },
-
-    /*** Dump Load ***/
-    dump: function() {
-        return this.data;
-    },
-    load: function(defaults) {
-        var self = this;
-
-        if(this.notFirstTime) {
-            //Reset data
-            this.data = {};
-
-            //Reset classes
-            this._removeClasses();
-        }
-        else {
-            this.notFirstTime = true;
-        }
-        
-        //Set Everything
-        $.each(defaults, function(name, value) {
-            self.set(name, value);
-        });
-    },
-
-    /*** Events ***/
-    bind: function(name, callback) {
-        var binding = this.bindings[name];
-
-        if(binding) {
-            binding.push(callback);
-        }
-        else {
-            binding = [callback];
-        }
-    },
-    unbind: function(name) {
-        delete this.bindings[name];
-    },
-    trigger: function(name) {
-        var binding = this.bindings[name],
-            value   = this.data[name];
-
-        if(binding) {
-            for(var i=0; i<binding.length; i++) {
-                binding[i](value);
-            }
-        }
-    },
-
-    _removeClasses: function(name) {
-        var classes = this.$wrapper[0].className.split(' '),
-            regex = new RegExp('^'+this._stateCssPrefix+name+'-'),
-            i = classes.length;
-
-        while(i--) {
-            if(classes[i].match(regex)) {
-                classes.splice(i, 1);
-            }
-        }
-        
-        this.$wrapper[0].className = classes.join(' ');
-    }
-};
-
-module.exports = State;
-
-
-},{"unopinionate":3}],5:[function(require,module,exports){
 var _   = require('underscore'),
     log = require('loglevel'),
     noop = function() {};
@@ -1853,9 +1758,8 @@ View.prototype = {
 module.exports = View;
 
 
-},{"loglevel":1,"underscore":2}],6:[function(require,module,exports){
-var $       = require("unopinionate").selector,
-    State   = require('./State');
+},{"loglevel":1,"underscore":2}],5:[function(require,module,exports){
+var $ = require("unopinionate").selector;
 
 var ViewPool = function(View) {
     //Configuration
@@ -1906,8 +1810,6 @@ ViewPool.prototype = {
                 view.wrapper  = el;
                 view.$wrapper = $el;
 
-                view.state = new State($el);
-
                 view._addDefaultClasses();
                 view._bindListeners();
 
@@ -1916,9 +1818,6 @@ ViewPool.prototype = {
             
             //Make the view active
             view._active = true;
-
-            //Set the default state
-            view.state.load(view.defaultState);
 
             //Render
             if(isNewView || view.reRender) {
@@ -1948,7 +1847,7 @@ ViewPool.prototype = {
 
 module.exports = ViewPool;
 
-},{"./State":4,"unopinionate":3}],7:[function(require,module,exports){
+},{"unopinionate":3}],6:[function(require,module,exports){
 var _               = require("underscore"),
     log             = require("loglevel"),
     $               = require("unopinionate").selector,
@@ -2140,4 +2039,4 @@ $(function() {
     }
 });
 
-},{"./View":5,"./ViewPool":6,"loglevel":1,"underscore":2,"unopinionate":3}]},{},[7])
+},{"./View":4,"./ViewPool":5,"loglevel":1,"underscore":2,"unopinionate":3}]},{},[6])
