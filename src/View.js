@@ -148,7 +148,7 @@ View.prototype = {
 
     /*** Traversing ***/
     traverse: function(jqFunc, type) {
-        var $el = this.$wrapper[jqFunc]('.' + (type ? this._viewCssPrefix + type : 'subview'));
+        var $el = this.$wrapper[jqFunc]('.' + (type ? this._subviewCssClass + '-' + type : 'subview'));
         
         if($el && $el.length > 0) {
             return $el[0][subview._domPropertyName];
