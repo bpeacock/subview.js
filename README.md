@@ -76,32 +76,18 @@ Submit a pull request to add your extension to the list!
 
 ### Writing Extensions
 
-Subview extensions are [factory](http://en.wikipedia.org/wiki/Factory_method_pattern) functions that should return an instance of your extension. In order to be recognized as a subview extension, **the extension must have the property `isSubviewExtension` set to `true`**.  Below is a basic template for an extension:
+Subview extensions are created with the `subview.extension` method:
 
 ```javascript
-//The Extension itself
-var MyExtension = function(view) {
-    this.view = view;
-};
+module.exports = subview.extension({
+    init: function(config, view) {
 
-MyExtension.prototype = {
-    foo: function() {
-        //Alert the type of the subview that has loaded the extension
-        alert(this.view.type); 
     }
-};
-
-//The Extension factory that is returned
-var extension = function(config) {
-    return new MyExtension(this);
-};
-
-extension.isSubviewExtension = true;
-
-module.exports = extension;
+    // ... more methods
+});
 ```
 
-Notice that the extension above uses an object with `prototype` methods to create the extension. This is preferred for efficiency and should be considered a best practice.
+At the moment extensions have only an init method that passes user configuration and the view it applies to itsself.  In the future, this will be extended to include bindings to subview life-cycle methods such as `once`, `preRender`, `postRender` and `clean`.
 
 
 Philosophy
