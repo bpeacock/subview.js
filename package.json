@@ -1,7 +1,7 @@
 {
   "name": "subview",
   "description": "A hierarchical view framework.",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "author": "Brian Peacock",
   "main": "src/main.js",
   "repository": {
