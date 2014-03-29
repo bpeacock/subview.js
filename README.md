@@ -61,7 +61,7 @@ A simple example is available [here](examples).
 subview.js Extensions
 ---------------------
 
-Subviews can include third party functionality via composition (extensions) or inheritance from another subview. 
+Subviews can include third-party functionality compositionally with extensions or by inheritance from another subview (subview.extend()). 
 
 ### Using Extensions
 
