@@ -8,6 +8,7 @@ Subview.js is a minimalistic hierarchical view framework designed to be highly m
 - Hierarchically Scoped Events
 - Elegant Templating with Your Favorite Engine (Handlebars, Underscore, EJS or Jade)
 - Efficient View Management Through Object Pools
+- Self-Contained and Compatible Any Other Framework
 
 
 Installation
