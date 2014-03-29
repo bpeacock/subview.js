@@ -1653,6 +1653,10 @@ View.prototype = {
     children: function(type) {
         return this.traverse('find', type);
     },
+    appendTo: function($el) {
+        this.$wrapper.appendTo($el);
+        return this;
+    },
     
     /*** Event API ***/
     trigger: function(name, args) {
@@ -1694,6 +1698,8 @@ View.prototype = {
                 }
             }
         });
+        
+        return this;
     },
     _bindListeners: function() {
         var self = this;
