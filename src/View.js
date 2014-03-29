@@ -38,18 +38,21 @@ View.prototype = {
         for(var i=0; i<this.onceFunctions.length; i++) {
             this.onceFunctions[i].apply(this, [config]);
         }
+        return this;
     }, 
     onceFunctions: [],
     init: function(config) { //Runs after render
         for(var i=0; i<this.initFunctions.length; i++) {
             this.initFunctions[i].apply(this, [config]);
         }
+        return this;
     }, 
     initFunctions: [],
     clean: function() { //Runs on remove
         for(var i=0; i<this.cleanFunctions.length; i++) {
             this.cleanFunctions[i].apply(this, []);
         }
+        return this;
     }, 
     cleanFunctions: [],
 
@@ -281,6 +284,7 @@ View.prototype = {
                 self[name] = prop(self);
             }
         });
+        return this;
     }
 };
 
