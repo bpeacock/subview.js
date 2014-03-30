@@ -90,7 +90,7 @@ $(function() {
                         if(pos.top < scrollTop) {
                             $sidebar.scrollTop(pos.top - windowH/3);
                         }
-                        else if(pos.top > scrollBottom) {
+                        else if(pos.top > scrollBottom - 40) {
                             $sidebar.scrollTop(pos.top - 2*windowH/3);
                         }
                     }
