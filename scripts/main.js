@@ -34,7 +34,6 @@ $(function() {
 
     //Size the Sidebar
     var headerHeight,
-        activeLimit,
         windowH,
         windowW;
 
@@ -43,9 +42,7 @@ $(function() {
         windowW = $window.width();
 
         $sidebar.height(windowH);
-
         headerHeight = $header.outerHeight();
-        activeLimit = windowH/4;
     };
 
     $window.resize(resizer);
@@ -65,7 +62,7 @@ $(function() {
                 var heading = $headings[i];
                     topOffset = heading.getBoundingClientRect().top;
 
-                if(topOffset < activeLimit) {
+                if(topOffset < 50) {
                     active = heading;
                 }
                 else {
