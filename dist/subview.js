@@ -478,7 +478,7 @@ Subview.prototype = {
 
     _subviewCssClass: 'subview',
     _addDefaultClasses: function() {
-        var classes = [];
+        var classes = this.className.split(' ');
 
         classes.push(this._subviewCssClass + '-' + this.type);
 

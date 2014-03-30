@@ -198,6 +198,31 @@ test("Initialization Process", function() {
     viewPool.destroy();
 });
 
+test("#tagName", function() {
+    var View = subview('tester', {
+        tagName: 'span'
+    });
+
+    var view = View.spawn();
+
+    equal(view.$wrapper.prop("tagName").toLowerCase(), 'span', "Correct tag name is created");
+
+    View.destroy();
+});
+
+test("#className", function() {
+    var View = subview('tester', {
+        className: 'class1 class2'
+    });
+
+    var view = View.spawn();
+
+    ok(view.$wrapper.hasClass('class1'), "Has class1");
+    ok(view.$wrapper.hasClass('class2'), "Has class2");
+
+    View.destroy();
+});
+
 test("#html", function() {
     var Subtest = subview("subtest"),
         subtest = Subtest.spawn();
