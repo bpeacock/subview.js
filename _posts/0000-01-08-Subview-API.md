@@ -291,11 +291,6 @@ Returns the next sibling of the given `subviewType`. If no `subviewType` is give
 Returns the previous sibling of the given `subviewType`. If no `subviewType` is given, returns the previous sibling subview. If no subview is found, returns `null`.
 
 
-#### <a name='Subview.appendTo' data-menu='Subview.appendTo()'>`Subview.appendTo(element)`</a><div class='static'></div><div class='chainable'></div>
-A convienience method that is a shortcut for `Subview.$wrapper.appendTo(element)`.
-
-
-
 ### <a name='Subview-Attributes'>Attributes</a>
 
 #### <a name='Subview.type' data-menu='Subview.type'>`Subview.type [string]`</a><div class='static'></div>

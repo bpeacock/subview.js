@@ -9,11 +9,10 @@ $(function() {
     //Build the Sidebar
     var html = "<ul>",
         tags = ['H2', 'H3', 'H4', 'H5', 'H6'],
-        $headings = $content.find(tags.join(', ')),
-        depth = 0;
+        $headings = $content.find(tags.join(', '));
 
-    $headings.each(function(i) {
-        var $this = $(this),
+    for(var i=0; i<$headings.length; i++) {
+        var $this = $($headings[i]),
             $a    = $this.find('a'),
             tag   = $this.prop("tagName");
 
@@ -26,8 +25,9 @@ $(function() {
         else {
             //Remove the element from the list (for the scroll highlighting)
             $headings.splice(i, 1);
+            i--;
         }
-    });
+    }
     html += "</ul>";
 
     $sidebar.html(html);
