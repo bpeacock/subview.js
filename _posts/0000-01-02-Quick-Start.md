@@ -3,7 +3,7 @@ title:      Quick Start
 categories: section
 ---
 
-The base for a Subview.js application is the definition of the `main` view. This is the only view that is automatically appended to the `<body>` of your application.  Other views are added to the `main` view using a template or by direct DOM manipulation.
+The base for a Subview.js application is the definition of the `main` view. This is the only view that is automatically appended to the `<body>` of your application.  Other views are added to the `main` view using a [template](#Subview-templating) or by direct DOM manipulation.
 
 ```javascript
 subview('main', {

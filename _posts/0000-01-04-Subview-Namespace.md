@@ -3,7 +3,7 @@ title:      Subview Namespace
 categories: section
 ---
 
-The core of Subview.js is the definition of reusable subview templates. Calling `subview()` defines a subview template and returns a [`SubviewPool`](#SubviewPool-API) object. [`Subview`](#Subview-API) instances, which can actually be added to the DOM, are created by calling the `SubviewPool.spawn()` method.
+The core of Subview.js is the definition of reusable subview templates. Calling `subview()` defines a subview template and returns a [`SubviewPool`](#SubviewPool-API) object. [`Subview`](#Subview-API) instances, which can be added to the DOM, are created by calling the `SubviewPool.spawn()` method or by passing a `SubviewPool` into a [template](#Subview-templating).
 
 ### <a name='subview'>`subview(name [string], {definition [object]})`</a>
 
