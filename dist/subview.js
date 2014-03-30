@@ -751,6 +751,7 @@ subview._reservedMethods = [
     'prev',
     'trigger',
     'traverse',
+    'appendTo',
     '$',
     '_bindListeners',
     'active',
