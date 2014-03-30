@@ -5,7 +5,7 @@ categories: section
 
 `SubviewPool`s are returned from the [`subview()`](#subview) function and are responsible for managing subviews, including recycling through pooling.
 
-### <a name='SubviewPool.spawn'>`SubviewPool.spawn( {config [object]} )`</a>
+### <a name='SubviewPool.spawn' data-menu='SubviewPool.spawn()'>`SubviewPool.spawn( {config [object]} )`</a>
 
 ```javascript
 var Pool = subview('my-subview'),
@@ -23,7 +23,7 @@ The `config` object is an optional object that is passed to the [`Subview.once`]
 </section>
 
 
-### <a name='SubviewPool.extend'>`SubviewPool.extend(name [string], {definition [object]})`</a>
+### <a name='SubviewPool.extend' data-menu='SubviewPool.extend()'>`SubviewPool.extend(name [string], {definition [object]})`</a>
 
 Extends a subview template and returns a new `SubviewPool` object.  `SubviewPool.extend` takes the same arguments as the [`subview`](#subview) function.  In most cases, methods and properties present in the `definition` object will overwrite those of the template being extended.  However, life-cycle functions such as [`once`](#Subview.once), [`init`](#Subview.init) and [`clean`](#Subview.clean) will be extended in order to preserve core functionality of the superclass.
 
@@ -54,22 +54,22 @@ var B = SuperClass.extend('B', {
 ```
 
 
-### <a name='SubviewPool.Subview'>`SubviewPool.Subview`</a>
+### <a name='SubviewPool.Subview' data-menu='SubviewPool.Subview'>`SubviewPool.Subview`</a>
 Stores the `prototype` object for the subview template.
 
 
-### <a name='SubviewPool.type'>`SubviewPool.type`</a>
+### <a name='SubviewPool.type' data-menu='SubviewPool.type'>`SubviewPool.type`</a>
 Stores the name of the subview template.
 
-### <a name='SubviewPool.super'>`SubviewPool.super`</a>
+### <a name='SubviewPool.super' data-menu='SubviewPool.super'>`SubviewPool.super`</a>
 Stores a reference to the super-class of the subview template.
 
 
-### <a name='SubviewPool.isSubviewPool'>`SubviewPool.isSubviewPool = true`</a>
+### <a name='SubviewPool.isSubviewPool' data-menu='SubviewPool.isSubviewPool'>`SubviewPool.isSubviewPool = true`</a>
 Simply used to identify that an object is a SubviewPool.
 
 
-### <a name='SubviewPool.destroy'>`SubviewPool.destroy()`</a>
+### <a name='SubviewPool.destroy' data-menu='SubviewPool.destroy()'>`SubviewPool.destroy()`</a>
 Destroys a SubviewPool.  This is rarely used in applications but can be useful for testing.
 
 

@@ -29,13 +29,7 @@
 
         <div id='content'>
             <aside>
-                <ul>
-                    <li><a href='#installation'>Installation</a></li>
-
-                    {% for post in site.posts reversed %}
-                        <li><a href='#{{ post.title | replace:' ','-' }}'>{{ post.title }}</a></li>
-                    {% endfor %}
-                </ul>
+                <!-- Content Built in scripts/main.js -->
             </aside>
 
             <article>
@@ -46,5 +40,8 @@
         <footer>
             Subview.js is maintained by <a href="https://github.com/bpeacock">Brian Peacock</a>.
         </footer>
+
+        <script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script>
+        <script type='text/javascript' src='scripts/main.js'></script>
     </body>
 </html>

@@ -5,7 +5,7 @@ categories: section
 
 ### <a name='Subview-Life-Cycle'>Life-Cycle Methods</a>
 
-#### <a name='Subview.once'>`Subview.once({config})`</a><div class='extension-function'>Extends Parent's Method</div>
+#### <a name='Subview.once' data-menu='Subview.once()''>`Subview.once({config})`</a><div class='extension-function'>Extends Parent's Method</div>
 Fired exactly once when the subview is initialized. `config` is optionally passed through from the [`SubviewPool.spawn`](#SubviewPool.spawn) method.
 
 <section class='best-practice'>
@@ -16,7 +16,7 @@ Fired exactly once when the subview is initialized. `config` is optionally passe
 </section>
 
 
-#### <a name='Subview.init'>`Subview.init({config})`</a><div class='extension-function'>Extends Parent's Method</div>
+#### <a name='Subview.init' data-menu='Subview.init()'>`Subview.init({config})`</a><div class='extension-function'>Extends Parent's Method</div>
 Fires every time the subview is spawned. This may happen multiple times per subview since subviews are recycled in a pool when they are [removed](#Subview.remove). `config` is optionally passed through from the [`SubviewPool.spawn`](#SubviewPool.spawn) method.
 
 <section class='important'>
@@ -31,7 +31,7 @@ Fires every time the subview is spawned. This may happen multiple times per subv
 </section>
 
 
-#### <a name='Subview.clean'>`Subview.clean()`</a><div class='extension-function'>Extends Parent's Method</div>
+#### <a name='Subview.clean' data-menu='Subview.clean()'>`Subview.clean()`</a><div class='extension-function'>Extends Parent's Method</div>
 Fires when the subview is [removed](#Subview.remove). This function is responsible for cleaning up any bindings created in the init function.
 
 <section class='important'>
@@ -39,18 +39,18 @@ Fires when the subview is [removed](#Subview.remove). This function is responsib
 </section>
 
 
-#### <a name='Subview.remove'>`Subview.remove()`</a><div class='static'></div><div class='chainable'></div>
+#### <a name='Subview.remove' data-menu='Subview.remove()'>`Subview.remove()`</a><div class='static'></div><div class='chainable'></div>
 Removes the subview and returns it to the pool of available subviews to be recycled. Triggers [`Subview.clean`](#Subview.clean).
 
 
-#### <a name='Subview.active'>`Subview.active [boolean]`</a><div class='static'></div>
+#### <a name='Subview.active' data-menu='Subview.active'>`Subview.active [boolean]`</a><div class='static'></div>
 A boolean indicated whether or not the subview is in use or in the pool waiting to be spawned.
 
 
 
 ### <a name='Subview-Templating'>Templating</a>
 
-#### <a name='Subview.template'>`Subview.template = ""`</a>
+#### <a name='Subview.template' data-menu='Subview.template'>`Subview.template = ""`</a>
 A template to render inside the `$wrapper`. The template can be a plain HTML string or a **compiled** [Handlebars](http://handlebarsjs.com/), [Underscore](http://underscorejs.org/), [EJS](http://embeddedjs.com/) or [Jade](http://jade-lang.com/) template. [`Subview.data`](#Subview.data) will be passed in to the template along with a special attribute `subview` that contains subviews & SubviewPools listed in [`Subview.subviews`]. 
 
 <section class='important'>
@@ -61,8 +61,6 @@ A template to render inside the `$wrapper`. The template can be a plain HTML str
         <li>**Jade** - `div!= subview.mySubview`</li>
     </ul>
 </section>
-
-##### Example:
 
 ```javascript
 var Li = subview('special-li', {
@@ -112,7 +110,7 @@ Will render in the `<body>`:
 </section>
 
 
-#### <a name='Subview.data'>`Subview.data = {}` [object or function]</a>
+#### <a name='Subview.data' data-menu='Subview.data'>`Subview.data = {}` [object or function]</a>
 Data to be passed into the template. May be an object or a function that returns an object and recieves the config passed to [`SubviewPool.spawn`](#SubviewPool.spawn) as its only argument. Note that the `subview` property is reserved for passing subviews into the template using [`Subview.subviews`](#Subview.subviews).
 
 ```javascript
@@ -135,14 +133,14 @@ subview('some-subview', {
 </section>
 
 
-#### <a name='Subview.subviews'>`Subview.subviews = {}`</a>
+#### <a name='Subview.subviews' data-menu='Subview.subviews'>`Subview.subviews = {}`</a>
 An object that contains subviews and SubviewPools that will be passed to the [template](#Subview.template) as `subview.{key}`.  See [`Subview.template`](#Subview.template) for a usage example.
 
 
-#### <a name='Subview.tagName'>`Subview.tagName = "div"`</a>
+#### <a name='Subview.tagName' data-menu='Subview.tagName'>`Subview.tagName = "div"`</a>
 The html element type that will be created for the subview's [`wrapper`](#Subview.wrapper). Defaults to "div".
 
-#### <a name='Subview.className'>`Subview.className = ""`</a>
+#### <a name='Subview.className' data-menu='Subview.className'>`Subview.className = ""`</a>
 Extra class name(s) to be added to the subview's [`wrapper`](#Subview.wrapper).
 
 ```javascript
@@ -158,7 +156,7 @@ Results in:
 ```
 
 
-#### <a name='Subview.preRender'>`Subview.preRender()`</a>
+#### <a name='Subview.preRender' data-menu='Subview.preRender()'>`Subview.preRender()`</a>
 A callback that fires before [rendering](#Subview.render).
 
 <section class='important'>
@@ -166,7 +164,7 @@ A callback that fires before [rendering](#Subview.render).
 </section>
 
 
-#### <a name='Subview.postRender'>`Subview.postRender()`</a>
+#### <a name='Subview.postRender' data-menu='Subview.postRender()'>`Subview.postRender()`</a>
 A callback that fires after [rendering](#Subview.render).
 
 <section class='best-practice'>
@@ -179,20 +177,20 @@ A callback that fires after [rendering](#Subview.render).
 </section>
 
 
-#### <a name='Subview.wrapper'>`Subview.wrapper [DOM Object]`</a><div class='static'></div>
+#### <a name='Subview.wrapper' data-menu='Subview.wrapper'>`Subview.wrapper [DOM Object]`</a><div class='static'></div>
 The DOM element that represents the subview.
 
 
-#### <a name='Subview.$wrapper'>`Subview.$wrapper [jQuery Object]`</a><div class='static'></div>
+#### <a name='Subview.$wrapper' data-menu='Subview.$wrapper'>`Subview.$wrapper [jQuery Object]`</a><div class='static'></div>
 A cached jQuery wrapper of [`Subview.wrapper`](#Subview.wrapper).
 
 
-#### <a name='Subview.render'>`Subview.render()`</a><div class='static'></div><div class='chainable'></div>
+#### <a name='Subview.render' data-menu='Subview.render()'>`Subview.render()`</a><div class='static'></div><div class='chainable'></div>
 Renders the template when called.  This function is automatically called when the subview is created and, when [`Subview.reRender`](#Subview.reRender) is set to `true`, each time the subview is subsequently spawned. 
 This method **may be overwritten** if no templating is being used on the subview.  Note that when it is overwritten [`Subview.preRender`](#Subview.preRender) and [`Subview.postRender`](#Subview.postRender) will not fire.
 
 
-#### <a name='Subview.html'>`Subview.html(html [string])`</a><div class='static'></div><div class='chainable'></div>
+#### <a name='Subview.html' data-menu='Subview.html()'>`Subview.html(html [string])`</a><div class='static'></div><div class='chainable'></div>
 Sets the HTML inside of the subview and returns any child subviews to the available pool.
 
 <section class='important'>
@@ -200,7 +198,7 @@ Sets the HTML inside of the subview and returns any child subviews to the availa
 </section>
 
 
-#### <a name='Subview.reRender'>`Subview.reRender = false`</a><div class='advanced'></div>
+#### <a name='Subview.reRender' data-menu='Subview.reRender'>`Subview.reRender = false`</a><div class='advanced'></div>
 When this attribute is set to `true` the template will be rendered every time the subview is spawned rather than just the first time the subview is created.
 
 
@@ -209,7 +207,8 @@ When this attribute is set to `true` the template will be rendered every time th
 
 Subview events are used to decouple subviews and eliminate the need to have direct references to subview instances. This results in very flexible and modular subviews that can be reused over and over again in different contexts.
 
-#### <a name='Subview.listeners'>`Subview.listeners = {}`</a>
+
+#### <a name='Subview.listeners' data-menu='Subview.listeners'>`Subview.listeners = {}`</a>
 An object containing event listener definitions as keys and their callbacks as values. Listeners are scoped directionally relative to the current DOM hierarchy and may also specify a type of subview that they are listening for.  The available directions are: 'up', 'down', 'across', 'all' and 'self'. The event specification format is:
 
 ```javascript
@@ -245,7 +244,7 @@ Note that listeners are applied when the subview is created and cannot be modifi
 </section>
 
 
-#### <a name='Subview.trigger'>`Subview.trigger(name [string], {args [array]})`</a><div class='static'></div><div class='chainable'></div>
+#### <a name='Subview.trigger' data-menu='Subview.trigger()'>`Subview.trigger(name [string], {args [array]})`</a><div class='static'></div><div class='chainable'></div>
 
 Broadcasts an event of `name` to all subviews listening in the appropriate direction for this subview's [`type`](#Subview.type).  `args` is a list of arguments that will be passed to the listeners.  See [`Subview.listeners`](#Subview.listeners).
 
@@ -272,37 +271,37 @@ subview('input', function() {
 
 ### <a name='Subview-Traversing'>Traversing & Manipulation</a>
 
-#### <a name='Subview.$'>`Subview.$(selector)`</a><div class='static'></div>
+#### <a name='Subview.$' data-menu='Subview.$()'>`Subview.$(selector)`</a><div class='static'></div>
 A convenience function that is a shortcut for `Subview.$wrapper.find(selector)`.  Inspired by [Backbone](http://backbonejs.org/).
 
 
-#### <a name='Subview.parent'>`Subview.parent({subviewType [string]})`</a><div class='static'></div>
+#### <a name='Subview.parent' data-menu='Subview.parent()'>`Subview.parent({subviewType [string]})`</a><div class='static'></div>
 Returns the closest parent of the given `subviewType`. If no `subviewType` is given, returns the closest parent subview. If no subview is found, returns `null`.
 
 
-#### <a name='Subview.children'>`Subview.children({subviewType [string]})`</a><div class='static'></div>
+#### <a name='Subview.children' data-menu='Subview.children()'>`Subview.children({subviewType [string]})`</a><div class='static'></div>
 Returns the children of the given `subviewType`. If no `subviewType` is given, returns all child subviews. If no subview is found, returns `null`.
 
 
-#### <a name='Subview.next'>`Subview.next({subviewType [string]})`</a><div class='static'></div>
+#### <a name='Subview.next' data-menu='Subview.next()'>`Subview.next({subviewType [string]})`</a><div class='static'></div>
 Returns the next sibling of the given `subviewType`. If no `subviewType` is given, returns the next sibling subview. If no subview is found, returns `null`.
 
 
-#### <a name='Subview.prev'>`Subview.prev({subviewType [string]})`</a><div class='static'></div>
+#### <a name='Subview.prev' data-menu='Subview.prev()'>`Subview.prev({subviewType [string]})`</a><div class='static'></div>
 Returns the previous sibling of the given `subviewType`. If no `subviewType` is given, returns the previous sibling subview. If no subview is found, returns `null`.
 
 
-#### <a name='Subview.appendTo'>`Subview.appendTo(element)`</a><div class='static'></div><div class='chainable'></div>
+#### <a name='Subview.appendTo' data-menu='Subview.appendTo()'>`Subview.appendTo(element)`</a><div class='static'></div><div class='chainable'></div>
 A convienience method that is a shortcut for `Subview.$wrapper.appendTo(element)`.
 
 
 
 ### <a name='Subview-Attributes'>Attributes</a>
 
-#### <a name='Subview.type'>`Subview.type [string]`</a><div class='static'></div>
+#### <a name='Subview.type' data-menu='Subview.type'>`Subview.type [string]`</a><div class='static'></div>
 The type of the subview as defined in the first argument of the [`subview()`](#subview) function.
 
 
-#### <a name='Subview.isSubview'>`Subview.isSubview = true`</a><div class='static'></div>
+#### <a name='Subview.isSubview' data-menu='Subview.isSubview'>`Subview.isSubview = true`</a><div class='static'></div>
 An identifier property that denotes that this is a `Subview` object.
 

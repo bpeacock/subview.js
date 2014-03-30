@@ -39,16 +39,19 @@ footer,
   position: relative;
   margin: 0 auto;
   width: 100%;
-  max-width: 914px;
+  max-width: 900px;
   background: #FFF;
 }
+header {
+  max-width: 914px;
+}
 #content {
-  max-width: 900px;
   background: #F5F5F5;
 }
 aside {
-  padding: 20px;
-  width: 220px;
+  position: relative;
+  padding: 0 15px;
+  width: 230px;
   float: left;
   background: #FFF;
   -moz-box-sizing: border-box;
@@ -56,19 +59,57 @@ aside {
   box-sizing: border-box;
   background: #FAFAFA;
   border-right: 1px solid #E7E7E7;
-  font-size: 18px;
+  overflow: auto;
+  z-index: 1;
 }
 aside ul {
+  position: relative;
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 5px 0;
+  z-index: 1;
 }
-aside ul li {
-  margin-bottom: 4px;
+aside ul .li-H2 {
+  font-size: 18px;
+  margin: 5px 0 4px;
+}
+aside ul .li-H3 {
+  padding-left: 10px;
+  font-size: 16px;
+  margin-bottom: 3px;
+}
+aside ul .li-H4 {
+  padding-left: 20px;
+}
+aside ul code {
+  font-size: 14px;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: 0;
+  font-weight: normal;
+}
+aside .indicator {
+  background: #EBEBEB;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  margin-top: -4px;
+  height: 30px;
+  z-index: 0;
+  -webkit-transition: top 0.3s;
+  -moz-transition: top 0.3s;
+  -ms-transition: top 0.3s;
+  -o-transition: top 0.3s;
+  transition: top 0.3s;
+}
+aside.fixed {
+  position: fixed;
+  top: 0;
 }
 article {
   padding: 20px;
-  margin-left: 220px;
+  margin-left: 230px;
 }
 h1,
 h2,
@@ -90,6 +131,15 @@ h5 a:hover,
 h6 a:hover {
   text-decoration: none;
 }
+h1 code,
+h2 code,
+h3 code,
+h4 code,
+h5 code,
+h6 code {
+  background: none;
+  border: 0;
+}
 h3 a,
 h4 a,
 h5 a,
@@ -107,7 +157,7 @@ header {
   border-bottom-left-radius: 2px;
   -moz-border-radius-bottomright: 2px;
   border-bottom-right-radius: 2px;
-  z-index: 1;
+  z-index: 2;
 }
 header p {
   margin: 10px 0 0;
@@ -232,7 +282,7 @@ header p {
   border-radius: 2px;
   padding: 0 3px;
   font-size: 13px;
-  margin: 0 6px;
+  margin-left: 6px;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -244,7 +294,7 @@ header p {
   border-radius: 2px;
   padding: 0 3px;
   font-size: 13px;
-  margin: 0 6px;
+  margin-left: 6px;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -261,7 +311,7 @@ header p {
   border-radius: 2px;
   padding: 0 3px;
   font-size: 13px;
-  margin: 0 6px;
+  margin-left: 6px;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -275,7 +325,7 @@ header p {
   border-radius: 2px;
   padding: 0 3px;
   font-size: 13px;
-  margin: 0 6px;
+  margin-left: 6px;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -292,12 +342,12 @@ header p {
   border-radius: 2px;
   padding: 0 3px;
   font-size: 13px;
-  margin: 0 6px;
+  margin-left: 6px;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  background: #FCFFD8;
-  border: 1px solid #F0F82F;
+  background: #D8FFDB;
+  border: 1px solid #9DFDB4;
 }
 .chainable:before {
   content: 'Chainable';
