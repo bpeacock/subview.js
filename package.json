@@ -18,13 +18,14 @@
     "grunt-contrib-watch": "0.5.x",
     "grunt-browserify": "1.3.x",
     "handlebars": "2.0.x",
-    "jade": "~1.3.0",
-    "grunt-contrib-qunit": "~0.4.0",
-    "qunitjs": "~1.14.0",
-    "sinon": "~1.8.2",
-    "grunt-contrib-uglify": "~0.3.2",
-    "grunt-contrib-jshint": "~0.8.0",
-    "subview-state": "0.x.x"
+    "jade": "~1.3.x",
+    "grunt-contrib-qunit": "~0.4.x",
+    "qunitjs": "~1.14.x",
+    "sinon": "~1.8.x",
+    "grunt-contrib-uglify": "~0.3.x",
+    "grunt-contrib-jshint": "~0.8.x",
+    "subview-state": "0.x.x",
+    "underscore": "~1.6.x"
   },
   "scripts": {
     "test": "grunt test"
