@@ -283,15 +283,20 @@ test("#_traverse", function() {
         subtest = Subtest.spawn();
 
     var Tester = subview("tester", {
-            template: Handlebars.compile("{{{ subview.subtest }}}"),
+            template: Handlebars.compile("{{{ subview.subtest }}}{{{ subview.Subtest }}}"),
             subviews: {
-                subtest: subtest
+                subtest: subtest,
+                Subtest: Subtest
             }
         }),
         tester = Tester.spawn();
 
     deepEqual(subtest._traverse('closest', 'tester'), tester, "Works with closest");
     deepEqual(subtest._traverse('closest', 'this-does-not-exist'), null, "does not exist");
+
+    var children = tester._traverse('children', 'subtest');
+    deepEqual(children.length, 2, "Returns correct number of children");
+    ok(children[0].isSubview, "Children are subviews");
 
     Subtest.destroy();
     Tester.destroy();

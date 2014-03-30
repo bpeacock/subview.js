@@ -449,8 +449,23 @@ Subview.prototype = {
     _traverse: function(jqFunc, type) {
         var $el = this.$wrapper[jqFunc]('.' + (type ? this._subviewCssClass + '-' + type : 'subview'));
         
-        if($el && $el.length > 0) {
-            return $el[0][subview._domPropertyName];
+        if($el) {
+            if($el.length === 1) {
+                return $el[0][subview._domPropertyName];
+            }
+            else if($el.length > 1) {
+                var i = $el.length,
+                    subviews = [];
+
+                while(i--) {
+                    subviews.push($el[i][subview._domPropertyName]);
+                }
+
+                return subviews;
+            }
+            else {
+                return null;
+            }
         }
         else {
             return null;
