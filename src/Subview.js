@@ -274,10 +274,6 @@ Subview.prototype = {
     children: function(type) {
         return this._traverse('find', type);
     },
-    appendTo: function($el) {
-        this.$wrapper.appendTo($el);
-        return this;
-    },
 
 
     /*** Classes ***/

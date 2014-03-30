@@ -320,15 +320,6 @@ test("#children", function() {
 });
 */
 
-test('#appendTo', function() {
-    var $div = $("<div>").appendTo('body');
-
-    var view = testSubview.spawn();
-    view.appendTo($div);
-
-    deepEqual(subview($div.find('.subview-test')), view, "Subview appended");
-});
-
 test('#trigger/#_bindListeners', function() {
     var allEvent1           = sinon.spy(),
         upEvent1            = sinon.spy(),
