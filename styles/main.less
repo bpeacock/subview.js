@@ -42,7 +42,7 @@ code {
 
 @contentWidth: 900px;
 @headerWidth: (@contentWidth + 14px);
-header, footer, #content {
+header, #content {
     .border-box;
     position: relative;
     margin: 0 auto;
@@ -363,9 +363,8 @@ header {
 footer {
     padding: 20px;
     text-align: center;
-    color: #444;
-    .border-radius-topleft(2px);
-    .border-radius-topright(2px);
+    margin-left: @asideWidth;
+    background: #FFF;
 }
 
 /*** Responsive ***/
@@ -375,7 +374,7 @@ footer {
         display: none !important;
     }
 
-    article {
+    article, footer {
         margin-left: 0 !important;
     }
 }

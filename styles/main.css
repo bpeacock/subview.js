@@ -31,7 +31,6 @@ code {
 }
 /*** General Layout ***/
 header,
-footer,
 #content {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -382,11 +381,8 @@ header p {
 footer {
   padding: 20px;
   text-align: center;
-  color: #444;
-  -moz-border-radius-topleft: 2px;
-  border-top-left-radius: 2px;
-  -moz-border-radius-topright: 2px;
-  border-top-right-radius: 2px;
+  margin-left: 230px;
+  background: #FFF;
 }
 /*** Responsive ***/
 @media only screen and (max-width: 600px) {
@@ -394,7 +390,8 @@ footer {
   aside {
     display: none !important;
   }
-  article {
+  article,
+  footer {
     margin-left: 0 !important;
   }
 }
