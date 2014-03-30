@@ -35,10 +35,13 @@ $(function() {
     //Size the Sidebar
     var headerHeight,
         activeLimit,
-        windowH;
+        windowH,
+        windowW;
 
     var resizer = function() {
         windowH = $window.height();
+        windowW = $window.width();
+
         $sidebar.height(windowH);
 
         headerHeight = $header.outerHeight();
@@ -55,43 +58,45 @@ $(function() {
         var top  = $html[0].scrollTop || $body[0].scrollTop;
         $sidebar[top > headerHeight ? 'addClass' : 'removeClass']('fixed');
 
-        //Get the active heading
-        var active;
-        for(var i=0; i<$headings.length; i++) {
-            var heading = $headings[i];
-                topOffset = heading.getBoundingClientRect().top;
+        if(windowW > 600) {
+            //Get the active heading
+            var active;
+            for(var i=0; i<$headings.length; i++) {
+                var heading = $headings[i];
+                    topOffset = heading.getBoundingClientRect().top;
 
-            if(topOffset < activeLimit) {
-                active = heading;
+                if(topOffset < activeLimit) {
+                    active = heading;
+                }
+                else {
+                    break;
+                }
             }
-            else {
-                break;
-            }
-        }
 
-        //Apply active class heading to sidebar
-        $sidebar.find('.active').removeClass('active');
+            //Apply active class heading to sidebar
+            $sidebar.find('.active').removeClass('active');
 
-        if(active) {
-            var $a = $(active).find('a');
+            if(active) {
+                var $a = $(active).find('a');
 
-            if($a) {
-                var pos = $sidebar.find("a[href='#"+$a.attr('name')+"']").position();
+                if($a) {
+                    var pos = $sidebar.find("a[href='#"+$a.attr('name')+"']").position();
 
-                if(pos) {
-                    $indicator.css('top', pos.top);
+                    if(pos) {
+                        $indicator.css('top', pos.top);
 
-                    //Only do it if the mouse isn't in the sidebar (mac twofinger scrolling weird bug)
-                    if(!mouseInSidebar) {
-                        //Make Sure Sidebar scrolls
-                        var scrollTop = $sidebar.scrollTop(),
-                            scrollBottom = scrollTop + windowH;
+                        //Only do it if the mouse isn't in the sidebar (mac twofinger scrolling weird bug)
+                        if(!mouseInSidebar) {
+                            //Make Sure Sidebar scrolls
+                            var scrollTop = $sidebar.scrollTop(),
+                                scrollBottom = scrollTop + windowH;
 
-                        if(pos.top < scrollTop) {
-                            $sidebar.scrollTop(pos.top - windowH/3);
-                        }
-                        else if(pos.top > scrollBottom - 40) {
-                            $sidebar.scrollTop(pos.top - 2*windowH/3);
+                            if(pos.top < scrollTop) {
+                                $sidebar.scrollTop(pos.top - windowH/3);
+                            }
+                            else if(pos.top > scrollBottom - 40) {
+                                $sidebar.scrollTop(pos.top - 2*windowH/3);
+                            }
                         }
                     }
                 }

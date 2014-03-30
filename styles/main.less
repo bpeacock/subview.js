@@ -41,6 +41,7 @@ code {
 /*** General Layout ***/
 
 @contentWidth: 900px;
+@headerWidth: (@contentWidth + 14px);
 header, footer, #content {
     .border-box;
     position: relative;
@@ -51,7 +52,7 @@ header, footer, #content {
 }
 
 header {
-    max-width: @contentWidth + 14px;
+    max-width: @headerWidth;
 }
 
 #content {
@@ -157,12 +158,17 @@ header {
     min-height: @logoHeight + 2*@headerPadding;
     padding: @headerPadding;
     .box-shadow(0 0 15px rgba(0, 0, 0, 0.1));
-    .border-radius-bottomleft(2px);
-    .border-radius-bottomright(2px);
     z-index: 2;
 
     p {
         margin: 10px 0 0;
+    }
+}
+
+@media only screen and (min-width: @headerWidth) {
+    header {
+        .border-radius-bottomleft(2px);
+        .border-radius-bottomright(2px);
     }
 }
 
@@ -360,6 +366,18 @@ footer {
     color: #444;
     .border-radius-topleft(2px);
     .border-radius-topright(2px);
+}
+
+/*** Responsive ***/
+@media only screen and (max-width : 600px) {
+    #logo,
+    aside {
+        display: none !important;
+    }
+
+    article {
+        margin-left: 0 !important;
+    }
 }
 
 
