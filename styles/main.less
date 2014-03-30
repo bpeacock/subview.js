@@ -1,0 +1,230 @@
+@import "../node_modules/helpers.less/helpers.less";
+
+/*** Colors ***/
+
+@primaryColor: #659EFC;
+
+/*** CSS RESET ***/
+
+body, html {
+    margin: 0;
+}
+
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: #323232;
+    font-weight: 300;
+}
+
+p {
+    line-height: 1.4em;
+    color: #525252;
+}
+
+a, a:visited {
+    text-decoration: none;
+    color: darken(@primaryColor, 15%);
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+code {
+    border: 1px solid #D5D5D5;
+    border-radius: 2px;
+    background: #E7E7E7;
+    padding: 0 2px;
+    font-family: Consolas, monaco, monospace;
+}
+
+/*** General Layout ***/
+
+@contentWidth: 860px;
+header, footer, #content {
+    .border-box;
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+    max-width: @contentWidth + 14px;
+    background: #FFF;
+}
+
+#content {
+    max-width: @contentWidth;
+    background: #F5F5F5;
+}
+
+@asideWidth: 220px;
+aside {
+    padding: 20px;
+    width: @asideWidth;
+    float: left;
+    background: #FFF;
+    .border-box;
+    background: #FAFAFA;
+    border-right: 1px solid #E7E7E7;
+    font-size: 18px;
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+            margin-bottom: 4px;
+        }
+    }
+}
+
+article {
+    padding: 20px;
+    margin-left: @asideWidth;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 30px 0 10px;
+    font-weight: 700;
+    color:#222222;
+    font-family: 'Lucida Grande', 'Calibri', Helvetica, Arial, sans-serif;
+    letter-spacing: -1px;
+}
+
+/*** Header ***/
+@logoHeight: 200px;
+@headerPadding: 20px;
+
+header {
+    min-height: @logoHeight + 2*@headerPadding;
+    padding: @headerPadding;
+    .box-shadow(0 0 15px rgba(0, 0, 0, 0.1));
+    .border-radius-bottomleft(2px);
+    .border-radius-bottomright(2px);
+    z-index: 1;
+}
+
+#logo {
+    float: left;
+    height: @logoHeight;
+    width:  @logoHeight;
+    margin-right: @headerPadding;
+}
+
+#title {
+    margin: 0;
+    color: #3D3D3D;
+    font-size: 42px;
+    font-weight: 700;
+}
+
+#tagline {
+    margin: 8px 0;
+    color: #3D3D3D;
+    font-size: 24px;
+    font-weight: 300;
+}
+
+#forkme-banner {
+    display: block;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    padding: 10px 50px 10px 10px;
+    color: #fff;
+    background: url('../images/blacktocat.png') @primaryColor no-repeat 95% 50%;
+    font-weight: 700;
+    .border-radius(3px);
+}
+
+#forkme-banner:hover {
+    background-color: darken(@primaryColor, 5%);
+}
+
+/*** Sidebar ***/
+
+/*** Content ***/
+
+#get-it {
+    background: @primaryColor;
+    color: white;
+    .border-radius(6px);
+    padding: 15px;
+    text-align: center;
+    max-width: 400px;
+    margin: 0 auto;
+
+    code {
+        font-size: 22px;
+        display: block;
+        margin: 10px;
+        border: 0;
+        background: transparent;
+    }
+
+    @orMargin: 20px;
+    .or {
+        position: relative;
+        border: 0;
+        height: 0;
+        border-top: 1px solid lighten(@primaryColor, 10%);
+        margin: @orMargin 0;
+        opacity: .8;
+    }
+
+    .or:after {
+        position: absolute;
+        content: 'Or';
+        font-family: "Bodoni MT", Didot, "Didot LT STD", "Hoefler Text", Garamond, "Times New Roman", serif;
+        font-size: 18px;
+        margin: 10px;
+        font-style: italic;
+        background: @primaryColor;
+        left: 50%;
+
+        @width: 80px;
+        width: @width/2;
+        margin-left: -@width/4;
+
+        @height: 20px;
+        line-height: @height;
+        margin-top: -(@orMargin - @height/2);
+    }
+}
+
+.zip-download-link,
+.tar-download-link {
+    width: 55px;
+    height:45px;
+    overflow: hidden;
+    display: inline-block;
+    background-size: 110px 90px;
+    background-image: url(../images/sprite_download.png);
+    background-repeat: no-repeat;
+    margin: 0 5px;
+    .transformTransition(.2s);
+}
+
+.zip-download-link {
+    background-position: bottom left;
+}
+
+.tar-download-link {
+    background-position: bottom right;
+}
+
+.zip-download-link:hover,
+.tar-download-link:hover {
+    .transform(scale(1.1, 1.1));
+}
+
+/*** Footer ***/
+footer {
+    padding: 20px;
+    text-align: center;
+    color: #444;
+    .border-radius-topleft(2px);
+    .border-radius-topright(2px);
+}
+
+

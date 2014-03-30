@@ -1,0 +1,17 @@
+{
+  "name": "subview-docs",
+  "description": "",
+  "version": "0.1.1",
+  "author": "Brian Peacock",
+  "dependencies": {
+    
+  },
+  "devDependencies": {
+    "browserify": "3.24.x",
+    "grunt": "~0.4.2",
+    "grunt-contrib-watch": "0.5.x",
+    "grunt-browserify": "1.3.x",
+    "grunt-contrib-less": "~0.11.0",
+    "helpers.less": "git://github.com/bpeacock/helpers.less.git"
+  }
+}
