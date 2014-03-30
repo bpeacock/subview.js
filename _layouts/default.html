@@ -20,7 +20,7 @@
             <img id='logo' src='images/logo.png' alt='logo' />
 
             <h1 id="title">Subview.js</h1>
-            <h2 id="tagline">A Heirarchical View Framework</h2>
+            <h2 id="tagline">A Simple Heirarchical View Framework</h2>
 
             <p>
                 Subview.js is a minimalistic view framework designed to be highly modular, extensible and efficient for applications containing thousands of views.  Subview is an excellent choice for complex user interfaces that are redrawn often such as word processors, messengers and other single page web-apps.
@@ -33,7 +33,7 @@
                     <li><a href='#installation'></a></li>
 
                     {% for post in site.posts reversed %}
-                        <li><a href='#'>{{ post.title }}</a></li>
+                        <li><a href='#{{ post.title | replace:' ','-' }}'>{{ post.title }}</a></li>
                     {% endfor %}
                 </ul>
             </aside>

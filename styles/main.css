@@ -9,7 +9,8 @@ body {
   background: #323232;
   font-weight: 300;
 }
-p {
+p,
+#content {
   line-height: 1.4em;
   color: #525252;
 }
@@ -22,9 +23,9 @@ a:hover {
   text-decoration: underline;
 }
 code {
-  border: 1px solid #D5D5D5;
+  border: 1px solid #E6E6E6;
   border-radius: 2px;
-  background: #E7E7E7;
+  background: #F0F0F0;
   padding: 0 2px;
   font-family: Consolas, monaco, monospace;
 }
@@ -38,11 +39,11 @@ footer,
   position: relative;
   margin: 0 auto;
   width: 100%;
-  max-width: 874px;
+  max-width: 914px;
   background: #FFF;
 }
 #content {
-  max-width: 860px;
+  max-width: 900px;
   background: #F5F5F5;
 }
 aside {
@@ -81,6 +82,20 @@ h6 {
   font-family: 'Lucida Grande', 'Calibri', Helvetica, Arial, sans-serif;
   letter-spacing: -1px;
 }
+h1 a:hover,
+h2 a:hover,
+h3 a:hover,
+h4 a:hover,
+h5 a:hover,
+h6 a:hover {
+  text-decoration: none;
+}
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+  color: black;
+}
 /*** Header ***/
 header {
   min-height: 240px;
@@ -93,6 +108,9 @@ header {
   -moz-border-radius-bottomright: 2px;
   border-bottom-right-radius: 2px;
   z-index: 1;
+}
+header p {
+  margin: 10px 0 0;
 }
 #logo {
   float: left;
@@ -139,8 +157,8 @@ header {
   border-radius: 6px;
   padding: 15px;
   text-align: center;
-  max-width: 400px;
-  margin: 0 auto;
+  max-width: 440px;
+  margin: 0 auto 20px;
 }
 #get-it code {
   font-size: 22px;
@@ -155,7 +173,6 @@ header {
   height: 0;
   border-top: 1px solid #97befd;
   margin: 20px 0;
-  opacity: .8;
 }
 #get-it .or:after {
   position: absolute;
@@ -170,6 +187,12 @@ header {
   margin-left: -20px;
   line-height: 20px;
   margin-top: -10px;
+}
+#get-it ul {
+  text-align: left;
+  padding-left: 20px;
+  margin: 5px 0 0;
+  font-size: 15px;
 }
 .zip-download-link,
 .tar-download-link {
@@ -200,6 +223,32 @@ header {
   -o-transform: scale(1.1, 1.1);
   -ms-transform: scale(1.1, 1.1);
   transform: scale(1.1, 1.1);
+}
+/*** Function Markup ***/
+.advanced {
+  display: inline-block;
+  background: #FFD8D8;
+  border: 1px solid #FFB6B6;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  padding: 0 3px;
+  font-size: 13px;
+  margin: 0 6px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.advanced:before {
+  content: 'Advanced';
+}
+.best-practice {
+  background: #EAFFEA;
+  padding: 8px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  border: 1px solid #AAEBA8;
 }
 /*** Footer ***/
 footer {

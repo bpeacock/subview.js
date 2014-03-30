@@ -3,6 +3,7 @@ layout: default
 title: Subview.js
 ---
 
+<a name='#installation'></a>
 <section id='get-it'>
     <code class="bash">
         npm install subview
@@ -12,9 +13,14 @@ title: Subview.js
 
     <a class="zip-download-link" href="https://github.com/bpeacock/subview.js/zipball/master" title="Download this project as a .zip file"></a>
     <a class="tar-download-link" href="https://github.com/bpeacock/subview.js/tarball/master" titiel="Download this project as a tar.gz file"></a>
+
+    <ul>
+        <li>Depends on jQuery or Zepto</li>
+        <li>Plays nice with CommonJS, RequireJS or plain old script tags</li>
+    </ul>
 </section>
 
 {% for post in site.posts reversed %}
-    <h2>{{ post.title }}</h2>
+    <h2><a name='{{ post.title | replace:' ','-' }}'>{{ post.title }}</a></h2>
     {{ post.content }}
 {% endfor %}

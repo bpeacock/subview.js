@@ -15,8 +15,8 @@ body {
     background: #323232;
     font-weight: 300;
 }
-
-p {
+ 
+p, #content {
     line-height: 1.4em;
     color: #525252;
 }
@@ -31,16 +31,16 @@ a:hover {
 }
 
 code {
-    border: 1px solid #D5D5D5;
+    border: 1px solid #E6E6E6;
     border-radius: 2px;
-    background: #E7E7E7;
+    background: #F0F0F0;
     padding: 0 2px;
     font-family: Consolas, monaco, monospace;
 }
 
 /*** General Layout ***/
 
-@contentWidth: 860px;
+@contentWidth: 900px;
 header, footer, #content {
     .border-box;
     position: relative;
@@ -88,6 +88,16 @@ h1, h2, h3, h4, h5, h6 {
     color:#222222;
     font-family: 'Lucida Grande', 'Calibri', Helvetica, Arial, sans-serif;
     letter-spacing: -1px;
+
+    a:hover {
+        text-decoration: none;
+    }
+}
+
+h3, h4, h5, h6 {
+    a {
+        color: black;
+    }
 }
 
 /*** Header ***/
@@ -101,6 +111,10 @@ header {
     .border-radius-bottomleft(2px);
     .border-radius-bottomright(2px);
     z-index: 1;
+
+    p {
+        margin: 10px 0 0;
+    }
 }
 
 #logo {
@@ -151,8 +165,8 @@ header {
     .border-radius(6px);
     padding: 15px;
     text-align: center;
-    max-width: 400px;
-    margin: 0 auto;
+    max-width: 440px;
+    margin: 0 auto 20px;
 
     code {
         font-size: 22px;
@@ -169,7 +183,6 @@ header {
         height: 0;
         border-top: 1px solid lighten(@primaryColor, 10%);
         margin: @orMargin 0;
-        opacity: .8;
     }
 
     .or:after {
@@ -189,6 +202,13 @@ header {
         @height: 20px;
         line-height: @height;
         margin-top: -(@orMargin - @height/2);
+    }
+
+    ul {
+        text-align: left;
+        padding-left: 20px;
+        margin: 5px 0 0;
+        font-size: 15px;
     }
 }
 
@@ -216,6 +236,29 @@ header {
 .zip-download-link:hover,
 .tar-download-link:hover {
     .transform(scale(1.1, 1.1));
+}
+
+/*** Function Markup ***/
+.advanced {
+    display: inline-block;
+    background: #FFD8D8;
+    border: 1px solid #FFB6B6;
+    .border-radius(2px);
+    padding: 0 3px;
+    font-size: 13px;
+    margin: 0 6px;
+    .border-box;
+}
+
+.advanced:before {
+    content: 'Advanced';
+}
+
+.best-practice {
+    background: #EAFFEA;
+    padding: 8px;
+    .border-radius(3px);
+    border: 1px solid #AAEBA8;
 }
 
 /*** Footer ***/

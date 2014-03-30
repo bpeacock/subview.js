@@ -3,7 +3,7 @@ title:      Quick Start
 categories: section
 ---
 
-The base for a Subview.js application is the definition of the `main` subview. This is the only subview that is automatically appended to the `body` of your application.  Other subviews are added to the `main` subview using a template or direct DOM manipulation.
+The base for a Subview.js application is the definition of the `main` view. This is the only view that is automatically appended to the `<body>` of your application.  Other views are added to the `main` view using a template or by direct DOM manipulation.
 
 ```javascript
 subview('main', {
@@ -13,7 +13,7 @@ subview('main', {
         //Runs the first time a subview is created then never again.
     },
     init: function() {
-        //Stuff to be done when initializing a subview via the .spawn method
+        //Runs when initializing a subview via the .spawn method
     },
     clean: function() {
         //Runs when a subview is removed to clean and prepare it to be reused
@@ -33,7 +33,7 @@ subview('main', {
 
     }),
 
-    /*** My API ***/
+    /*** My View's API ***/
 
     // ... Some API Functions
 });
