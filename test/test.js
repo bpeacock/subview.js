@@ -105,8 +105,8 @@ module("ViewPool", {
     }
 });
 
-test("#isViewPool", function() {
-    ok(viewPool.isViewPool);
+test("#isSubviewPool", function() {
+    ok(viewPool.isSubviewPool);
 });
 
 test("#spawn", function() {

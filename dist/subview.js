@@ -213,7 +213,7 @@ var log = require('loglevel'),
 var Subview = function() {};
 
 Subview.prototype = {
-    isView: true,
+    isSubview: true,
 
     /*** Default Attributes (should be overwritten) ***/
     tagName:    "div",
@@ -310,7 +310,7 @@ Subview.prototype = {
                 var $this = $(this),
                     view  = self.subviews[$this.attr('data-name')];
 
-                if(view.isViewPool) {
+                if(view.isSubviewPool) {
                     view = view.spawn();
                 }
 
@@ -516,7 +516,7 @@ var SubviewPool = function(View) {
 };
 
 SubviewPool.prototype = {
-    isViewPool: true,
+    isSubviewPool: true,
     spawn: function(el, config) {
         //jQuery normalization
         var $el = el ? (el.jquery ? el : $(el)): null;
@@ -610,7 +610,7 @@ var subview = function(name, protoViewPool, config) {
     //Define a subview
     else {
         //Argument surgery
-        if(protoViewPool && protoViewPool.isViewPool) {
+        if(protoViewPool && protoViewPool.isSubviewPool) {
             ViewPrototype = protoViewPool.View;
         }
         else {
@@ -695,10 +695,10 @@ subview.lookup = function(name) {
         return this.views[name];
     }
     else {
-        if(name.isViewPool) {
+        if(name.isSubviewPool) {
             return name;
         }
-        else if(name.isView) {
+        else if(name.isSubview) {
             return name.pool;
         }
         else {

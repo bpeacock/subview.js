@@ -4,7 +4,7 @@ var log = require('loglevel'),
 var Subview = function() {};
 
 Subview.prototype = {
-    isView: true,
+    isSubview: true,
 
     /*** Default Attributes (should be overwritten) ***/
     tagName:    "div",
@@ -101,7 +101,7 @@ Subview.prototype = {
                 var $this = $(this),
                     view  = self.subviews[$this.attr('data-name')];
 
-                if(view.isViewPool) {
+                if(view.isSubviewPool) {
                     view = view.spawn();
                 }
 

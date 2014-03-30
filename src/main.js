@@ -18,7 +18,7 @@ var subview = function(name, protoViewPool, config) {
     //Define a subview
     else {
         //Argument surgery
-        if(protoViewPool && protoViewPool.isViewPool) {
+        if(protoViewPool && protoViewPool.isSubviewPool) {
             ViewPrototype = protoViewPool.View;
         }
         else {
@@ -103,10 +103,10 @@ subview.lookup = function(name) {
         return this.views[name];
     }
     else {
-        if(name.isViewPool) {
+        if(name.isSubviewPool) {
             return name;
         }
-        else if(name.isView) {
+        else if(name.isSubview) {
             return name.pool;
         }
         else {

@@ -14,7 +14,7 @@ var SubviewPool = function(View) {
 };
 
 SubviewPool.prototype = {
-    isViewPool: true,
+    isSubviewPool: true,
     spawn: function(el, config) {
         //jQuery normalization
         var $el = el ? (el.jquery ? el : $(el)): null;
