@@ -81,18 +81,30 @@ $(function() {
                 if(pos) {
                     $indicator.css('top', pos.top);
 
-                    //Make Sure Sidebar scrolls
-                    var scrollTop = $sidebar.scrollTop(),
-                        scrollBottom = scrollTop + windowH;
+                    //Only do it if the mouse isn't in the sidebar (mac twofinger scrolling weird bug)
+                    if(!mouseInSidebar) {
+                        //Make Sure Sidebar scrolls
+                        var scrollTop = $sidebar.scrollTop(),
+                            scrollBottom = scrollTop + windowH;
 
-                    if(pos.top < scrollTop) {
-                        $sidebar.scrollTop(pos.top - windowH/3);
-                    }
-                    else if(pos.top > scrollBottom) {
-                        $sidebar.scrollTop(pos.top - 2*windowH/3);
+                        if(pos.top < scrollTop) {
+                            $sidebar.scrollTop(pos.top - windowH/3);
+                        }
+                        else if(pos.top > scrollBottom) {
+                            $sidebar.scrollTop(pos.top - 2*windowH/3);
+                        }
                     }
                 }
             }
         }
     });
+
+    var mouseInSidebar;
+    $sidebar
+        .mouseenter(function() {
+            mouseInSidebar = true;
+        })
+        .mouseleave(function() {
+            mouseInSidebar = false;
+        });
 });
