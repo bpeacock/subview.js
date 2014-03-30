@@ -6,18 +6,54 @@ var Subview = function() {};
 Subview.prototype = {
     isSubview: true,
 
-    /*** Default Attributes (should be overwritten) ***/
-    tagName:    "div",
-    className:  "",
+    /*** Life-Cycle ***/
 
-    //listeners
-    //'[direction]:[event name]:[from type], ...': function(eventArguments*) {}
-    listeners: {},
+    //These should be configured but will be pushed to their respective function stacks rather than overwriting
+    once: function(config) { //Runs after render
+        for(var i=0; i<this._onceFunctions.length; i++) {
+            this._onceFunctions[i].apply(this, [config]);
+        }
+        return this;
+    }, 
+    _onceFunctions: [],
+    init: function(config) { //Runs after render
+        for(var i=0; i<this._initFunctions.length; i++) {
+            this._initFunctions[i].apply(this, [config]);
+        }
+        return this;
+    },
+    _initFunctions: [],
+    clean: function() { //Runs on remove
+        for(var i=0; i<this._cleanFunctions.length; i++) {
+            this._cleanFunctions[i].apply(this, []);
+        }
+        return this;
+    }, 
+    _cleanFunctions: [],
 
-    //State
-    defaultState: {},
+    //Static methods and properties
+    active: false,
 
-    /* Templating */
+    remove: function() {
+        if(this.active) {
+            //Detach
+            var parent = this.wrapper.parentNode;
+            if(parent) {
+                parent.removeChild(this.wrapper);
+            }
+
+            //Clean
+            this.clean();
+
+            this.pool._release(this);
+        }
+
+        return this;
+    },
+
+
+    /*** Templating ***/
+
     template:   "",
 
     //Data goes into the templates and may also be a function that returns an object
@@ -26,36 +62,15 @@ Subview.prototype = {
     //Subviews are a set of subviews that will be fed into the templating engine
     subviews:   {},
 
+    //Settings
     reRender:   false, //Determines if subview is re-rendered every time it is spawned
+    tagName:    "div",
+    className:  "",
 
-    /* Callbacks */
+    //Events
     preRender:  noop,
     postRender: noop,
 
-    /*** Initialization Functions (should be configured but will be manipulated when defining the subview) ***/
-    once: function(config) { //Runs after render
-        for(var i=0; i<this.onceFunctions.length; i++) {
-            this.onceFunctions[i].apply(this, [config]);
-        }
-        return this;
-    }, 
-    onceFunctions: [],
-    init: function(config) { //Runs after render
-        for(var i=0; i<this.initFunctions.length; i++) {
-            this.initFunctions[i].apply(this, [config]);
-        }
-        return this;
-    }, 
-    initFunctions: [],
-    clean: function() { //Runs on remove
-        for(var i=0; i<this.cleanFunctions.length; i++) {
-            this.cleanFunctions[i].apply(this, []);
-        }
-        return this;
-    }, 
-    cleanFunctions: [],
-
-    /*** Rendering ***/
     render: function() {
         var self = this,
             html = '';
@@ -125,55 +140,15 @@ Subview.prototype = {
 
         return this;
     },
-    remove: function() {
-        if(this._active) {
-            //Detach
-            var parent = this.wrapper.parentNode;
-            if(parent) {
-                parent.removeChild(this.wrapper);
-            }
 
-            //Clean
-            this.clean();
-
-            this.pool._release(this);
-        }
-
-        return this;
-    },
-    $: function(selector) {
-        return this.$wrapper.find(selector);
-    },
-
-    /*** Traversing ***/
-    traverse: function(jqFunc, type) {
-        var $el = this.$wrapper[jqFunc]('.' + (type ? this._subviewCssClass + '-' + type : 'subview'));
-        
-        if($el && $el.length > 0) {
-            return $el[0][subview._domPropertyName];
-        }
-        else {
-            return null;
-        }
-    },
-    parent: function(type) {
-        return this.traverse('closest', type);
-    },
-    next: function(type) {
-        return this.traverse('next', type);
-    },
-    prev: function(type) {
-        return this.traverse('prev', type);
-    },
-    children: function(type) {
-        return this.traverse('find', type);
-    },
-    appendTo: function($el) {
-        this.$wrapper.appendTo($el);
-        return this;
-    },
     
-    /*** Event API ***/
+    /*** Events ***/
+
+    //listeners
+    listeners: {
+        //'[direction]:[event name]:[from type], ...': function(eventArguments*) {}
+    },
+
     trigger: function(name, args) {
         var self = this;
         args = args || [];
@@ -216,6 +191,8 @@ Subview.prototype = {
         
         return this;
     },
+
+    //Gets called when a new Subview instance is created by the SubviewPool
     _bindListeners: function() {
         var self = this;
 
@@ -247,8 +224,42 @@ Subview.prototype = {
         return this;
     },
 
+    
+    /*** Traversing ***/
+
+    $: function(selector) {
+        return this.$wrapper.find(selector);
+    },
+    traverse: function(jqFunc, type) {
+        var $el = this.$wrapper[jqFunc]('.' + (type ? this._subviewCssClass + '-' + type : 'subview'));
+        
+        if($el && $el.length > 0) {
+            return $el[0][subview._domPropertyName];
+        }
+        else {
+            return null;
+        }
+    },
+    parent: function(type) {
+        return this.traverse('closest', type);
+    },
+    next: function(type) {
+        return this.traverse('next', type);
+    },
+    prev: function(type) {
+        return this.traverse('prev', type);
+    },
+    children: function(type) {
+        return this.traverse('find', type);
+    },
+    appendTo: function($el) {
+        this.$wrapper.appendTo($el);
+        return this;
+    },
+
+
     /*** Classes ***/
-    _active: false,
+
     _subviewCssClass: 'subview',
     _addDefaultClasses: function() {
         var classes = [];
@@ -275,7 +286,9 @@ Subview.prototype = {
         return this;
     },
 
+
     /*** Extensions ***/
+
     _loadExtensions: function() {
         var self = this;
         $.each(this, function(name, prop) {

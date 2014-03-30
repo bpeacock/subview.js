@@ -1,13 +1,13 @@
 var $ = require("unopinionate").selector;
 
-var SubviewPool = function(View) {
+var SubviewPool = function(Subview) {
     //Configuration
-    this.View   = View;
-    this.type   = View.prototype.type;
-    this.super  = View.prototype.super;
+    this.Subview    = Subview;
+    this.type       = Subview.prototype.type;
+    this.super      = Subview.prototype.super;
     
     //View Configuration
-    this.View.prototype.pool = this;
+    this.Subview.prototype.pool = this;
 
     //Pool
     this.pool = [];
@@ -34,7 +34,7 @@ SubviewPool.prototype = {
                     view = this.pool.pop();
                 }
                 else {
-                    el = document.createElement(this.View.prototype.tagName);
+                    el = document.createElement(this.Subview.prototype.tagName);
                     $el = $(el);
                 }
             }
@@ -42,7 +42,7 @@ SubviewPool.prototype = {
             var isNewView;
             if(!view) {
                 isNewView   = true;
-                view        = new this.View();
+                view        = new this.Subview();
 
                 //Bind to/from the element
                 el[subview._domPropertyName] = view;
@@ -57,7 +57,7 @@ SubviewPool.prototype = {
             }
             
             //Make the view active
-            view._active = true;
+            view.active = true;
 
             //Render
             if(isNewView || view.reRender) {
@@ -75,11 +75,11 @@ SubviewPool.prototype = {
     },
     destroy: function() {
         this.pool = null;
-        delete subview.views[this.type];
+        delete subview.Subviews[this.type];
     },
 
     _release: function(view) {
-        view._active = false;
+        view.active = false;
         this.pool.push(view);
         return this;
     }

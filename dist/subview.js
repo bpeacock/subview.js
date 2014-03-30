@@ -215,18 +215,54 @@ var Subview = function() {};
 Subview.prototype = {
     isSubview: true,
 
-    /*** Default Attributes (should be overwritten) ***/
-    tagName:    "div",
-    className:  "",
+    /*** Life-Cycle ***/
 
-    //listeners
-    //'[direction]:[event name]:[from type], ...': function(eventArguments*) {}
-    listeners: {},
+    //These should be configured but will be pushed to their respective function stacks rather than overwriting
+    once: function(config) { //Runs after render
+        for(var i=0; i<this._onceFunctions.length; i++) {
+            this._onceFunctions[i].apply(this, [config]);
+        }
+        return this;
+    }, 
+    _onceFunctions: [],
+    init: function(config) { //Runs after render
+        for(var i=0; i<this._initFunctions.length; i++) {
+            this._initFunctions[i].apply(this, [config]);
+        }
+        return this;
+    },
+    _initFunctions: [],
+    clean: function() { //Runs on remove
+        for(var i=0; i<this._cleanFunctions.length; i++) {
+            this._cleanFunctions[i].apply(this, []);
+        }
+        return this;
+    }, 
+    _cleanFunctions: [],
 
-    //State
-    defaultState: {},
+    //Static methods and properties
+    active: false,
 
-    /* Templating */
+    remove: function() {
+        if(this.active) {
+            //Detach
+            var parent = this.wrapper.parentNode;
+            if(parent) {
+                parent.removeChild(this.wrapper);
+            }
+
+            //Clean
+            this.clean();
+
+            this.pool._release(this);
+        }
+
+        return this;
+    },
+
+
+    /*** Templating ***/
+
     template:   "",
 
     //Data goes into the templates and may also be a function that returns an object
@@ -235,36 +271,15 @@ Subview.prototype = {
     //Subviews are a set of subviews that will be fed into the templating engine
     subviews:   {},
 
+    //Settings
     reRender:   false, //Determines if subview is re-rendered every time it is spawned
+    tagName:    "div",
+    className:  "",
 
-    /* Callbacks */
+    //Events
     preRender:  noop,
     postRender: noop,
 
-    /*** Initialization Functions (should be configured but will be manipulated when defining the subview) ***/
-    once: function(config) { //Runs after render
-        for(var i=0; i<this.onceFunctions.length; i++) {
-            this.onceFunctions[i].apply(this, [config]);
-        }
-        return this;
-    }, 
-    onceFunctions: [],
-    init: function(config) { //Runs after render
-        for(var i=0; i<this.initFunctions.length; i++) {
-            this.initFunctions[i].apply(this, [config]);
-        }
-        return this;
-    }, 
-    initFunctions: [],
-    clean: function() { //Runs on remove
-        for(var i=0; i<this.cleanFunctions.length; i++) {
-            this.cleanFunctions[i].apply(this, []);
-        }
-        return this;
-    }, 
-    cleanFunctions: [],
-
-    /*** Rendering ***/
     render: function() {
         var self = this,
             html = '';
@@ -334,55 +349,15 @@ Subview.prototype = {
 
         return this;
     },
-    remove: function() {
-        if(this._active) {
-            //Detach
-            var parent = this.wrapper.parentNode;
-            if(parent) {
-                parent.removeChild(this.wrapper);
-            }
 
-            //Clean
-            this.clean();
-
-            this.pool._release(this);
-        }
-
-        return this;
-    },
-    $: function(selector) {
-        return this.$wrapper.find(selector);
-    },
-
-    /*** Traversing ***/
-    traverse: function(jqFunc, type) {
-        var $el = this.$wrapper[jqFunc]('.' + (type ? this._subviewCssClass + '-' + type : 'subview'));
-        
-        if($el && $el.length > 0) {
-            return $el[0][subview._domPropertyName];
-        }
-        else {
-            return null;
-        }
-    },
-    parent: function(type) {
-        return this.traverse('closest', type);
-    },
-    next: function(type) {
-        return this.traverse('next', type);
-    },
-    prev: function(type) {
-        return this.traverse('prev', type);
-    },
-    children: function(type) {
-        return this.traverse('find', type);
-    },
-    appendTo: function($el) {
-        this.$wrapper.appendTo($el);
-        return this;
-    },
     
-    /*** Event API ***/
+    /*** Events ***/
+
+    //listeners
+    listeners: {
+        //'[direction]:[event name]:[from type], ...': function(eventArguments*) {}
+    },
+
     trigger: function(name, args) {
         var self = this;
         args = args || [];
@@ -425,6 +400,8 @@ Subview.prototype = {
         
         return this;
     },
+
+    //Gets called when a new Subview instance is created by the SubviewPool
     _bindListeners: function() {
         var self = this;
 
@@ -456,8 +433,42 @@ Subview.prototype = {
         return this;
     },
 
+    
+    /*** Traversing ***/
+
+    $: function(selector) {
+        return this.$wrapper.find(selector);
+    },
+    traverse: function(jqFunc, type) {
+        var $el = this.$wrapper[jqFunc]('.' + (type ? this._subviewCssClass + '-' + type : 'subview'));
+        
+        if($el && $el.length > 0) {
+            return $el[0][subview._domPropertyName];
+        }
+        else {
+            return null;
+        }
+    },
+    parent: function(type) {
+        return this.traverse('closest', type);
+    },
+    next: function(type) {
+        return this.traverse('next', type);
+    },
+    prev: function(type) {
+        return this.traverse('prev', type);
+    },
+    children: function(type) {
+        return this.traverse('find', type);
+    },
+    appendTo: function($el) {
+        this.$wrapper.appendTo($el);
+        return this;
+    },
+
+
     /*** Classes ***/
-    _active: false,
+
     _subviewCssClass: 'subview',
     _addDefaultClasses: function() {
         var classes = [];
@@ -484,7 +495,9 @@ Subview.prototype = {
         return this;
     },
 
+
     /*** Extensions ***/
+
     _loadExtensions: function() {
         var self = this;
         $.each(this, function(name, prop) {
@@ -502,14 +515,14 @@ module.exports = Subview;
 },{"loglevel":1}],4:[function(require,module,exports){
 var $ = require("unopinionate").selector;
 
-var SubviewPool = function(View) {
+var SubviewPool = function(Subview) {
     //Configuration
-    this.View   = View;
-    this.type   = View.prototype.type;
-    this.super  = View.prototype.super;
+    this.Subview    = Subview;
+    this.type       = Subview.prototype.type;
+    this.super      = Subview.prototype.super;
     
     //View Configuration
-    this.View.prototype.pool = this;
+    this.Subview.prototype.pool = this;
 
     //Pool
     this.pool = [];
@@ -536,7 +549,7 @@ SubviewPool.prototype = {
                     view = this.pool.pop();
                 }
                 else {
-                    el = document.createElement(this.View.prototype.tagName);
+                    el = document.createElement(this.Subview.prototype.tagName);
                     $el = $(el);
                 }
             }
@@ -544,7 +557,7 @@ SubviewPool.prototype = {
             var isNewView;
             if(!view) {
                 isNewView   = true;
-                view        = new this.View();
+                view        = new this.Subview();
 
                 //Bind to/from the element
                 el[subview._domPropertyName] = view;
@@ -559,7 +572,7 @@ SubviewPool.prototype = {
             }
             
             //Make the view active
-            view._active = true;
+            view.active = true;
 
             //Render
             if(isNewView || view.reRender) {
@@ -577,11 +590,11 @@ SubviewPool.prototype = {
     },
     destroy: function() {
         this.pool = null;
-        delete subview.views[this.type];
+        delete subview.Subviews[this.type];
     },
 
     _release: function(view) {
-        view._active = false;
+        view.active = false;
         this.pool.push(view);
         return this;
     }
@@ -611,7 +624,7 @@ var subview = function(name, protoViewPool, config) {
     else {
         //Argument surgery
         if(protoViewPool && protoViewPool.isSubviewPool) {
-            ViewPrototype = protoViewPool.View;
+            ViewPrototype = protoViewPool.Subview;
         }
         else {
             config          = protoViewPool;
@@ -630,12 +643,13 @@ var subview = function(name, protoViewPool, config) {
             var extendFunctions = ['once', 'init', 'clean'];
 
             for(var i=0; i<extendFunctions.length; i++) {
-                var funcName = extendFunctions[i];
+                var funcName = extendFunctions[i],
+                    funcStackName = '_' + funcName + 'Functions';
 
-                config[funcName+'Functions'] = superClass[funcName+'Functions'].slice(0); //Clone superClass init
+                config[funcStackName] = superClass[funcStackName].slice(0); //Clone superClass init
                 
                 if(config[funcName]) {
-                    config[funcName+'Functions'].push(config[funcName]);
+                    config[funcStackName].push(config[funcName]);
                     delete config[funcName];
                 }
             }
@@ -674,7 +688,7 @@ var subview = function(name, protoViewPool, config) {
             
             //Save the New View
             var viewPool        = new ViewPool(View);
-            subview.views[name] = viewPool;
+            subview.Subviews[name] = viewPool;
 
             return viewPool;
         }
@@ -684,7 +698,7 @@ var subview = function(name, protoViewPool, config) {
     }
 };
 
-subview.views = {};
+subview.Subviews = {};
 
 //Obscure DOM property name for subview wrappers
 subview._domPropertyName = "subview12345";
@@ -692,7 +706,7 @@ subview._domPropertyName = "subview12345";
 /*** API ***/
 subview.lookup = function(name) {
     if(typeof name == 'string') {
-        return this.views[name];
+        return this.Subviews[name];
     }
     else {
         if(name.isSubviewPool) {
@@ -713,7 +727,7 @@ subview._validateName = function(name) {
         return false;
     }
 
-    if(subview.views[name]) {
+    if(subview.Subviews[name]) {
         log.error("subview '" + name + "' is already defined.");
         return false;
     }
@@ -732,9 +746,11 @@ subview._reservedMethods = [
     'traverse',
     '$',
     '_bindListeners',
-    '_active',
+    'active',
     '_subviewCssClass',
-    '_addDefaultClasses'
+    '_addDefaultClasses',
+    '$wrapper',
+    'wrapper'
 ];
 
 subview._validateConfig = function(config) {

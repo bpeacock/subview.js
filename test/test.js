@@ -26,7 +26,7 @@ test('subview() define subview', function() {
 
     var tester = subview('tester');
     ok(tester, "Subview successfully created");
-    deepEqual(tester, subview.views.tester, "Subview successfully registered");
+    deepEqual(tester, subview.Subviews.tester, "Subview successfully registered");
 
     ok(tester.super, "Super is bound to the view");
 
@@ -210,11 +210,11 @@ test("#html", function() {
         }),
         tester = Tester.spawn();
 
-    ok(subtest._active, "Subtest is active");
+    ok(subtest.active, "Subtest is active");
 
     tester.html('Hello There');
 
-    ok(!subtest._active, "Subtest is inactive");
+    ok(!subtest.active, "Subtest is inactive");
     equal(tester.$wrapper.html(), 'Hello There', "Html is set");
 
     Subtest.destroy();
@@ -231,12 +231,12 @@ test("#remove", function() {
     test.$wrapper.appendTo('body');
 
     ok($('.subview-tester').length, "view in the page");
-    ok(test._active, "view is active");
+    ok(test.active, "view is active");
 
     test.remove();
 
     ok(!$('.subview-tester').length, "view removed from page");
-    ok(!test._active, "view is inactive");
+    ok(!test.active, "view is inactive");
     ok(clean.called, "The clean function was called");
 
     Test.destroy();

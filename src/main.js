@@ -19,7 +19,7 @@ var subview = function(name, protoViewPool, config) {
     else {
         //Argument surgery
         if(protoViewPool && protoViewPool.isSubviewPool) {
-            ViewPrototype = protoViewPool.View;
+            ViewPrototype = protoViewPool.Subview;
         }
         else {
             config          = protoViewPool;
@@ -38,12 +38,13 @@ var subview = function(name, protoViewPool, config) {
             var extendFunctions = ['once', 'init', 'clean'];
 
             for(var i=0; i<extendFunctions.length; i++) {
-                var funcName = extendFunctions[i];
+                var funcName = extendFunctions[i],
+                    funcStackName = '_' + funcName + 'Functions';
 
-                config[funcName+'Functions'] = superClass[funcName+'Functions'].slice(0); //Clone superClass init
+                config[funcStackName] = superClass[funcStackName].slice(0); //Clone superClass init
                 
                 if(config[funcName]) {
-                    config[funcName+'Functions'].push(config[funcName]);
+                    config[funcStackName].push(config[funcName]);
                     delete config[funcName];
                 }
             }
@@ -82,7 +83,7 @@ var subview = function(name, protoViewPool, config) {
             
             //Save the New View
             var viewPool        = new ViewPool(View);
-            subview.views[name] = viewPool;
+            subview.Subviews[name] = viewPool;
 
             return viewPool;
         }
@@ -92,7 +93,7 @@ var subview = function(name, protoViewPool, config) {
     }
 };
 
-subview.views = {};
+subview.Subviews = {};
 
 //Obscure DOM property name for subview wrappers
 subview._domPropertyName = "subview12345";
@@ -100,7 +101,7 @@ subview._domPropertyName = "subview12345";
 /*** API ***/
 subview.lookup = function(name) {
     if(typeof name == 'string') {
-        return this.views[name];
+        return this.Subviews[name];
     }
     else {
         if(name.isSubviewPool) {
@@ -121,7 +122,7 @@ subview._validateName = function(name) {
         return false;
     }
 
-    if(subview.views[name]) {
+    if(subview.Subviews[name]) {
         log.error("subview '" + name + "' is already defined.");
         return false;
     }
@@ -140,9 +141,11 @@ subview._reservedMethods = [
     'traverse',
     '$',
     '_bindListeners',
-    '_active',
+    'active',
     '_subviewCssClass',
-    '_addDefaultClasses'
+    '_addDefaultClasses',
+    '$wrapper',
+    'wrapper'
 ];
 
 subview._validateConfig = function(config) {
