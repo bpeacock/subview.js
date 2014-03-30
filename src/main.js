@@ -1,7 +1,7 @@
 var log             = require("loglevel"),
     $               = require("unopinionate").selector,
-    ViewPool        = require("./ViewPool"),
-    ViewTemplate    = require("./View"),
+    ViewPool        = require("./SubviewPool"),
+    ViewTemplate    = require("./Subview"),
     noop            = function() {},
     viewTypeRegex   = new RegExp('^' + ViewTemplate.prototype._subviewCssClass + '-');
 

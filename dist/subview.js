@@ -210,9 +210,9 @@
 var log = require('loglevel'),
     noop = function() {};
 
-var View = function() {};
+var Subview = function() {};
 
-View.prototype = {
+Subview.prototype = {
     isView: true,
 
     /*** Default Attributes (should be overwritten) ***/
@@ -496,13 +496,13 @@ View.prototype = {
     }
 };
 
-module.exports = View;
+module.exports = Subview;
 
 
 },{"loglevel":1}],4:[function(require,module,exports){
 var $ = require("unopinionate").selector;
 
-var ViewPool = function(View) {
+var SubviewPool = function(View) {
     //Configuration
     this.View   = View;
     this.type   = View.prototype.type;
@@ -515,7 +515,7 @@ var ViewPool = function(View) {
     this.pool = [];
 };
 
-ViewPool.prototype = {
+SubviewPool.prototype = {
     isViewPool: true,
     spawn: function(el, config) {
         //jQuery normalization
@@ -587,13 +587,13 @@ ViewPool.prototype = {
     }
 };
 
-module.exports = ViewPool;
+module.exports = SubviewPool;
 
 },{"unopinionate":2}],5:[function(require,module,exports){
 var log             = require("loglevel"),
     $               = require("unopinionate").selector,
-    ViewPool        = require("./ViewPool"),
-    ViewTemplate    = require("./View"),
+    ViewPool        = require("./SubviewPool"),
+    ViewTemplate    = require("./Subview"),
     noop            = function() {},
     viewTypeRegex   = new RegExp('^' + ViewTemplate.prototype._subviewCssClass + '-');
 
@@ -800,4 +800,4 @@ $(function() {
     }
 });
 
-},{"./View":3,"./ViewPool":4,"loglevel":1,"unopinionate":2}]},{},[5])
+},{"./Subview":3,"./SubviewPool":4,"loglevel":1,"unopinionate":2}]},{},[5])
