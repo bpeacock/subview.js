@@ -765,7 +765,7 @@ subview._validateConfig = function(config) {
     var success = true;
 
     $.each(config, function(name, value) {
-        if(subview._reservedMethods.indexOf(name) != -1) {
+        if(subview._reservedMethods.indexOf(name) !== -1) {
             log.error("Method '"+name+"' is reserved as part of the subview API.");
             success = false;
         }
