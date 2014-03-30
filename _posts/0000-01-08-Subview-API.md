@@ -240,7 +240,7 @@ subview('some-subview', {
 Note that listeners are applied when the subview is created and cannot be modified afterwards.
 
 <section class='best-practice'>
-    <strong>Best Practice:</strong> Use the most specific listener direction you can.  This prevents events from other, unrelated, parts of the application from effecting your subview.
+    <strong>Best Practice:</strong> Use the most specific listener direction you can.  This prevents events from other, unrelated parts of the application from effecting your subview.
 </section>
 
 
