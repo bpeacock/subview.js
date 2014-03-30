@@ -212,7 +212,7 @@ Subview events are used to decouple subviews and eliminate the need to have dire
 An object containing event listener definitions as keys and their callbacks as values. Listeners are scoped directionally relative to the current DOM hierarchy and may also specify a type of subview that they are listening for.  The available directions are: 'up', 'down', 'across', 'all' and 'self'. The event specification format is:
 
 ```javascript
-"[direction]:[event name]{:[from type] }, {...}"
+"[direction]:[event name]{:[from type]}, {...}"
 ```
 
 The callback receives the arguments passed as the second argument of the [`Subview.trigger`](#Subview.trigger) method. These arguments are passed by reference, so don't worry about passing around large values.  The value of `this` in the callbacks is the subview itself.
