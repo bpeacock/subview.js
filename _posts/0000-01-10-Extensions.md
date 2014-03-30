@@ -25,7 +25,7 @@ subview('main', {
 
 - [State](https://github.com/bpeacock/subview-state.js) - Adds a state model to your subview that can be bound to and is reflected by CSS classes applied to the `$wrapper`. This is very useful for UI state changes such as hiding and showing a side bar.
 
-Submit a pull request to add your extension to the list!
+Submit a pull request [here](https://github.com/bpeacock/subview.js/tree/gh-pages) to add your extension to the list!
 
 
 ### Writing Extensions

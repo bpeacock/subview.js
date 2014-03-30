@@ -239,10 +239,8 @@ header {
 }
 
 /*** Function Markup ***/
-.advanced {
+.heading-tag {
     display: inline-block;
-    background: #FFD8D8;
-    border: 1px solid #FFB6B6;
     .border-radius(2px);
     padding: 0 3px;
     font-size: 13px;
@@ -250,16 +248,61 @@ header {
     .border-box;
 }
 
+.advanced {
+    .heading-tag;
+    background: #FFD8D8;
+    border: 1px solid #FFB6B6;
+}
+
 .advanced:before {
     content: 'Advanced';
 }
 
-.best-practice {
-    background: #EAFFEA;
+.extension-function {
+    .heading-tag;
+    background: #FFC3FD;
+    border: 1px solid #F0A3FF;
+}
+
+.static {
+    .heading-tag;
+    background: #FCFFD8;
+    border: 1px solid #F0F82F;
+}
+
+.static:before {
+    content: 'Static';
+}
+
+.chainable {
+    .heading-tag;
+    background: #FCFFD8;
+    border: 1px solid #F0F82F;
+}
+
+.chainable:before {
+    content: 'Chainable';
+}
+
+//Sections
+.inline-section {
     padding: 8px;
     .border-radius(3px);
+}
+
+.best-practice {
+    .inline-section;
+    background: #EAFFEA;
     border: 1px solid #AAEBA8;
 }
+
+.important {
+    .inline-section;
+    background: #FFEEEA;
+    border: 1px solid #EBB3A8;
+}
+
+
 
 /*** Footer ***/
 footer {
