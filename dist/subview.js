@@ -690,35 +690,6 @@ subview.views = {};
 subview._domPropertyName = "subview12345";
 
 /*** API ***/
-subview.load = function(scope) {
-    var $scope = scope ? $(scope) : $('body'),
-        $views = $scope.find("[class^='subview-']");
-
-    for(var i=0; i<$views.length; i++) {
-        var el = $views[i],
-            classes = el.className.split(/\s+/);
-
-        //Find the type of the element by the class that matches "subview-"
-        var j = classes.length,
-            type;
-
-        while(j--) {
-            if(classes[j].match(viewTypeRegex)) {
-                type = classes[j].replace(viewTypeRegex, '');
-            }
-        }
-
-        if(type && this.views[type]) {
-            this.views[type].spawn($views[i]);
-        }
-        else {
-            log.error("subview '"+type+"' is not defined.");
-        }
-    }
-
-    return this;
-};
-
 subview.lookup = function(name) {
     if(typeof name == 'string') {
         return this.views[name];
@@ -790,6 +761,7 @@ subview.init = function() {
 
 /*** Extensions ***/
 subview.extension = function(extensionConfig) {
+
     //The Actual Extension Definition
     var Extension = function(userConfig, view) {
         this.view   = view;

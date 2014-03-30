@@ -38,16 +38,6 @@ test('subview() define subview', function() {
     subTester.destroy();
 });
 
-test('#load', function() {
-    var $tester = $("<div class='subview-test'>").appendTo('body');
-    subview.load();
-    ok(subview($tester), "View was successfully created");
-
-    var $tester2 = $("<div class='subview-test'>").appendTo('body');
-    subview.load('body');
-    ok(subview($tester2), "Scoped loading was successful");
-});
-
 test('#lookup', function() {
     var Tester = subview('tester');
 
