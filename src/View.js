@@ -1,5 +1,4 @@
-var _   = require('underscore'),
-    log = require('loglevel'),
+var log = require('loglevel'),
     noop = function() {};
 
 var View = function() {};
@@ -79,7 +78,7 @@ View.prototype = {
             });
 
             //Run the templating engine
-            if(_.isFunction(this.template)) {
+            if($.isFunction(this.template)) {
                 //EJS
                 if(typeof this.template.render == 'function') {
                     html = this.template.render(data);
@@ -188,7 +187,7 @@ View.prototype = {
             self:   this.$wrapper
         };
 
-        _.find(directions, function(jqFunc, direction) {
+        $.each(directions, function(direction, jqFunc) {
             var selector = '.listener-'+direction+'-'+name;
             selector = selector + ', ' + selector+'-'+self.type;
 
@@ -204,13 +203,13 @@ View.prototype = {
                 //Check for a subview type specific callback
                 var typedCallback = recipient.listeners[direction + ":" + name + ":" + self.type];
                 if(typedCallback && typedCallback.apply(recipient, args) === false) {
-                    return true; //Breaks if callback returns false
+                    return false; //Breaks if callback returns false
                 }
 
                 //Check for a general event callback
                 var untypedCallback = recipient.listeners[direction + ":" + name];
                 if(untypedCallback && untypedCallback.apply(recipient, args) === false) {
-                    return true; //Breaks if callback returns false
+                    return false; //Breaks if callback returns false
                 }
             }
         });

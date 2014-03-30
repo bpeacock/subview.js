@@ -1,5 +1,4 @@
-var _               = require("underscore"),
-    log             = require("loglevel"),
+var log             = require("loglevel"),
     $               = require("unopinionate").selector,
     ViewPool        = require("./ViewPool"),
     ViewTemplate    = require("./View"),
@@ -36,13 +35,18 @@ var subview = function(name, protoViewPool, config) {
                 superClass  = new ViewPrototype();
 
             //Extend the existing init, config & clean functions rather than overwriting them
-            _.each(['once', 'init', 'clean'], function(name) {
-                config[name+'Functions'] = superClass[name+'Functions'].slice(0); //Clone superClass init
-                if(config[name]) {
-                    config[name+'Functions'].push(config[name]);
-                    delete config[name];
+            var extendFunctions = ['once', 'init', 'clean'];
+
+            for(var i=0; i<extendFunctions.length; i++) {
+                var funcName = extendFunctions[i];
+
+                config[funcName+'Functions'] = superClass[funcName+'Functions'].slice(0); //Clone superClass init
+                
+                if(config[funcName]) {
+                    config[funcName+'Functions'].push(config[funcName]);
+                    delete config[funcName];
                 }
-            });
+            }
 
             //Extend the listeners object
             if(config.listeners) {
@@ -65,8 +69,14 @@ var subview = function(name, protoViewPool, config) {
                 });
             }
 
+            //Extend the View
+            for(var prop in config) {
+                superClass[prop] = config[prop];
+            }
+
+            View.prototype = superClass;
+
             //Build The new view
-            View.prototype       = _.extend(superClass, config);
             View.prototype.type  = name;
             View.prototype.super = ViewPrototype.prototype;
             
@@ -90,16 +100,21 @@ subview._domPropertyName = "subview12345";
 /*** API ***/
 subview.load = function(scope) {
     var $scope = scope ? $(scope) : $('body'),
-        $views = $scope.find("[class^='subview-']"),
-        finder = function(c) {
-            return c.match(viewTypeRegex);
-        };
+        $views = $scope.find("[class^='subview-']");
 
     for(var i=0; i<$views.length; i++) {
         var el = $views[i],
             classes = el.className.split(/\s+/);
 
-        type =  _.find(classes, finder).replace(viewTypeRegex, '');
+        //Find the type of the element by the class that matches "subview-"
+        var j = classes.length,
+            type;
+
+        while(j--) {
+            if(classes[j].match(viewTypeRegex)) {
+                type = classes[j].replace(viewTypeRegex, '');
+            }
+        }
 
         if(type && this.views[type]) {
             this.views[type].spawn($views[i]);
