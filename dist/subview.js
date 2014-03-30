@@ -321,18 +321,21 @@ Subview.prototype = {
 
         //Post Load Views
         if(postLoad) {
-            this.$wrapper.find('.post-load-view').each(function() {
-                var $this = $(this),
-                    view  = self.subviews[$this.attr('data-name')];
+            var $postLoads = this.$wrapper.find('.post-load-view'),
+                i = $postLoads.length;
+            
+            while(i--) {
+                var $postLoad = $($postLoads[i]),
+                    view  = self.subviews[$postLoad.attr('data-name')];
 
                 if(view.isSubviewPool) {
                     view = view.spawn();
                 }
 
-                $this
+                $postLoad
                     .after(view.$wrapper)
                     .remove();
-            });
+            }
         }
 
         this.postRender();
@@ -341,10 +344,14 @@ Subview.prototype = {
     },
     html: function(html) {
         //Remove & clean subviews in the wrapper 
-        this.$('.'+this._subviewCssClass).each(function() {
-            subview(this).remove();
-        });
+        var $subviews = this.$('.'+this._subviewCssClass),
+            i = $subviews.length;
 
+        while(i--) {
+            subview($subviews[i]).remove();
+        }
+        
+        //Empty the wrapper
         this.wrapper.innerHTML = html;
 
         return this;
