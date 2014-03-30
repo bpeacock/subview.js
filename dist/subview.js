@@ -446,7 +446,7 @@ Subview.prototype = {
     $: function(selector) {
         return this.$wrapper.find(selector);
     },
-    traverse: function(jqFunc, type) {
+    _traverse: function(jqFunc, type) {
         var $el = this.$wrapper[jqFunc]('.' + (type ? this._subviewCssClass + '-' + type : 'subview'));
         
         if($el && $el.length > 0) {
@@ -457,16 +457,16 @@ Subview.prototype = {
         }
     },
     parent: function(type) {
-        return this.traverse('closest', type);
+        return this._traverse('closest', type);
     },
     next: function(type) {
-        return this.traverse('next', type);
+        return this._traverse('next', type);
     },
     prev: function(type) {
-        return this.traverse('prev', type);
+        return this._traverse('prev', type);
     },
     children: function(type) {
-        return this.traverse('find', type);
+        return this._traverse('find', type);
     },
     appendTo: function($el) {
         this.$wrapper.appendTo($el);

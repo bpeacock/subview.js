@@ -278,7 +278,7 @@ test("#$", function() {
     equal(test.$('.scoped-jquery-test').length, 1, "The one child element is selected");
 });
 
-test("#traverse", function() {
+test("#_traverse", function() {
     var Subtest = subview("subtest"),
         subtest = Subtest.spawn();
 
@@ -290,8 +290,8 @@ test("#traverse", function() {
         }),
         tester = Tester.spawn();
 
-    deepEqual(subtest.traverse('closest', 'tester'), tester, "Works with closest");
-    deepEqual(subtest.traverse('closest', 'this-does-not-exist'), null, "does not exist");
+    deepEqual(subtest._traverse('closest', 'tester'), tester, "Works with closest");
+    deepEqual(subtest._traverse('closest', 'this-does-not-exist'), null, "does not exist");
 
     Subtest.destroy();
     Tester.destroy();
