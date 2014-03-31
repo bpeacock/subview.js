@@ -20,7 +20,7 @@ subview('my-subview', {
 
 Defines a subview template with the given `name` and the methods and properties provided in the `definition`. The `definition` contains methods and properties from the [`Subview API`](#Subview-API) along with additional methods and properties for the object. These methods and properties will be present on the `prototype` of the subview instances.
 
-The `name` may contain letters, numbers, "-"" and "_".  In addition, the `name` will form a CSS class of form `.subview-{name}` that will be applied to every instance of the subview along with any subviews sub-classed from the subview definition. In addition to the specific named subview classes, the class '.subview' will be added to every subview DOM element.
+The `name` may contain letters, numbers, "-"" and "_".  In addition, the `name` will form a CSS class of form `.subview-{name}` that will be applied to every instance of the subview along with any subviews sub-classed from the subview definition. In addition to the specific named subview classes, the class `.subview` will be added to every subview DOM element.
 
 
 ### `subview(element [DOM element or jQuery object])`
