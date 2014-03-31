@@ -1,7 +1,7 @@
 Subview.js [![Build Status](https://travis-ci.org/bpeacock/subview.js.svg?branch=master)](https://travis-ci.org/bpeacock/subview.js)
 ==================================
 
-[See Website for Documentation](http://brianpeacock.me/subview.js/)
+[See Website for Documentation](http://subviewjs.com/)
 
 Subview.js is a minimalistic hierarchical view framework designed to be highly modular, highly extensible and very efficient for applications containing thousands of views.  The last point makes subview an excellent choice for complex user interfaces that are redrawn often such as word processors, messengers and other single-page web-apps.  Subview *is not and will never be* a complete MVC framework but rather a View/Controller module designed to be used in conjunction with a Data Model.
 
