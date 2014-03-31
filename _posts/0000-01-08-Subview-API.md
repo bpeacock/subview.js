@@ -159,10 +159,9 @@ Results in:
 #### <a name='Subview.preRender' data-menu='Subview.preRender()'>`Subview.preRender()`</a>
 A callback that fires before [rendering](#Subview.render).
 
-<section class='important'>
-    <strong>Important:</strong> If your subview is rendered multiple times in its life-cycle, make sure to destroy any event bindings created in [`Subview.postRender`](#Subview.postRender).
+<section class='best-practice'>
+    <strong>Best Practice:</strong> Use this function to destroy event bindings created in [`Subview.postRender`](#Subview.postRender).
 </section>
-
 
 #### <a name='Subview.postRender' data-menu='Subview.postRender()'>`Subview.postRender()`</a>
 A callback that fires after [rendering](#Subview.render).
@@ -174,6 +173,10 @@ A callback that fires after [rendering](#Subview.render).
         <li>Direct DOM event bindings</li>
         <li>DOM and jQuery object caching</li>
     </ul>
+</section>
+
+<section class='important'>
+    <strong>Important:</strong> If your subview is rendered multiple times in its life-cycle, make sure to destroy any event bindings created here in [`Subview.preRender`](#Subview.preRender).
 </section>
 
 
