@@ -138,7 +138,7 @@ An object that contains subviews and SubviewPools that will be passed to the [te
 
 
 #### <a name='Subview.tagName' data-menu='Subview.tagName'>`Subview.tagName = "div"`</a>
-The html element type that will be created for the subview's [`wrapper`](#Subview.wrapper). Defaults to "div".
+The html element type that will be created for the subview's [`wrapper`](#Subview.wrapper). Defaults to `"div"`.
 
 #### <a name='Subview.className' data-menu='Subview.className'>`Subview.className = ""`</a>
 Extra class name(s) to be added to the subview's [`wrapper`](#Subview.wrapper).
