@@ -61,7 +61,7 @@ SubviewPool.prototype = {
 
             //Render
             if(isNewView || view.reRender) {
-                view.render();
+                view.render(config);
             }
 
             //Initialize
