@@ -5,7 +5,6 @@
   "version": "0.2.2",
   "author": "Brian Peacock",
   "main": "src/main.js",
-  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/bpeacock/subview.js"
