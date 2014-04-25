@@ -280,7 +280,7 @@ Subview.prototype = {
     preRender:  noop,
     postRender: noop,
 
-    render: function() {
+    render: function(config) {
         var self = this,
             html = '';
             postLoad = false;
@@ -292,7 +292,7 @@ Subview.prototype = {
             html = this.template;
         }
         else {
-            var data = typeof this.data == 'function' ? this.data() : this.data;
+            var data = typeof this.data == 'function' ? this.data(config) : this.data;
             
             //Define the subview variable
             data.subview = {};
@@ -594,7 +594,7 @@ SubviewPool.prototype = {
 
             //Render
             if(isNewView || view.reRender) {
-                view.render();
+                view.render(config);
             }
 
             //Initialize
