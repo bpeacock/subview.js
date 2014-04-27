@@ -51,7 +51,7 @@ $(function() {
     //Make the sidebar sticky & add position indicator
     var $indicator = $("<div class='indicator'>").appendTo($sidebar);
 
-    $(window, document).scroll(function(e) {
+    $(window, document, 'body').bind('scroll touchmove', function(e) {
         var top  = $html[0].scrollTop || $body[0].scrollTop;
         $sidebar[top > headerHeight ? 'addClass' : 'removeClass']('fixed');
 
