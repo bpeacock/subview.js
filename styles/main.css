@@ -28,6 +28,7 @@ code {
   background: #F0F0F0;
   padding: 0 2px;
   font-family: Consolas, monaco, monospace;
+  font-size: 0.8em;
 }
 /*** General Layout ***/
 header,

@@ -59,8 +59,8 @@ $(function() {
             //Get the active heading
             var active;
             for(var i=0; i<$headings.length; i++) {
-                var heading = $headings[i];
-                    topOffset = heading.getBoundingClientRect().top;
+                var heading     = $headings[i];
+                    topOffset   = heading.getBoundingClientRect().top;
 
                 if(topOffset < 50) {
                     active = heading;
