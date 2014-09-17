@@ -1,4 +1,4 @@
-Subview.js &ndash; Views done right! [![Build Status](https://travis-ci.org/bpeacock/subview.js.svg?branch=master)](https://travis-ci.org/bpeacock/subview.js)
+Subview.js &ndash; Views done right! [![Build Status](https://travis-ci.org/bpeacock/subview.js.svg?branch=master)](https://travis-ci.org/bpeacock/subview.js) [![NPM version](https://badge.fury.io/js/subview.svg)](http://badge.fury.io/js/subview)
 ==================================
 
 **[See Website for Documentation](http://subviewjs.com/)**
